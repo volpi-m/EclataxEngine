@@ -79,7 +79,7 @@ void Server::TcpConnection::handleRead(const boost::system::error_code &error, s
     // std::cout << b << " bytes packet received from: " + _ip << std::endl;
     // std::cout << "\tCODE='" << received->code << "'" << std::endl;
     // std::cout << "\tMSG='" << received->data << "'" << std::endl;
-    std::cout << _buf.data() << std::endl;
+    std::cout << _buf.data();
 
     for (size_t i = 0; i < BUFFER_SIZE; i++)
         _buf[i] = 0;
