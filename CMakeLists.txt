@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.14)
+cmake_minimum_required(VERSION 3.13)
 set(CMAKE_CXX_STANDARD 17)
 project(APCPPLib)
 
@@ -15,8 +15,9 @@ set(CMAKE_CXX_FLAGS "-Wall -fprofile-arcs -ftest-coverage")
 enable_testing()
 
 # Required packages
+find_package(Boost 1.6 COMPONENTS system REQUIRED)
 find_package(Threads)
-find_package(GTest REQUIRED)  
+find_package(GTest REQUIRED)
 
 set(LIB lib/src/Exception/Exception.cpp
         lib/src/Log/Logger.cpp
@@ -24,6 +25,12 @@ set(LIB lib/src/Exception/Exception.cpp
 set(SRC src/ecs/entities/Entity.cpp
         src/engine/GameEngine.cpp
         src/ecs/ECS.cpp)
+
+set(SRC_SERVER
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/server/TcpConnection.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/server/TcpNetwork.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/src/server/UdpNetwork.cpp
+)
 
 ## Include headers to program
 include_directories(
@@ -36,12 +43,14 @@ include_directories(
   src/ecs
   src/engine
   src
+  src/server
 )
 
 ## Creating executable
 add_executable(APCPPLib
   ${LIB}
   ${SRC}
+  ${SRC_SERVER}
   main.cpp)
 
 ## Creating executable of unit tests
@@ -54,7 +63,9 @@ add_executable(unit_tests
 	            tests/Log/test_logger.cpp)
 
 ## Linking libraries
-target_link_libraries(APCPPLib ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries(APCPPLib ${CMAKE_THREAD_LIBS_INIT}
+                                ${Boost_LIBRARIES}
+                                ${CMAKE_THREAD_LIBS_INIT})
 target_link_libraries(unit_tests PUBLIC
                       ${GTEST_LIBRARIES} pthread
                       ${CMAKE_THREAD_LIBS_INIT})
