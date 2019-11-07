@@ -8,7 +8,7 @@
 #include "UdpNetwork.hpp"
 
 Server::UdpNetwork::UdpNetwork(boost::asio::io_context &io)
-    : _socket(io, udp::endpoint(udp::v4(), 12345))
+    : _socket(io, udp::endpoint(udp::v4(), 1111))
 {
     startAccept();
 }
@@ -17,6 +17,7 @@ Server::UdpNetwork::~UdpNetwork() {}
 
 void Server::UdpNetwork::startAccept()
 {
+    std::cout << "startAccept" << std::endl;
     _socket.async_receive_from(boost::asio::buffer(_buf), _endpoint,
         boost::bind(&UdpNetwork::handleRead, this,
             boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred));

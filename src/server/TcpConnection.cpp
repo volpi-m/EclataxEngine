@@ -60,7 +60,7 @@ void Server::TcpConnection::start()
 /// \param error : error code set by boost::asio
 /// \param b : number of bytes written
 /// \brief Callback function used after a packet has been sent, if an error occurs, disconnect the client from the server
-void Server::TcpConnection::handleWrite(const boost::system::error_code &error, UNUSED size_t b)
+void Server::TcpConnection::handleWrite(const boost::system::error_code &error, [[maybe_unused]] size_t b)
 {
     if (!error)
         std::cout << "Packet sent to " << _ip << std::endl;

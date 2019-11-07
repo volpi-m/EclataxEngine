@@ -18,12 +18,7 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/enable_shared_from_this.hpp>
 #include <boost/asio.hpp>
-
-/// \def UNUSED
-/// \brief attribute unused from g++
-#define UNUSED __attribute__((unused))
-
-#define BUFFER_SIZE 256
+#include "macro.hpp"
 
 using boost::asio::ip::tcp;
 

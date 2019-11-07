@@ -17,8 +17,7 @@
 #include <boost/bind.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/asio.hpp>
-
-#define BUFFER_SIZE 256
+#include "macro.hpp"
 
 using boost::asio::ip::udp;
 

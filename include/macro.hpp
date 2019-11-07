@@ -4,22 +4,26 @@
 
 #pragma once
 
-#define RED             "\033[0;31m"
-#define REDUNDERLINED   "\033[0;41m"
-#define GREEN           "\033[0;32m"
-#define YELLOW          "\033[0;33m"
-#define BLUE            "\033[0;34m"
-#define MAGENTA         "\033[0;35m"
-#define CYAN            "\033[0;36m"
-#define WHITE           "\033[m"
+#include <string>
 
-#define DEFAULT_LOG_FILE    "output.txt"
-#define WARNING_MESSAGE     "[Warning]"
-#define ERROR_MESSAGE       "[Error]"
-#define DEBUG_MESSAGE       "[Debug]"
-#define FATAL_MESSAGE       "[FATAL]"
-#define INFO_MESSAGE        "[Info]"
-#define BREAKPOINT_MESSAGE  "[" REDUNDERLINED "0" WHITE "][Breakpoint]"
+constexpr auto const RED           = "\033[0;31m";
+constexpr auto const REDUNDERLINED = "\033[0;41m";
+constexpr auto const GREEN         = "\033[0;32m";
+constexpr auto const YELLOW        = "\033[0;33m";
+constexpr auto const BLUE          = "\033[0;34m";
+constexpr auto const MAGENTA       = "\033[0;35m";
+constexpr auto const CYAN          = "\033[0;36m";
+constexpr auto const WHITE         = "\033[m";
+
+constexpr auto const DEFAULT_LOG_FILE   = "output.txt";
+constexpr auto const WARNING_MESSAGE    = "[Warning]";
+constexpr auto const ERROR_MESSAGE      = "[Error]";
+constexpr auto const DEBUG_MESSAGE      = "[Debug]";
+constexpr auto const FATAL_MESSAGE      = "[FATAL]";
+constexpr auto const INFO_MESSAGE       = "[Info]";
+constexpr auto const BREAKPOINT_MESSAGE = "[\033[0;41m0\033[m][Breakpoint]";
+
+constexpr auto const BUFFER_SIZE = 256;
 
 // Flags options for the Logger class
 namespace Debug {
