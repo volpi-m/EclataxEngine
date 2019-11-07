@@ -9,6 +9,12 @@
 
 namespace ECS {
 
+    using flagType = unsigned char;
+
+    namespace Flags {
+        typedef enum e_flags {transform, audio, physic, script, life, particules, parallax} flags;
+    }
+
     class IComponent {
     public:
         virtual ~IComponent() = default;
