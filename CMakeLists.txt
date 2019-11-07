@@ -2,6 +2,9 @@ cmake_minimum_required(VERSION 3.13)
 set(CMAKE_CXX_STANDARD 17)
 project(APCPPLib)
 
+include(${CMAKE_CURRENT_SOURCE_DIR}/conanbuildinfo.cmake)
+conan_basic_setup(TARGETS)
+
 # Adding valgrind flags
 if (MSVC)
     add_compile_options(/W4 /WX)
@@ -15,7 +18,6 @@ set(CMAKE_CXX_FLAGS "-Wall -fprofile-arcs -ftest-coverage")
 enable_testing()
 
 # Required packages
-find_package(Boost 1.6 COMPONENTS system REQUIRED)
 find_package(Threads)
 find_package(GTest REQUIRED)
 
@@ -70,8 +72,8 @@ add_executable(unit_tests
 
 ## Linking libraries
 target_link_libraries(APCPPLib
-    ${CMAKE_THREAD_LIBS_INIT}
-    ${Boost_LIBRARIES}
+    CONAN_PKG::sfml
+    CONAN_PKG::boost_system
     ${CMAKE_THREAD_LIBS_INIT}
 )
 target_link_libraries(unit_tests PUBLIC
