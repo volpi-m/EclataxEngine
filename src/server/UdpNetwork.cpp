@@ -23,7 +23,7 @@ void Server::UdpNetwork::startAccept()
             boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred));
 }
 
-void Server::UdpNetwork::handleRead(const boost::system::error_code &err, std::size_t b)
+void Server::UdpNetwork::handleRead(const boost::system::error_code &err, [[maybe_unused]] std::size_t b)
 {
     std::cout << "New client" << std::endl;
     std::cout << _buf.data() << std::endl;
@@ -35,7 +35,7 @@ void Server::UdpNetwork::handleRead(const boost::system::error_code &err, std::s
     startAccept();
 }
 
-void Server::UdpNetwork::handleWrite(const boost::system::error_code &err, std::size_t size)
+void Server::UdpNetwork::handleWrite(const boost::system::error_code &err, [[maybe_unused]] std::size_t size)
 {
     if (!err)
         std::cout << "Packet sent to IP" << std::endl;
@@ -43,7 +43,7 @@ void Server::UdpNetwork::handleWrite(const boost::system::error_code &err, std::
         disconnect(err);
 }
 
-void Server::UdpNetwork::writeback(uint code, const char *data, std::size_t size)
+void Server::UdpNetwork::writeback([[maybe_unused]] uint code, const char *data, std::size_t size)
 {
     _socket.async_send_to(boost::asio::buffer(static_cast<const void *>(data), size), _endpoint,
         boost::bind(&UdpNetwork::handleWrite, this,

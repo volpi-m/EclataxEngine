@@ -73,7 +73,7 @@ void Server::TcpConnection::handleWrite(const boost::system::error_code &error, 
 /// \param b : number of bytes written
 /// \brief Callback function used after a packet has been received
 /// analyse the received packet to return what the client asked (if INFO_CONTACT is send, return client's contacts)
-void Server::TcpConnection::handleRead(const boost::system::error_code &error, size_t b)
+void Server::TcpConnection::handleRead(const boost::system::error_code &error, [[maybe_unused]] size_t b)
 {
     // Babel::tcpHeader *received = static_cast<Babel::tcpHeader *>((void *)_buf.data());
     // std::cout << b << " bytes packet received from: " + _ip << std::endl;
@@ -116,7 +116,7 @@ void Server::TcpConnection::read()
 /// \param data : string to be written on network with network code
 /// \param size : size of the string to be written on network
 /// \brief Write a packet on network, use the structure defined in Voip.hpp to send data
-void Server::TcpConnection::writeback(uint code, const char *data, std::size_t size)
+void Server::TcpConnection::writeback([[maybe_unused]] uint code, [[maybe_unused]] const char *data, std::size_t size)
 {
     char *toSend = new char(10);
     // Babel::tcpHeader *toSend = new Babel::tcpHeader();
