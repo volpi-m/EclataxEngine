@@ -51,3 +51,7 @@ _deps
 build
 cmake-build-debug/
 .vscode/
+*.cmake
+conaninfo.txt
+conanbuildinfo.txt
+*.lock
