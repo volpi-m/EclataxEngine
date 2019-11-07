@@ -1,6 +1,9 @@
-cmake_minimum_required(VERSION 3.14)
+cmake_minimum_required(VERSION 3.13)
 set(CMAKE_CXX_STANDARD 17)
 project(rtype)
+
+include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+conan_basic_setup(TARGETS)
 
 # Adding valgrind flags
 if (MSVC)
@@ -16,26 +19,34 @@ enable_testing()
 
 # Required packages
 find_package(Threads)
-find_package(GTest REQUIRED)  
+find_package(GTest REQUIRED)
 
-set(LIB lib/src/Exception/Exception.cpp
-  lib/src/Log/Logger.cpp
-  lib/src/Benchmarking/Breakpoint.cpp)
-set(SRC src/ecs/entities/Entity.cpp
-  src/engine/GameEngine.cpp
-  src/ecs/ECS.cpp)
+set(LIB 
+    lib/src/Exception/Exception.cpp
+    lib/src/Log/Logger.cpp
+    lib/src/Benchmarking/Breakpoint.cpp)
+set(SRC
+    src/ecs/entities/Entity.cpp
+    src/engine/GameEngine.cpp
+    src/ecs/ECS.cpp)
+set(SRC_SERVER
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/server/TcpConnection.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/server/TcpNetwork.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/server/UdpNetwork.cpp
+)
 
 ## Include headers to program
 include_directories(
   include
+  lib/src/Benchmarking
   lib/src/Exception
   lib/src/Log
-  lib/src/Benchmarking
   src/ecs/components
   src/ecs/entities
   src/ecs/systems
-  src/ecs
   src/engine
+  src/server
+  src/ecs
   src
 )
 
@@ -43,6 +54,7 @@ include_directories(
 add_executable(rtype
   ${LIB}
   ${SRC}
+  ${SRC_SERVER}
   main.cpp)
 
 ## Creating executable of unit tests
@@ -55,7 +67,11 @@ add_executable(unit_tests
 	tests/Log/test_logger.cpp)
 
 ## Linking libraries
-target_link_libraries(rtype ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries(rtype
+    CONAN_PKG::sfml
+    CONAN_PKG::boost_system
+    ${CMAKE_THREAD_LIBS_INIT})
 target_link_libraries(unit_tests PUBLIC
-  ${GTEST_LIBRARIES} pthread
-  ${CMAKE_THREAD_LIBS_INIT})
+    ${GTEST_LIBRARIES}
+    pthread
+    ${CMAKE_THREAD_LIBS_INIT})
