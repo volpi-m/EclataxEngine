@@ -5,6 +5,7 @@
 int main()
 {
 	Debug::Logger *log = Debug::Logger::getInstance(Debug::STANDARD, Debug::Flags::fatal_off);
+
 	{
 		Debug::Breakpoint b("Logger class", "main", Debug::Flags::all_on);
 		log->generateDebugMessage(Debug::DEBUG, "Just a regular debug message", "main");

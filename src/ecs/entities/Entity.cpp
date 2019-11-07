@@ -5,4 +5,49 @@
 ** Entity class methods
 */
 
+/// \file Entity.cpp
+/// \author Lucas T.
+/// \brief Source file for the Entity class
+
 #include "Entity.hpp"
+
+ECS::Entity::Entity(const std::string &tag) : _tag(tag), _deleted(false), _visible(true) {}
+
+ECS::Entity::Entity(const char *tag) : _tag(tag), _deleted(false), _visible(true) {}
+
+void ECS::Entity::update()
+{
+
+}
+
+void ECS::Entity::addChild(std::shared_ptr<Entity> &child)
+{
+    (void)child;
+}
+
+std::shared_ptr<ECS::IComponent> ECS::Entity::component(flagType flag)
+{
+    return _components[flag];
+}
+
+std::string ECS::Entity::tag() const
+{
+    return _tag;
+}
+
+bool ECS::Entity::hasComponent(flagType flag) const
+{
+    return _components.find(flag) == _components.end() ? false : true;
+}
+
+bool ECS::Entity::isVisible() const
+{
+    return _visible;
+}
+
+void ECS::Entity::deleteEntity()
+{
+    for (auto &child : _children)
+        child->deleteEntity();
+    _deleted = true;
+}

@@ -6,3 +6,10 @@
 */
 
 #include "ECS.hpp"
+
+void Module::EntityComponentSystem::update()
+{
+    // std::async ?
+    for (auto &system : _systems)
+        system->update(_entities);
+}

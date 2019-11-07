@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.14)
 set(CMAKE_CXX_STANDARD 17)
-project(APCPPLib)
+project(rtype)
 
 # Adding valgrind flags
 if (MSVC)
@@ -9,7 +9,7 @@ else()
     add_compile_options(-g)
 endif()
 
-set(CMAKE_CXX_FLAGS "-Wall -fprofile-arcs -ftest-coverage")
+set(CMAKE_CXX_FLAGS "-W -Wall -fprofile-arcs -ftest-coverage")
 
 ## Enable Google test library
 enable_testing()
@@ -19,11 +19,11 @@ find_package(Threads)
 find_package(GTest REQUIRED)  
 
 set(LIB lib/src/Exception/Exception.cpp
-        lib/src/Log/Logger.cpp
-        lib/src/Benchmarking/Breakpoint.cpp)
+  lib/src/Log/Logger.cpp
+  lib/src/Benchmarking/Breakpoint.cpp)
 set(SRC src/ecs/entities/Entity.cpp
-        src/engine/GameEngine.cpp
-        src/ecs/ECS.cpp)
+  src/engine/GameEngine.cpp
+  src/ecs/ECS.cpp)
 
 ## Include headers to program
 include_directories(
@@ -31,15 +31,16 @@ include_directories(
   lib/src/Exception
   lib/src/Log
   lib/src/Benchmarking
-  src/ecs/components/
-  src/ecs/entities/
+  src/ecs/components
+  src/ecs/entities
+  src/ecs/systems
   src/ecs
   src/engine
   src
 )
 
 ## Creating executable
-add_executable(APCPPLib
+add_executable(rtype
   ${LIB}
   ${SRC}
   main.cpp)
@@ -48,13 +49,13 @@ add_executable(APCPPLib
 include(GoogleTest)
 set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ../tests)
 add_executable(unit_tests
-              ${LIB}
-              tests/main.cpp
-              tests/Exception/test_exception.cpp
-	            tests/Log/test_logger.cpp)
+  ${LIB}
+  tests/main.cpp
+  tests/Exception/test_exception.cpp
+	tests/Log/test_logger.cpp)
 
 ## Linking libraries
-target_link_libraries(APCPPLib ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries(rtype ${CMAKE_THREAD_LIBS_INIT})
 target_link_libraries(unit_tests PUBLIC
-                      ${GTEST_LIBRARIES} pthread
-                      ${CMAKE_THREAD_LIBS_INIT})
+  ${GTEST_LIBRARIES} pthread
+  ${CMAKE_THREAD_LIBS_INIT})
