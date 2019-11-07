@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.14)
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 project(APCPPLib)
 
 # Adding valgrind flags
@@ -18,19 +18,29 @@ enable_testing()
 find_package(Threads)
 find_package(GTest REQUIRED)  
 
-set(SRC lib/src/Exception/Exception.cpp
+set(LIB lib/src/Exception/Exception.cpp
         lib/src/Log/Logger.cpp
         lib/src/Benchmarking/Breakpoint.cpp)
+set(SRC src/ecs/entities/Entity.cpp
+        src/engine/GameEngine.cpp
+        src/ecs/ECS.cpp)
 
 ## Include headers to program
 include_directories(
+  include
   lib/src/Exception
   lib/src/Log
   lib/src/Benchmarking
-  include)
+  src/ecs/components/
+  src/ecs/entities/
+  src/ecs
+  src/engine
+  src
+)
 
 ## Creating executable
 add_executable(APCPPLib
+  ${LIB}
   ${SRC}
   main.cpp)
 
@@ -38,7 +48,7 @@ add_executable(APCPPLib
 include(GoogleTest)
 set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ../tests)
 add_executable(unit_tests
-              ${SRC}
+              ${LIB}
               tests/main.cpp
               tests/Exception/test_exception.cpp
 	            tests/Log/test_logger.cpp)
