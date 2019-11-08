@@ -38,7 +38,6 @@ namespace Server
         void handleRead(const boost::system::error_code &, const std::size_t);
         void handleWrite(const boost::system::error_code &, std::size_t);
         void writeback(uint, const char *, std::size_t);
-        void disconnect(const boost::system::error_code &);
 
         udp::socket _socket;
         udp::endpoint _endpoint;

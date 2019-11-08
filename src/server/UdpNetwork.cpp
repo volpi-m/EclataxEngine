@@ -25,22 +25,21 @@ void Server::UdpNetwork::startAccept()
 
 void Server::UdpNetwork::handleRead(const boost::system::error_code &err, [[maybe_unused]] std::size_t b)
 {
-    if (err)
-        disconnect(err);
-    std::cout << "New client" << std::endl;
-    std::cout.write(_buf.data(), b);
+    if (!err) {
+        std::cout << "New client" << std::endl;
+        std::cout.write(_buf.data(), b);
 
-    for (size_t i = 0; i < BUFFER_SIZE; i++)
-        _buf[i] = 0;
+        for (size_t i = 0; i < BUFFER_SIZE; i++)
+            _buf[i] = 0;
+    }
+    writeback(1, "pute", 4);
     startAccept();
 }
 
 void Server::UdpNetwork::handleWrite(const boost::system::error_code &err, [[maybe_unused]] std::size_t size)
 {
     if (!err)
-        std::cout << "Packet sent to IP" << std::endl;
-    else
-        disconnect(err);
+        std::cout << "Packet of size " << size << " sent" << std::endl;
 }
 
 void Server::UdpNetwork::writeback([[maybe_unused]] uint code, const char *data, std::size_t size)
@@ -49,13 +48,4 @@ void Server::UdpNetwork::writeback([[maybe_unused]] uint code, const char *data,
         boost::bind(&UdpNetwork::handleWrite, this,
             boost::asio::placeholders::error,
             boost::asio::placeholders::bytes_transferred));
-}
-
-void Server::UdpNetwork::disconnect(const boost::system::error_code &err)
-{
-    std::cout << "Disconnect client with ip: IP" << std::endl;
-
-    if (err.value() != 2)
-        std::cerr << "Error: " << err.message() << std::endl;
-    _socket.close();
 }
