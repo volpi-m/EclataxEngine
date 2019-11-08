@@ -17,18 +17,26 @@ set(CMAKE_CXX_FLAGS "-W -Wall -fprofile-arcs -ftest-coverage")
 ## Enable Google test library
 enable_testing()
 
-# Required packages
+## Required packages
 find_package(Threads)
 find_package(GTest REQUIRED)
 
-set(LIB 
+## Lib sources
+set(LIB
     lib/src/Exception/Exception.cpp
     lib/src/Log/Logger.cpp
-    lib/src/Benchmarking/Breakpoint.cpp)
+    lib/src/Benchmarking/Breakpoint.cpp
+)
+
+## General sources
 set(SRC
-    src/ecs/entities/Entity.cpp
+    src/engine/ecs/entities/Entity.cpp
     src/engine/GameEngine.cpp
-    src/ecs/ECS.cpp)
+    src/engine/ecs/ECS.cpp
+    src/engine/scenesManagement/sceneMachine/SceneMachine.cpp
+)
+
+## Server sources
 set(SRC_SERVER
     ${CMAKE_CURRENT_SOURCE_DIR}/src/server/TcpConnection.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/server/TcpNetwork.cpp
@@ -41,9 +49,12 @@ include_directories(
   lib/src/Benchmarking
   lib/src/Exception
   lib/src/Log
-  src/ecs/components
-  src/ecs/entities
-  src/ecs/systems
+  src/engine/scenesManagement/sceneMachine
+  src/engine/scenesManagement/scenes
+  src/engine/scenesManagement
+  src/engine/ecs/components
+  src/engine/ecs/entities
+  src/engine/ecs/systems
   src/engine
   src/server
   src/ecs
