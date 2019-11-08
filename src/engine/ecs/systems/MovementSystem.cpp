@@ -9,8 +9,7 @@
 
 void ECS::MovementSystem::update(std::unordered_map<unsigned long long, std::shared_ptr<Entity>> &entities)
 {
-    for (auto &entity : entities) {
+    for (auto &entity : entities)
         if (entity.second->hasComponent(Flags::transform))
-            
-    }
+            std::cout << "Transform component found." << std::endl;
 }

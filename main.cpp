@@ -7,16 +7,14 @@
 
 #include "TcpNetwork.hpp"
 #include "UdpNetwork.hpp"
+#include "GameEngine.hpp"
+#include "DumyScene.hpp"
 
 int main()
 {
-    try {
-        boost::asio::io_context io;
-        Server::TcpNetwork serv(io);
-        // Server::UdpNetwork serv(io);
-        io.run();
-    } catch(const std::exception &e) {
-        ;
-    }
-    return 0;
+    Game::GameEngine engine;
+
+    auto scene = std::shared_ptr<Scenes::IScene>(new Scenes::DumyScene);
+    engine.SceneManager().push(scene);
+    engine.SceneManager().run();
 }

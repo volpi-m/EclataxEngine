@@ -19,8 +19,8 @@ namespace Module {
         
         class EntityComponentSystem : public IModule {
         public:
-            EntityComponentSystem();
-            ~EntityComponentSystem();
+            EntityComponentSystem() = default;
+            ~EntityComponentSystem() = default;
 
             void update();
             unsigned long long createEntity(const std::string &tag = "");
@@ -41,9 +41,9 @@ namespace Module {
 
             void entityDebugCollisionBox(unsigned long long id, bool show);
             
-            bool isInitialised() override;
+            bool isInitialised() override {return false;};
         private:
-            void init() override;
+            void init() override {};
             bool _initialised;
 
             std::vector<std::unique_ptr<ECS::ISystem>> _systems;

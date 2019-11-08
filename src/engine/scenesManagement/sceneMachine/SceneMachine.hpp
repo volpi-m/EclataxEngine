@@ -5,6 +5,10 @@
 ** SceneMachine class
 */
 
+/// \file SceneMachine.hpp
+/// \author Lucas T.
+/// \brief Header file for the SceneMachine class
+
 #pragma once
 
 #include <stack>
@@ -14,22 +18,53 @@
 
 #include "IScene.hpp"
 
-namespace indie {
+/// \namespace Scenes
+/// \brief Used for the all Scenes subsclasses
+namespace Module {
+
+    /// \class SceneMachine
+    /// \brief Create a singleton instance that will stack scenes and manipulate them
     class SceneMachine {
         public:
-            static SceneMachine *getInstance();
-            void push(IScene *scene);
-            void pop();
-            void pop(const std::string &name);
-            void swap(indie::IScene *scene);
+            /// \brief constructor
+            /// Initialize SceneMachine class
+            SceneMachine();
+            
+            /// \brief destructor
+            /// Destroy SceneMachine class
+            ~SceneMachine();
 
-            // Getter
+            /// \param scene : The scene to push
+            /// \brief Push a scene pointer into the stack
+            void push(std::shared_ptr<Scenes::IScene> &scene);
+
+            /// \brief Destroy the scene on top of the stack
+            void pop();
+
+            /// \param name : Last scene to destroy
+            /// \brief Destroy all scenes unit the current scene corespond to the name parameter
+            void pop(const std::string &name);
+
+            /// \param scene : The scene to replace
+            /// \brief Swap the current scene with the scene passed as parameter
+            void swap(std::shared_ptr<Scenes::IScene> &scene);
+
+            /// \return the size of the stack
+            /// \brief get the size of the stack
             size_t size() const;
-            std::string getSceneName() const;
+
+            /// \return the name of the current scene
+            /// \brief get the name of the current scene
+            std::string name() const;
+
+            /// \return a bool, true if the scene is to be poped, false otherwise
+            /// \brief check if the current scene needs to be destroyed
             bool isToPop() const;
+
+            /// \brief starts the machine
             void run();
         private:
-            SceneMachine() = default;
-            std::stack<IScene *> _scenes;
+            /*! the stack of scenes */
+            std::stack<std::shared_ptr<Scenes::IScene>> _scenes;
     };
 }

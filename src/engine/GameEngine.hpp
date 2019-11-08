@@ -5,6 +5,9 @@
 ** Game Engine methods
 */
 
+#include "SceneMachine.hpp"
+#include "ECS.hpp"
+
 #pragma once
 
 namespace Game {
@@ -14,16 +17,16 @@ namespace Game {
         GameEngine();
         ~GameEngine();
 
-        bool isInitialised();
-        // EntityComponentSystem &EntityComponentSystem() {return _ecs;};
+        bool isInitialised() const;
+        Module::EntityComponentSystem &ECS();
         // LibLoader &LibLoader() {return _libLoader;};
-        // SceneManager &SceneManager() {return _sceneManager;};
+        Module::SceneMachine &SceneManager();
     private:
         void init();
 
         bool _initialised;
-        // EntityComponentSystem _ecs;
+        Module::EntityComponentSystem _ecs;
         // LibLoader _libLoader;
-        // SceneManager _sceneManager;
+        Module::SceneMachine _sceneMachine;
     };
 }

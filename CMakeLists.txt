@@ -30,10 +30,12 @@ set(LIB
 
 ## General sources
 set(SRC
-    src/engine/ecs/entities/Entity.cpp
     src/engine/GameEngine.cpp
-    src/engine/ecs/ECS.cpp
     src/engine/scenesManagement/sceneMachine/SceneMachine.cpp
+    src/engine/scenesManagement/scenes/DumyScene.cpp
+    src/engine/ecs/ECS.cpp
+    src/engine/ecs/entities/Entity.cpp
+    src/engine/ecs/systems/MovementSystem.cpp
 )
 
 ## Server sources
@@ -51,13 +53,12 @@ include_directories(
   lib/src/Log
   src/engine/scenesManagement/sceneMachine
   src/engine/scenesManagement/scenes
-  src/engine/scenesManagement
   src/engine/ecs/components
   src/engine/ecs/entities
   src/engine/ecs/systems
+  src/engine/ecs
   src/engine
   src/server
-  src/ecs
   src
 )
 
