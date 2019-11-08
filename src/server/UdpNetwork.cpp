@@ -25,13 +25,13 @@ void Server::UdpNetwork::startAccept()
 
 void Server::UdpNetwork::handleRead(const boost::system::error_code &err, [[maybe_unused]] std::size_t b)
 {
+    if (err)
+        disconnect(err);
     std::cout << "New client" << std::endl;
-    std::cout << _buf.data() << std::endl;
+    std::cout.write(_buf.data(), b);
 
     for (size_t i = 0; i < BUFFER_SIZE; i++)
         _buf[i] = 0;
-    if (err)
-        disconnect(err);
     startAccept();
 }
 
