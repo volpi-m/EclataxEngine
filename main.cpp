@@ -5,16 +5,21 @@
 ** main
 */
 
+/// \file main.cpp
+/// \author Lucas T.
+/// \brief main function
+
 #include "TcpNetwork.hpp"
 #include "UdpNetwork.hpp"
 #include "GameEngine.hpp"
 #include "DumyScene.hpp"
 
+/// \brief main function
 int main()
 {
     Game::GameEngine engine;
 
-    auto scene = std::shared_ptr<Scenes::IScene>(new Scenes::DumyScene);
-    engine.SceneManager().push(scene);
-    engine.SceneManager().run();
+    auto scene = std::shared_ptr<Scenes::IScene>(new Scenes::DumyScene("Dummy scene", engine.ECS()));
+    engine.SceneMachine()->push(scene);
+    engine.SceneMachine()->run();
 }

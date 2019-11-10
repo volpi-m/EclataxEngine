@@ -37,12 +37,17 @@ std::string ECS::Entity::tag() const
 
 bool ECS::Entity::hasComponent(flagType flag) const
 {
-    return _components.find(flag) == _components.end() ? false : true;
+    return _components.find(flag) == _components.end();
 }
 
 bool ECS::Entity::isVisible() const
 {
     return _visible;
+}
+
+void ECS::Entity::setVisible(bool state)
+{
+    _visible = state;
 }
 
 void ECS::Entity::deleteEntity()

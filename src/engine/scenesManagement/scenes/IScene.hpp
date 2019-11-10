@@ -5,9 +5,16 @@
 ** IScene class interface
 */
 
+#include "ECS.hpp"
+
 #pragma once
 
+/// \namespace Scenes
+/// \brief Used for all scenes components
 namespace Scenes {
+
+    /// \class IScene
+    /// \brief Scene interface
     class IScene {
         public:
             /// \brief destructor
@@ -40,5 +47,9 @@ namespace Scenes {
             
             /// \brief remove all the entities of the scene
             virtual void remove() = 0;
+
+            /// \param ECS : The entity compponent system to pass to the scene
+            /// \brief set an instance of the ECS inside the scene object
+            virtual void setECSInstance(std::shared_ptr<Module::EntityComponentSystem> &ECS) = 0;
     };
 }

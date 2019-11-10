@@ -66,6 +66,10 @@ namespace ECS {
             /// \return a boolean, true if the entity is visible, false otherwise
             /// \brief Check if the entity is visible
             bool isVisible() const;
+
+            /// \param state : visible state of the entity 
+            /// \brief set the visible state of the entity
+            void setVisible(bool state);
         private:
             /// \brief mark the current entity as deleted and all of its children
             void deleteEntity();

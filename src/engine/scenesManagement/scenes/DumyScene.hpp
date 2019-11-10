@@ -5,6 +5,10 @@
 // DumyScene class declaration
 //
 
+/// \file DumyScene.hpp
+/// \author Lucas T.
+/// \brief DumyScene class declaration
+
 #pragma once
 
 #include <string>
@@ -13,11 +17,33 @@
 #include "IScene.hpp"
 #include "Logger.hpp"
 
+/// \namespace Scenes
+/// \brief Used for all scenes components
 namespace Scenes {
 
+    /// \class DumyScene
+    /// \brief DumyScene class
     class DumyScene : public IScene {
         public:
-            DumyScene() = default;
+            /// \param name : the new name of the current scene
+            /// \param ECS : ECS instance to pass to the scene
+            /// \brief scene constructor
+            DumyScene(const std::string &name, std::shared_ptr<Module::EntityComponentSystem> &ECS);
+
+            /// \param name : the new name of the current scene
+            /// \param ECS : ECS instance to pass to the scene
+            /// \brief scene constructor
+            DumyScene(const char *name, std::shared_ptr<Module::EntityComponentSystem> &ECS);
+
+            /// \param name : the new name of the current scene
+            /// \brief scene constructor
+            DumyScene(const std::string &name = default_tag);
+
+            /// \param name : the new name of the current scene
+            /// \brief scene constructor
+            DumyScene(const char *name = default_tag);
+
+            /// \brief default scene destructor
             ~DumyScene() override = default;
 
             /// \param name : the new name of the current scene
@@ -47,9 +73,19 @@ namespace Scenes {
             /// \brief remove all the entities of the scene
             void remove() override;
 
+            /// \param ECS : The entity compponent system to pass to the scene
+            /// \brief set an instance of the ECS inside the scene object
+            void setECSInstance(std::shared_ptr<Module::EntityComponentSystem> &ECS) override;
         private:
+            /*! name of the scene */
             std::string _name;
+            /*! ECS instance */
+            std::shared_ptr<Module::EntityComponentSystem> _ECS;
+            /*! scene entities */
+            std::vector<unsigned long long> _ids;
+            /*! pop characteristic */
             bool _pop;
+            /*! swap characteristic */
             bool _swap;
     };
 }
