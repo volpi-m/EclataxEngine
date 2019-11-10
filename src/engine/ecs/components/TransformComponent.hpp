@@ -5,17 +5,32 @@
 ** Component interface
 */
 
+/// \file TransformComponent.hpp
+/// \author Lucas T.
+/// \brief TransformComponent class declaration
+
 #pragma once
 
 #include <cstdint>
 
 #include "IComponent.hpp"
 
+/// \namespace ECS
+/// \brief Used for the all entity component system subclasses
 namespace ECS {
 
+    /// \struct Transform
+    /// \brief Transform structure, create the transform components
     struct Transform : public IComponent {
-        std::size_t _x;
-        std::size_t _y;
-        std::size_t _z;
+        
+        /// \brief constructor
+        Transform() : x(0), y(0), z(0) {}
+        
+        /*! x axis attribute */
+        std::size_t x;
+        /*! y axis attribute */
+        std::size_t y;
+        /*! z axis attribute */
+        std::size_t z;
     };
 }

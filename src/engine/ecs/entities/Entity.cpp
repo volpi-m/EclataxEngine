@@ -25,6 +25,11 @@ void ECS::Entity::addChild(std::shared_ptr<Entity> &child)
     (void)child;
 }
 
+void ECS::Entity::addComponent(flagType flag, std::shared_ptr<ECS::IComponent> &component)
+{
+    _components.emplace(flag, component);
+}
+
 std::shared_ptr<ECS::IComponent> ECS::Entity::component(flagType flag)
 {
     return _components[flag];
@@ -37,7 +42,7 @@ std::string ECS::Entity::tag() const
 
 bool ECS::Entity::hasComponent(flagType flag) const
 {
-    return _components.find(flag) == _components.end();
+    return !(_components.find(flag) == _components.end());
 }
 
 bool ECS::Entity::isVisible() const

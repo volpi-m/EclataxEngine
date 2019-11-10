@@ -49,6 +49,11 @@ namespace ECS {
             /// \brief Attach an entity to another
             void addChild(std::shared_ptr<Entity> &child);
 
+            /// \param flag : the flag of the component
+            /// \param component : the component to attach
+            /// \brief Attach an entity to another
+            void addComponent(flagType flag, std::shared_ptr<IComponent> &component);
+
             /// \param flag : the flag that we want to look for
             /// \return a shared pointer of a component
             /// \brief get a component from an the current instance

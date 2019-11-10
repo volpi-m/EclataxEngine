@@ -14,6 +14,8 @@
 #include <string>
 #include <memory>
 
+#include "TransformComponent.hpp"
+#include "MovementSystem.hpp"
 #include "IScene.hpp"
 #include "Logger.hpp"
 

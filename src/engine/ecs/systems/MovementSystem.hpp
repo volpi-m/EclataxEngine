@@ -12,9 +12,9 @@
 #include <memory>
 #include <vector>
 
-#include "IComponent.hpp"
 #include "ISystem.hpp"
 #include "Entity.hpp"
+#include "TransformComponent.hpp"
 
 namespace ECS {
 

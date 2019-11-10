@@ -35,6 +35,10 @@ namespace Module {
         /// \brief destructor
         ~EntityComponentSystem() = default;
 
+        /// \param system : The system to add to the ECS's system list
+        /// \brief add a system to the ECS's system list
+        void addSystem(std::unique_ptr<ECS::ISystem> &system);
+
         /// \param tag : the new name of the current scene
         /// \param ECS : ECS instance to pass to the scene
         /// \brief scene constructor
@@ -46,11 +50,23 @@ namespace Module {
         unsigned long long createEntity(const char *tag = "");
 
         /// \param id : the id of the entity
+        /// \param flag : the component flag
+        /// \param component : the component to attach to the entity 
+        /// \brief add a component to an existing entity
+        void addComponentToEntity(unsigned long long id, ECS::flagType flag, std::shared_ptr<ECS::IComponent> &component);
+
+        /// \param id : the id of the entity
         /// \param state : the visible state
         /// \brief set the visible set of an entity
         void setEntityVisibleState(unsigned long long id, bool state);
 
         /// \param id : the id of the entity
+        /// \return true of the entity is visible, false otherwise
+        /// \brief check if the entity is visibke
+        bool isEntityVisible(unsigned long long id);
+
+        /// \param id : the id of the entity
+        /// \return true of the entity exists, false otherwise
         /// \brief check if the entity exists
         bool hasEntity(unsigned long long id) const;
 
@@ -59,19 +75,19 @@ namespace Module {
         /// \brief get the tag of an entity
         std::string tag(unsigned long long id);
 
+        /// \return true if the ECS instance is initialised, false otherwise
+        /// \brief check if the ECS instance is initialised
+        bool isInitialised() override;
+
         // NOT YET IMPLEMENTED
         void update();
         unsigned long long createChildEntity(unsigned long long id, const std::string &tag = "");
-        void addComponentToEntity(unsigned long long id, std::unique_ptr<ECS::IComponent>);
         void setEntityPosition(unsigned long long id, unsigned int x, unsigned int y);
         void setEntitySpeed(unsigned long long id, unsigned int damage);
         void setEntityDamage(unsigned long long id, unsigned int damage);
         std::optional<unsigned long long> checkCollision(unsigned long long id);
-        bool isEntityVisible(unsigned long long id);
         //ECS::Entity getEntity(unsigned long long id);
         void entityDebugCollisionBox(unsigned long long id, bool show);
-        
-        bool isInitialised() override {return false;};
     private:
         /*! Module initialisation method */
         unsigned long long _newId;

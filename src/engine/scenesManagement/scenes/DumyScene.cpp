@@ -28,10 +28,20 @@ std::string Scenes::DumyScene::name() const
 
 bool Scenes::DumyScene::run()
 {
-    if (_ids.empty())
+    if (_ids.empty()) {
+        // Creating a basic component to add to an entity, and a system that wil access it.
+        std::shared_ptr<ECS::IComponent> transform(new ECS::Transform);
+        std::unique_ptr<ECS::ISystem> system(new ECS::MovementSystem);
+
+        // Creating the entity, adding the component, saving the system
         _ids.push_back(_ECS->createEntity("John Cena"));
-    else
+        _ECS->addComponentToEntity(_ids.front(), ECS::Flags::transform, transform);
+        _ECS->addSystem(system);
+    } else {
         std::cout << "The Dumy scene posseses " << _ids.size() << " entitie(s), it's name is " << _ECS->tag(_ids.front()) << std::endl;
+        std::cout << "Launching systems ..." << std::endl;
+        _ECS->update();
+    }
     return true;
 }
 
