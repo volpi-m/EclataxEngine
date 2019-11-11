@@ -11,56 +11,33 @@
 
 #include "TcpConnection.hpp"
 
-/// \brief constructor.
-/// Initialize socket
-/// \param io : boost's io_context used by every I/O object in boost::asio
 Server::TcpConnection::TcpConnection(boost::asio::io_context &io)
     : _socket(io)
 {}
 
-
-/// \brief Destructor.
-/// Do nothing special
 Server::TcpConnection::~TcpConnection() {}
 
-
-/// \param io : boost's io_contect used by every I/O object in boost::asio
-/// \return new Connection instance as a shared pointer
-/// \brief Return a new Connection instance as a shared pointer
 boost::shared_ptr<Server::TcpConnection> Server::TcpConnection::create(boost::asio::io_context &io)
 {
     return boost::shared_ptr<Server::TcpConnection>(new Server::TcpConnection(io));
 }
 
-
-/// \return Socket reference from the class
-/// \brief Return the socket
 tcp::socket &Server::TcpConnection::getSocket()
 {
     return _socket;
 }
 
-
-/// \param ip : ip address of the current client connected to this instance of Connection
-/// \brief Save the ip of the remote client in the instance of Connection, called in Server when the connection occurs
 void Server::TcpConnection::setIP(const std::string &ip)
 {
     _ip = ip;
 }
 
-
-/// \brief server's startup function. Called when a client is connected to bind writing and
-/// reading functions to their respectives callback
 void Server::TcpConnection::start()
 {
     read();
 }
 
-
-/// \param error : error code set by boost::asio
-/// \param b : number of bytes written
-/// \brief Callback function used after a packet has been sent, if an error occurs, disconnect the client from the server
-void Server::TcpConnection::handleWrite(const boost::system::error_code &error, [[maybe_unused]] size_t b)
+void Server::TcpConnection::handleWrite(const boost::system::error_code &error, [[maybe_unused]] const size_t b)
 {
     if (!error)
         std::cout << "Packet sent to " << _ip << std::endl;
@@ -68,12 +45,7 @@ void Server::TcpConnection::handleWrite(const boost::system::error_code &error, 
         disconnect(error);
 }
 
-
-/// \param error : error code set by boost::asio
-/// \param b : number of bytes written
-/// \brief Callback function used after a packet has been received
-/// analyse the received packet to return what the client asked (if INFO_CONTACT is send, return client's contacts)
-void Server::TcpConnection::handleRead(const boost::system::error_code &error, [[maybe_unused]] size_t b)
+void Server::TcpConnection::handleRead(const boost::system::error_code &error, [[maybe_unused]] const size_t b)
 {
     // Babel::tcpHeader *received = static_cast<Babel::tcpHeader *>((void *)_buf.data());
     // std::cout << b << " bytes packet received from: " + _ip << std::endl;
@@ -89,9 +61,6 @@ void Server::TcpConnection::handleRead(const boost::system::error_code &error, [
         read();
 }
 
-
-/// \param error : error code set by boost::asio, used to display the error message
-/// \brief Show the error message and disconnect the socket
 void Server::TcpConnection::disconnect(const boost::system::error_code &error)
 {
     std::cout << "Disconnect client with ip: " + _ip << std::endl;
@@ -101,8 +70,6 @@ void Server::TcpConnection::disconnect(const boost::system::error_code &error)
     _socket.close();
 }
 
-
-/// \brief Bind the read action with a callback, must be called by the callback to read again on network
 void Server::TcpConnection::read()
 {
     _socket.async_read_some(boost::asio::buffer(_buf),
@@ -111,12 +78,7 @@ void Server::TcpConnection::read()
         boost::asio::placeholders::bytes_transferred));
 }
 
-
-/// \param code : network code to be written on the network (see Voip.hpp for all codes available)
-/// \param data : string to be written on network with network code
-/// \param size : size of the string to be written on network
-/// \brief Write a packet on network, use the structure defined in Voip.hpp to send data
-void Server::TcpConnection::writeback([[maybe_unused]] uint code, [[maybe_unused]] const char *data, std::size_t size)
+void Server::TcpConnection::writeback([[maybe_unused]] const uint code, [[maybe_unused]] const char *data, const std::size_t size)
 {
     char *toSend = new char(10);
     // Babel::tcpHeader *toSend = new Babel::tcpHeader();
