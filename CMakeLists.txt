@@ -28,10 +28,21 @@ set(LIB
     lib/src/Benchmarking/Breakpoint.cpp
 )
 
+set(ENTITY_ASTEROID
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/engine/ecs/entities/Entity.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/game/entities/Asteroid.cpp
+)
+
+set(ENTITY_ENNEMY
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/engine/ecs/entities/Entity.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/game/entities/Ennemy.cpp
+)
+
 ## General sources
 set(SRC
     src/engine/ecs/entities/Entity.cpp
     src/engine/GameEngine.cpp
+    src/engine/DLLoader.cpp
     src/engine/ecs/ECS.cpp
     src/engine/scenesManagement/sceneMachine/SceneMachine.cpp
 )
@@ -59,7 +70,14 @@ include_directories(
   src/server
   src/ecs
   src
+
+  src/game/entities
 )
+
+## Creating Librairies
+add_library(asteroid SHARED ${ENTITY_ASTEROID})
+
+add_library(ennemy SHARED ${ENTITY_ENNEMY})
 
 ## Creating executable
 add_executable(rtype
@@ -81,7 +99,8 @@ add_executable(unit_tests
 target_link_libraries(rtype
     CONAN_PKG::sfml
     CONAN_PKG::boost_system
-    ${CMAKE_THREAD_LIBS_INIT})
+    ${CMAKE_THREAD_LIBS_INIT}
+    ${CMAKE_DL_LIBS})
 target_link_libraries(unit_tests PUBLIC
     ${GTEST_LIBRARIES}
     pthread
