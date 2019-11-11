@@ -106,7 +106,9 @@ target_link_libraries(rtype
     CONAN_PKG::boost_system
     ${CMAKE_THREAD_LIBS_INIT}
     ${CMAKE_DL_LIBS})
+
 target_link_libraries(unit_tests PUBLIC
+    CONAN_PKG::gtest
     ${GTEST_LIBRARIES}
     pthread
     ${CMAKE_THREAD_LIBS_INIT}
