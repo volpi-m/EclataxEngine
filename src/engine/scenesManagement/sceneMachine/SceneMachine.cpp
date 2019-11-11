@@ -8,87 +8,58 @@
 #include "Logger.hpp"
 #include "SceneMachine.hpp"
 
-indie::SceneMachine *indie::SceneMachine::getInstance()
-{
-    static auto instance = new SceneMachine;
+Module::SceneMachine::SceneMachine() {}
 
-    return instance;
-}
+Module::SceneMachine::~SceneMachine() {}
 
-void indie::SceneMachine::push(indie::IScene *scene)
+void Module::SceneMachine::push(std::shared_ptr<Scenes::IScene> &scene)
 {
     if (!_scenes.empty())
         _scenes.top()->setVisible(false);
     _scenes.push(scene);
 }
 
-void indie::SceneMachine::pop()
+void Module::SceneMachine::pop()
 {
-    if (!_scenes.empty()) {
-        if (_scenes.top()->getName() != "Start Option Scene")
-            _scenes.top()->remove();
+    if (!_scenes.empty())
         _scenes.pop();
-    }
 }
 
-void indie::SceneMachine::pop(const std::string &name)
+void Module::SceneMachine::pop(const std::string &name)
 {
     if (_scenes.empty())
         return;
-    pop();
-    while (!_scenes.empty() && _scenes.top()->getName() != name) {
-        if (!_scenes.empty()) {
-            if (_scenes.top()->getName() != "Start Option Scene")
-                _scenes.top()->remove();
-            _scenes.pop();
-        }
-    }
-    if (!_scenes.empty()) {
-        _scenes.top()->setPop(false);
+    while (!_scenes.empty() && _scenes.top()->name() != name)
+        pop();
+    if (!_scenes.empty())
         _scenes.top()->setVisible(true);
-    }
 }
 
-void indie::SceneMachine::swap(indie::IScene *scene)
+void Module::SceneMachine::swap(std::shared_ptr<Scenes::IScene> &scene)
 {
-    std::string name = _scenes.top()->getName();
+    std::string name = _scenes.top()->name();
 
     pop();
     push(scene);
 }
 
-std::string indie::SceneMachine::getSceneName() const
+std::string Module::SceneMachine::name() const
 {
-    if (_scenes.empty())
-        return "";
-    return _scenes.top()->getName();
+    return _scenes.empty() ? "" : _scenes.top()->name();
 }
 
-size_t indie::SceneMachine::size() const
+size_t Module::SceneMachine::size() const
 {
     return _scenes.empty() ? 0 : _scenes.size();
 }
 
-bool indie::SceneMachine::isToPop() const
+bool Module::SceneMachine::isToPop() const
 {
     return _scenes.empty() ? false : _scenes.top()->isToPop();
 }
 
-void indie::SceneMachine::run()
+void Module::SceneMachine::run()
 {
-    indie::IScene *newScene = nullptr;
-
-    if ((newScene = _scenes.top()->computeEvents())) {
-        if (newScene->isToSwap())
-            swap(newScene);
-        else
-            push(newScene);
-    } else if (_scenes.top()->isToPop() && !_scenes.top()->isToSwap()) {
-        pop();
-        if (!_scenes.empty()) {
-            _scenes.top()->setPop(false);
-            _scenes.top()->setVisible(true);
-        }
-    } else if (_scenes.top()->isToPop() && _scenes.top()->isToSwap())
-        pop(_scenes.top()->getName());
+    if (!_scenes.empty())
+        while (_scenes.top()->run());
 }
