@@ -49,6 +49,11 @@ namespace ECS {
             /// \brief Attach an entity to another
             void addChild(std::shared_ptr<Entity> &child);
 
+            /// \param flag : the flag of the component
+            /// \param component : the component to attach
+            /// \brief Attach an entity to another
+            void addComponent(flagType flag, std::shared_ptr<IComponent> &component);
+
             /// \param flag : the flag that we want to look for
             /// \return a shared pointer of a component
             /// \brief get a component from an the current instance
@@ -66,6 +71,10 @@ namespace ECS {
             /// \return a boolean, true if the entity is visible, false otherwise
             /// \brief Check if the entity is visible
             bool isVisible() const;
+
+            /// \param state : visible state of the entity 
+            /// \brief set the visible state of the entity
+            void setVisible(bool state);
         private:
             /// \brief mark the current entity as deleted and all of its children
             void deleteEntity();
