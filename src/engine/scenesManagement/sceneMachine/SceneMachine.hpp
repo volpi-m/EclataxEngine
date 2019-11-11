@@ -45,6 +45,10 @@ namespace Module {
             /// \brief Destroy all scenes unit the current scene corespond to the name parameter
             void pop(const std::string &name);
 
+            /// \param name : Last scene to destroy
+            /// \brief Destroy all scenes unit the current scene corespond to the name parameter
+            void pop(const char *name);
+
             /// \param scene : The scene to replace
             /// \brief Swap the current scene with the scene passed as parameter
             void swap(std::shared_ptr<Scenes::IScene> &scene);
@@ -60,6 +64,10 @@ namespace Module {
             /// \return a bool, true if the scene is to be poped, false otherwise
             /// \brief check if the current scene needs to be destroyed
             bool isToPop() const;
+
+            /// \return a bool, true if the scene is to be swaped, false otherwise
+            /// \brief check if the current scene needs to be swaped
+            bool isToSwap() const;
 
             /// \brief starts the machine
             void run();
