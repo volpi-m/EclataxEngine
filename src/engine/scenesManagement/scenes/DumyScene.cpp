@@ -41,6 +41,7 @@ bool Scenes::DumyScene::run()
         std::cout << "The Dumy scene posseses " << _ids.size() << " entitie(s), it's name is " << _ECS->tag(_ids.front()) << std::endl;
         std::cout << "Launching systems ..." << std::endl;
         _ECS->update();
+        return false;
     }
     return true;
 }

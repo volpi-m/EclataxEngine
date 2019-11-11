@@ -18,8 +18,8 @@
 int main()
 {
     Game::GameEngine engine;
-
     auto scene = std::shared_ptr<Scenes::IScene>(new Scenes::DumyScene("Dummy scene", engine.ECS()));
+
     engine.SceneMachine()->push(scene);
     engine.SceneMachine()->run();
 }

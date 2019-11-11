@@ -27,8 +27,14 @@ void Module::SceneMachine::pop()
 
 void Module::SceneMachine::pop(const std::string &name)
 {
-    if (_scenes.empty())
-        return;
+    while (!_scenes.empty() && _scenes.top()->name() != name)
+        pop();
+    if (!_scenes.empty())
+        _scenes.top()->setVisible(true);
+}
+
+void Module::SceneMachine::pop(const char *name)
+{
     while (!_scenes.empty() && _scenes.top()->name() != name)
         pop();
     if (!_scenes.empty())
@@ -37,8 +43,6 @@ void Module::SceneMachine::pop(const std::string &name)
 
 void Module::SceneMachine::swap(std::shared_ptr<Scenes::IScene> &scene)
 {
-    std::string name = _scenes.top()->name();
-
     pop();
     push(scene);
 }
@@ -56,6 +60,11 @@ size_t Module::SceneMachine::size() const
 bool Module::SceneMachine::isToPop() const
 {
     return _scenes.empty() ? false : _scenes.top()->isToPop();
+}
+
+bool Module::SceneMachine::isToSwap() const
+{
+    return _scenes.empty() ? false : _scenes.top()->isToSwap();
 }
 
 void Module::SceneMachine::run()

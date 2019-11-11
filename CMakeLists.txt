@@ -93,9 +93,12 @@ include(GoogleTest)
 set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ../tests)
 add_executable(unit_tests
   ${LIB}
+  ${SRC}
   tests/main.cpp
   tests/Exception/test_exception.cpp
-	tests/Log/test_logger.cpp)
+  tests/Log/test_logger.cpp
+  tests/sceneMachine/test_sceneMachine.cpp
+  tests/scenes/test_dummyScene.cpp)
 
 ## Linking libraries
 target_link_libraries(rtype
@@ -106,4 +109,5 @@ target_link_libraries(rtype
 target_link_libraries(unit_tests PUBLIC
     ${GTEST_LIBRARIES}
     pthread
-    ${CMAKE_THREAD_LIBS_INIT})
+    ${CMAKE_THREAD_LIBS_INIT}
+    ${CMAKE_DL_LIBS})
