@@ -51,7 +51,7 @@ include_directories(
 )
 
 ## Creating executable
-add_executable(rtype-server
+add_executable(r-type_server
   ${LIB}
   ${SRC}
   ${SRC_NETWORK}
@@ -67,7 +67,7 @@ add_executable(unit_tests
 	tests/Log/test_logger.cpp)
 
 ## Linking libraries
-target_link_libraries(rtype
+target_link_libraries(r-type_server
     CONAN_PKG::sfml
     CONAN_PKG::boost_system
     ${CMAKE_THREAD_LIBS_INIT})
