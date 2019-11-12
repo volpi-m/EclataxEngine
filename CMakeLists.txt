@@ -98,7 +98,11 @@ add_executable(unit_tests
   tests/Exception/test_exception.cpp
   tests/Log/test_logger.cpp
   tests/sceneMachine/test_sceneMachine.cpp
-  tests/scenes/test_dummyScene.cpp)
+  tests/scenes/test_dummyScene.cpp
+  tests/Benchmarking/test_breakpoints.cpp
+  tests/ecs/test_ecs.cpp
+  tests/entity/test_entity.cpp
+  tests/engine/test_gameEngine.cpp)
 
 ## Linking libraries
 target_link_libraries(rtype

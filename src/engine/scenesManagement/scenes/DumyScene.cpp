@@ -30,8 +30,8 @@ bool Scenes::DumyScene::run()
 {
     if (_ids.empty()) {
         // Creating a basic component to add to an entity, and a system that wil access it.
-        std::shared_ptr<ECS::IComponent> transform(new ECS::Transform);
-        std::unique_ptr<ECS::ISystem> system(new ECS::MovementSystem);
+        std::shared_ptr<ECS::IComponent> transform(new ECS::Component::Transform(0, 1, 2));
+        std::unique_ptr<ECS::ISystem> system(new ECS::System::MovementSystem);
 
         // Creating the entity, adding the component, saving the system
         _ids.push_back(_ECS->createEntity("John Cena"));

@@ -63,6 +63,10 @@ namespace ECS {
             /// \brief get the tag of the current instance
             std::string tag() const;
 
+            /// \return the number of children of the entity
+            /// \brief get the number of children of the entity
+            std::size_t children() const;
+
             /// \param flag : the flag that we want to look for
             /// \return a boolean, true if the component is attached, false otherwise
             /// \brief Check if the component specified is attached to the entity
@@ -75,9 +79,15 @@ namespace ECS {
             /// \param state : visible state of the entity 
             /// \brief set the visible state of the entity
             void setVisible(bool state);
-        private:
+
             /// \brief mark the current entity as deleted and all of its children
             void deleteEntity();
+
+            /// \return a boolean, true if the entity is deleted, false otherwise
+            /// \brief Check if the entity is deleted
+            bool deleted() const;
+
+        private:
 
             /*! tag of the entity */
             std::string _tag;

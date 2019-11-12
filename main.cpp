@@ -13,6 +13,7 @@
 #include "UdpNetwork.hpp"
 #include "GameEngine.hpp"
 #include "DumyScene.hpp"
+#include "Breakpoint.hpp"
 
 /// \brief main function
 int main()
@@ -20,6 +21,7 @@ int main()
     Game::GameEngine engine;
     auto scene = std::shared_ptr<Scenes::IScene>(new Scenes::DumyScene("Dummy scene", engine.ECS()));
 
+    Debug::Breakpoint("Fuck off", "yes");
     engine.SceneMachine()->push(scene);
     engine.SceneMachine()->run();
 }

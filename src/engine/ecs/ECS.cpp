@@ -7,7 +7,10 @@
 
 #include "ECS.hpp"
 
-Module::EntityComponentSystem::EntityComponentSystem() : _newId(0), _initialised(true) {}
+Module::EntityComponentSystem::EntityComponentSystem() : _newId(0), _initialised(false)
+{
+    init();
+}
 
 void Module::EntityComponentSystem::addSystem(std::unique_ptr<ECS::ISystem> &system)
 {
@@ -52,9 +55,19 @@ bool Module::EntityComponentSystem::hasEntity(unsigned long long id) const
     return !(_entities.find(id) == _entities.end());
 }
 
+bool Module::EntityComponentSystem::hasComponent(unsigned long long id, ECS::flagType type)
+{
+    return _entities[id]->hasComponent(type);
+}
+
 std::string Module::EntityComponentSystem::tag(unsigned long long id)
 {
     return _entities[id]->tag();
+}
+
+std::size_t Module::EntityComponentSystem::systems() const
+{
+    return _systems.size();
 }
 
 bool Module::EntityComponentSystem::isInitialised()
@@ -67,4 +80,9 @@ void Module::EntityComponentSystem::update()
     // std::async ?
     for (auto &system : _systems)
         system->update(_entities);
+}
+
+void Module::EntityComponentSystem::init()
+{
+    _initialised = true;
 }

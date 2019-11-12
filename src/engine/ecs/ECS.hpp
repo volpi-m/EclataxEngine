@@ -71,9 +71,17 @@ namespace Module {
         bool hasEntity(unsigned long long id) const;
 
         /// \param id : the id of the entity
+        /// \param type : type of the component
+        /// \return true of the entity has the component, false otherwise
+        /// \brief check if the entity has the component
+        bool hasComponent(unsigned long long id, ECS::flagType type);
+
+        /// \param id : the id of the entity
         /// \return the tag of the entity
         /// \brief get the tag of an entity
         std::string tag(unsigned long long id);
+
+        std::size_t systems() const;
 
         /// \return true if the ECS instance is initialised, false otherwise
         /// \brief check if the ECS instance is initialised
@@ -90,9 +98,9 @@ namespace Module {
         void entityDebugCollisionBox(unsigned long long id, bool show);
     private:
         /*! Module initialisation method */
-        unsigned long long _newId;
+        void init() override;
         /*! Module initialisation method */
-        void init() override {};
+        unsigned long long _newId;
         /*! has the ECS module been initialised */
         bool _initialised;
         /*! System vector */

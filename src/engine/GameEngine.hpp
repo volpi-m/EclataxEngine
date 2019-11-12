@@ -48,13 +48,13 @@ namespace Game {
     private:
         void init();
 
-        /*! iniialisation value */
-        bool _initialised;
         /*! ECS instance */
         std::shared_ptr<Module::EntityComponentSystem> _ecs;
         /*! LibLoader instance */
         // LibLoader _libLoader;
         /*! SceneMachine instance */
         std::shared_ptr<Module::SceneMachine> _sceneMachine;
+        /*! iniialisation value */
+        bool _initialised;
     };
 }
