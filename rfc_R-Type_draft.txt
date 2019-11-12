@@ -1,0 +1,54 @@
+Netcode:
+    Tick every 16 ms (~60 t/s)
+
+    here's a basic gameloop:
+    while 1:
+        read_network();
+        read_events();
+        update_world();
+        send_events();
+        render_game();
+
+    send_events():
+        send a packet each tick
+        every packet is composed of a queue of events
+            [eventCode, eventCode ...]
+
+    read_network():
+        read a packet each tick
+        every packet ...
+
+
+1xx: informations
+
+2xx: client communication
+    201: ask for hub
+    202: client ready
+    203: client not ready
+    204: request sprites
+    205: client tick
+
+3xx: client error
+    301: Client error
+
+4xx: server communication
+    401: player in hub
+    402: server tick
+
+5xx: server error
+    501: Server error
+
+
+- every key has an event associated
+    struct {
+        eventUp = sfKeyA;
+        eventDown = sfKeyS;
+        ...
+    }
+
+- change a key: change the key associated with the event
+
+- enum in client
+typedef enum event {
+    eventUp, eventDown, eventLeft ...
+} event_t;
