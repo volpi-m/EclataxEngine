@@ -29,10 +29,10 @@ set(SRC
     src/ecs/entities/Entity.cpp
     src/engine/GameEngine.cpp
     src/ecs/ECS.cpp)
-set(SRC_SERVER
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/server/TcpConnection.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/server/TcpNetwork.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/server/UdpNetwork.cpp
+set(SRC_NETWORK
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/network/TcpConnection.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/network/TcpNetwork.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/network/UdpNetwork.cpp
 )
 
 ## Include headers to program
@@ -45,16 +45,16 @@ include_directories(
   src/ecs/entities
   src/ecs/systems
   src/engine
-  src/server
+  src/network
   src/ecs
   src
 )
 
 ## Creating executable
-add_executable(rtype
+add_executable(rtype-server
   ${LIB}
   ${SRC}
-  ${SRC_SERVER}
+  ${SRC_NETWORK}
   main.cpp)
 
 ## Creating executable of unit tests
