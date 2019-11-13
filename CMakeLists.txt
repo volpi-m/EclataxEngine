@@ -17,22 +17,44 @@ set(CMAKE_CXX_FLAGS "-W -Wall -fprofile-arcs -ftest-coverage")
 ## Enable Google test library
 enable_testing()
 
-# Required packages
+## Required packages
 find_package(Threads)
 find_package(GTest REQUIRED)
 
-set(LIB 
+## Lib sources
+set(LIB
     lib/src/Exception/Exception.cpp
     lib/src/Log/Logger.cpp
-    lib/src/Benchmarking/Breakpoint.cpp)
+    lib/src/Benchmarking/Breakpoint.cpp
+)
+
+set(ENTITY_ASTEROID
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/engine/ecs/entities/Entity.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/game/entities/Asteroid.cpp
+)
+
+set(ENTITY_ENNEMY
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/engine/ecs/entities/Entity.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/game/entities/Ennemy.cpp
+)
+
+## General sources
 set(SRC
-    src/ecs/entities/Entity.cpp
     src/engine/GameEngine.cpp
-    src/ecs/ECS.cpp)
-set(SRC_NETWORK
+)
+
+## Server sources
+set(SRC_SERVER
     ${CMAKE_CURRENT_SOURCE_DIR}/src/network/TcpConnection.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/network/TcpNetwork.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/network/UdpNetwork.cpp
+    src/engine/DLLoader.cpp
+    src/engine/ecs/ECS.cpp
+    src/engine/scenesManagement/sceneMachine/SceneMachine.cpp
+    src/engine/scenesManagement/scenes/DumyScene.cpp
+    src/engine/ecs/ECS.cpp
+    src/engine/ecs/entities/Entity.cpp
+    src/engine/ecs/systems/MovementSystem.cpp
 )
 
 ## Include headers to program
@@ -41,20 +63,28 @@ include_directories(
   lib/src/Benchmarking
   lib/src/Exception
   lib/src/Log
-  src/ecs/components
-  src/ecs/entities
-  src/ecs/systems
+  src/engine/scenesManagement/sceneMachine
+  src/engine/scenesManagement/scenes
+  src/engine/ecs/components
+  src/engine/ecs/entities
+  src/engine/ecs/systems
+  src/engine/ecs
   src/engine
   src/network
-  src/ecs
   src
+  src/game/entities
 )
+
+## Creating Librairies
+add_library(asteroid SHARED ${ENTITY_ASTEROID})
+
+add_library(ennemy SHARED ${ENTITY_ENNEMY})
 
 ## Creating executable
 add_executable(r-type_server
   ${LIB}
   ${SRC}
-  ${SRC_NETWORK}
+  ${SRC_SERVER}
   main.cpp
 )
 
@@ -63,11 +93,21 @@ include(GoogleTest)
 set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ../tests)
 add_executable(unit_tests
   ${LIB}
-  ${SRC_NETWORK}
+  ${SRC_SERVER}
   tests/main.cpp
   tests/Exception/test_exception.cpp
   tests/Log/test_logger.cpp
   tests/network/test_tcp.cpp
+  ${SRC}
+  tests/main.cpp
+  tests/Exception/test_exception.cpp
+  tests/Log/test_logger.cpp
+  tests/sceneMachine/test_sceneMachine.cpp
+  tests/scenes/test_dummyScene.cpp
+  tests/Benchmarking/test_breakpoints.cpp
+  tests/ecs/test_ecs.cpp
+  tests/entity/test_entity.cpp
+  tests/engine/test_gameEngine.cpp
 )
 
 ## Linking libraries
@@ -75,11 +115,14 @@ target_link_libraries(r-type_server
     CONAN_PKG::sfml
     CONAN_PKG::boost_system
     ${CMAKE_THREAD_LIBS_INIT}
+    ${CMAKE_DL_LIBS}
 )
 
 target_link_libraries(unit_tests PUBLIC
+    CONAN_PKG::gtest
     ${GTEST_LIBRARIES}
     pthread
     CONAN_PKG::boost_system
     ${CMAKE_THREAD_LIBS_INIT}
+    ${CMAKE_DL_LIBS}
 )

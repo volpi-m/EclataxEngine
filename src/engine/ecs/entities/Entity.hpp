@@ -49,6 +49,11 @@ namespace ECS {
             /// \brief Attach an entity to another
             void addChild(std::shared_ptr<Entity> &child);
 
+            /// \param flag : the flag of the component
+            /// \param component : the component to attach
+            /// \brief Attach an entity to another
+            void addComponent(flagType flag, std::shared_ptr<IComponent> &component);
+
             /// \param flag : the flag that we want to look for
             /// \return a shared pointer of a component
             /// \brief get a component from an the current instance
@@ -58,6 +63,10 @@ namespace ECS {
             /// \brief get the tag of the current instance
             std::string tag() const;
 
+            /// \return the number of children of the entity
+            /// \brief get the number of children of the entity
+            std::size_t children() const;
+
             /// \param flag : the flag that we want to look for
             /// \return a boolean, true if the component is attached, false otherwise
             /// \brief Check if the component specified is attached to the entity
@@ -66,9 +75,19 @@ namespace ECS {
             /// \return a boolean, true if the entity is visible, false otherwise
             /// \brief Check if the entity is visible
             bool isVisible() const;
-        private:
+
+            /// \param state : visible state of the entity 
+            /// \brief set the visible state of the entity
+            void setVisible(bool state);
+
             /// \brief mark the current entity as deleted and all of its children
             void deleteEntity();
+
+            /// \return a boolean, true if the entity is deleted, false otherwise
+            /// \brief Check if the entity is deleted
+            bool deleted() const;
+
+        private:
 
             /*! tag of the entity */
             std::string _tag;

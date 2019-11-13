@@ -13,7 +13,7 @@ TEST(LoggerTests, debugMessageOnStdout)
 
     log->generateDebugMessage(Debug::DEBUG, "debug message", "test::debugMessageOnStdout");
 
-    std::this_thread::sleep_for(std::chrono::seconds(1));
+    std::this_thread::sleep_for(std::chrono::milliseconds(10));
     output = testing::internal::GetCapturedStdout();
     std::size_t pos = output.find(")");
     std::string str = output.substr(pos + 2);
@@ -28,7 +28,7 @@ TEST(LoggerTests, debugMessageInFile)
     log->switchMode(Debug::FILE, "output.txt");
     log->generateDebugMessage(Debug::INFO, "Info message", "test::debugMessageInFile");
 
-    std::this_thread::sleep_for(std::chrono::seconds(1));
+    std::this_thread::sleep_for(std::chrono::milliseconds(10));
     std::fstream stream("output.txt", std::fstream::in);
     if (!stream.is_open() || !getline(stream, output)) {
         ASSERT_NO_FATAL_FAILURE("File could not open");
@@ -49,7 +49,7 @@ TEST(LoggerTests, switchModeTest)
 
     log->switchMode(Debug::STANDARD);
     log->generateDebugMessage(Debug::INFO, "Info message", "test::switchModeTest");
-    std::this_thread::sleep_for(std::chrono::seconds(1));
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
     output = testing::internal::GetCapturedStdout();
     std::size_t pos = output.find(")");
     std::string str = output.substr(pos + 2);
@@ -63,7 +63,7 @@ TEST(LoggerTests, switchModeTestInverse)
 
     log->switchMode(Debug::FILE);
     log->generateDebugMessage(Debug::INFO, "Info message", "test::switchModeTestInverse");
-    std::this_thread::sleep_for(std::chrono::seconds(1));
+    std::this_thread::sleep_for(std::chrono::milliseconds(10));
     std::fstream stream("output.txt", std::fstream::in);
     if (!stream.is_open() || !getline(stream, output)) {
         ASSERT_NO_FATAL_FAILURE("File could not open");
@@ -84,7 +84,7 @@ TEST(LoggerTests, setFlags)
 
     log->setFlags(Debug::Flags::info_off);
     log->generateDebugMessage(Debug::INFO, "Info message", "test::switchModeTest");
-    std::this_thread::sleep_for(std::chrono::seconds(1));
+    std::this_thread::sleep_for(std::chrono::milliseconds(10));
     output = testing::internal::GetCapturedStdout();
     ASSERT_STREQ("", output.c_str());
 }
@@ -98,7 +98,7 @@ TEST(LoggerTests, logOff)
     log->generateDebugMessage(Debug::INFO, "Info message", "test::switchModeTest");
     log->generateDebugMessage(Debug::INFO, "Info message", "test::switchModeTest");
     log->generateDebugMessage(Debug::INFO, "Info message", "test::switchModeTest");
-    std::this_thread::sleep_for(std::chrono::seconds(1));
+    std::this_thread::sleep_for(std::chrono::milliseconds(10));
     output = testing::internal::GetCapturedStdout();
     ASSERT_STREQ("", output.c_str());
 }

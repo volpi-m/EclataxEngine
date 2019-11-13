@@ -5,18 +5,23 @@
 ** main
 */
 
+/// \file main.cpp
+/// \author Lucas T.
+/// \brief main function
+
 #include "TcpNetwork.hpp"
 #include "UdpNetwork.hpp"
+#include "GameEngine.hpp"
+#include "DumyScene.hpp"
+#include "Breakpoint.hpp"
 
+/// \brief main function
 int main()
 {
-    try {
-        boost::asio::io_context io;
-        Server::TcpNetwork serv(io);
-        // Server::UdpNetwork serv(io);
-        io.run();
-    } catch(const std::exception &e) {
-        ;
-    }
-    return 0;
+    Game::GameEngine engine;
+    auto scene = std::shared_ptr<Scenes::IScene>(new Scenes::DumyScene("Dummy scene", engine.ECS()));
+
+    Debug::Breakpoint("Fuck off", "yes");
+    engine.SceneMachine()->push(scene);
+    engine.SceneMachine()->run();
 }
