@@ -17,9 +17,9 @@ Server::TcpConnection::TcpConnection(boost::asio::io_context &io)
 
 Server::TcpConnection::~TcpConnection() {}
 
-boost::shared_ptr<Server::TcpConnection> Server::TcpConnection::create(boost::asio::io_context &io)
+std::shared_ptr<Server::TcpConnection> Server::TcpConnection::create(boost::asio::io_context &io)
 {
-    return boost::shared_ptr<Server::TcpConnection>(new Server::TcpConnection(io));
+    return std::shared_ptr<Server::TcpConnection>(new Server::TcpConnection(io));
 }
 
 tcp::socket &Server::TcpConnection::getSocket()
