@@ -13,9 +13,8 @@
     #define UdpNetwork_HPP_
 
 #include <iostream>
-#include <boost/array.hpp>
+#include <array>
 #include <boost/bind.hpp>
-#include <boost/shared_ptr.hpp>
 #include <boost/asio.hpp>
 #include "macro.hpp"
 
@@ -45,14 +44,12 @@ namespace Server
         void startAccept();
 
         /// \brief handle any received packet
-        /// \param err : error code
         /// \param size : size of the packet received
-        void handleRead(const boost::system::error_code &, const std::size_t);
+        void handleRead(const std::size_t);
 
         /// \brief callback for any sent packet
-        /// \param err : error code
         /// \param size : size of the packet sent
-        void handleWrite(const boost::system::error_code &, const std::size_t);
+        void handleWrite(const std::size_t);
 
         /// \brief write packet to client
         /// \param code : packet code
@@ -65,7 +62,7 @@ namespace Server
         /*! Connection ednpoint */
         udp::endpoint _endpoint;
         /*! Buffer containing data got from remote client */
-        boost::array<char, BUFFER_SIZE> _buf;
+        std::array<char, BUFFER_SIZE> _buf;
     };
 }
 

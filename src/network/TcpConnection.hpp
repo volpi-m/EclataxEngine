@@ -13,9 +13,8 @@
     #define TcpConnection_HPP_
 
 #include <iostream>
-#include <boost/array.hpp>
+#include <array>
 #include <boost/bind.hpp>
-#include <boost/shared_ptr.hpp>
 #include <boost/enable_shared_from_this.hpp>
 #include <boost/asio.hpp>
 #include "macro.hpp"
@@ -38,7 +37,7 @@ namespace Server
         /// \param io : boost's io_contect used by every I/O object in boost::asio
         /// \return new Connection instance as a shared pointer
         /// \brief Return a new Connection instance as a shared pointer
-        static boost::shared_ptr<TcpConnection> create(boost::asio::io_context &);
+        static std::shared_ptr<TcpConnection> create(boost::asio::io_context &);
 
         /// \return Socket reference from the class
         /// \brief Return the socket
@@ -85,7 +84,7 @@ namespace Server
         /*! Socket used for the TcpConnection with a client */
         tcp::socket _socket;
         /*! Buffer filled by received packets */
-        boost::array<char, BUFFER_SIZE> _buf;
+        std::array<char, BUFFER_SIZE> _buf;
         /*! IP address of the client connected to this instance of the TcpConnection class */
         std::string _ip;
     };

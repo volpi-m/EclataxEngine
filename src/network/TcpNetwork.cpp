@@ -21,13 +21,13 @@ Server::TcpNetwork::~TcpNetwork() {}
 
 void Server::TcpNetwork::startAccept()
 {
-    boost::shared_ptr<Server::TcpConnection> co = Server::TcpConnection::create(_acceptor.get_executor().context());
+    std::shared_ptr<Server::TcpConnection> co = Server::TcpConnection::create(_acceptor.get_executor().context());
     _acceptor.async_accept(co->getSocket(),
         boost::bind(&TcpNetwork::handleAccept, this, co, boost::asio::placeholders::error));
 }
 
 void Server::TcpNetwork::handleAccept(
-    boost::shared_ptr<Server::TcpConnection> &co,
+    std::shared_ptr<Server::TcpConnection> &co,
     const boost::system::error_code &error
 )
 {
