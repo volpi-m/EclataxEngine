@@ -30,14 +30,14 @@ namespace ECS {
             Transform() : x(0), y(0), z(0) {}
 
             /// \brief constructor
-            Transform(std::size_t _x, std::size_t _y, std::size_t _z) : x(_x), y(_y), z(_z) {}
+            Transform(float _x, float _y, float _z) : x(_x), y(_y), z(_z) {}
 
             /*! x axis attribute */
-            std::size_t x;
+            float x; // float
             /*! y axis attribute */
-            std::size_t y;
+            float y;
             /*! z axis attribute */
-            std::size_t z;
+            float z;
         };
     }
 }

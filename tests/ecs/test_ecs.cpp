@@ -14,7 +14,7 @@ TEST(ECSTests, AddSystemToEcs)
 
     ASSERT_EQ(ECS.isInitialised(), true);
     ASSERT_EQ(ECS.systems(), 0);
-    ECS.addSystem(system);
+    ECS.addSystem(ECS::System::Flags::Movement, system);
     ECS.update();
     ASSERT_EQ(ECS.systems(), 1);
 }
@@ -39,8 +39,8 @@ TEST(ECSTests, addAComponentToAnEntity)
 
     auto entity = ECS.createEntity(std::string("The best entity"));
     ASSERT_EQ(ECS.hasEntity(entity), true);
-    ECS.addComponentToEntity(entity, ECS::Flags::transform, component);
-    ASSERT_EQ(ECS.hasComponent(entity, ECS::Flags::transform), true);
+    ECS.addComponentToEntity(entity, ECS::Component::Flags::transform, component);
+    ASSERT_EQ(ECS.hasComponent(entity, ECS::Component::Flags::transform), true);
 }
 
 TEST(ECSTests, entityVisibleStates)
@@ -52,4 +52,25 @@ TEST(ECSTests, entityVisibleStates)
     ASSERT_EQ(ECS.isEntityVisible(entity), true);
     ECS.setEntityVisibleState(entity, false);
     ASSERT_EQ(ECS.isEntityVisible(entity), false);
+}
+
+TEST(ECSTests, getEntityAndSystem)
+{
+    Module::EntityComponentSystem ECS;
+    std::shared_ptr<ECS::IComponent> component(new ECS::Component::Transform(0, 10, 82.5));
+    std::unique_ptr<ECS::ISystem> system(new ECS::System::MovementSystem);
+    auto entity = ECS.createEntity(std::string("The best entity"));
+
+    ECS.addSystem(ECS::System::Flags::Movement, system);
+    ECS.addComponentToEntity(entity, ECS::Component::Flags::transform, component);
+
+    ASSERT_EQ(ECS.hasComponent(entity, ECS::Component::Flags::transform), true);
+    ASSERT_EQ(ECS.systems(), 1);
+
+    auto movementSystem = static_cast<ECS::System::MovementSystem *>(ECS.system(ECS::System::Flags::Movement).get());
+    auto transform = movementSystem->transform(ECS.entity(entity));
+
+    ASSERT_EQ(std::get<0>(transform), 0);
+    ASSERT_EQ(std::get<1>(transform), 10);
+    ASSERT_EQ(std::get<2>(transform), 82.5);
 }

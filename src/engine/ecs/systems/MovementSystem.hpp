@@ -34,6 +34,24 @@ namespace ECS {
                 /// \param entities : entities that needs to be updated
                 /// \brief update all entities with the current system
                 void update(std::unordered_map<unsigned long long, std::shared_ptr<Entity>> &entities) override;
+
+                /// \param entity : entity that we want the transform from
+                /// \brief get the tranform of the entity
+                std::tuple<float, float, float> transform(const std::shared_ptr<Entity> &entity) const;
+
+                /// \param entity : entity that will be updated
+                /// \param x : x coordinates
+                /// \param y : y coordinates
+                /// \param z : z coordinates
+                /// \brief update the entity by providing new coordinates
+                void setTransform(std::shared_ptr<Entity> &entity, float x, float y, float z);
+
+                /// \param entity : entity that we want to move
+                /// \param x : x coordinates
+                /// \param y : y coordinates
+                /// \param z : z coordinates
+                /// \brief move an entity
+                void move(const std::shared_ptr<Entity> &entity, float x, float y, float z);
         };
     }
 }

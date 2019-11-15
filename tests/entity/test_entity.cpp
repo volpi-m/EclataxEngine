@@ -32,9 +32,9 @@ TEST(EntityTests, addComponentToEntity)
     std::shared_ptr<ECS::IComponent> component(new ECS::Component::Transform);
     ECS::Entity first(std::string("entity from string"));
 
-    first.addComponent(ECS::Flags::transform, component);
-    ASSERT_EQ(first.hasComponent(ECS::Flags::transform), true);
-    ASSERT_NE(first.component(ECS::Flags::transform).get(), nullptr);
+    first.addComponent(ECS::Component::Flags::transform, component);
+    ASSERT_EQ(first.hasComponent(ECS::Component::Flags::transform), true);
+    ASSERT_NE(first.component(ECS::Component::Flags::transform).get(), nullptr);
 }
 
 TEST(EntityTests, entityVisibleStates)

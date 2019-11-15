@@ -13,6 +13,7 @@
 
 #include <string>
 #include <memory>
+#include <tuple>
 
 #include "TransformComponent.hpp"
 #include "MovementSystem.hpp"

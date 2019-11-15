@@ -35,11 +35,29 @@ bool Scenes::DumyScene::run()
 
         // Creating the entity, adding the component, saving the system
         _ids.push_back(_ECS->createEntity("John Cena"));
-        _ECS->addComponentToEntity(_ids.front(), ECS::Flags::transform, transform);
-        _ECS->addSystem(system);
-    } else {
+        _ECS->addComponentToEntity(_ids.front(), ECS::Component::Flags::transform, transform);
+        _ECS->addSystem(ECS::System::Flags::Movement, system);
+    } else if (_ECS->hasEntity(_ids.front())) {
         std::cout << "The Dumy scene posseses " << _ids.size() << " entitie(s), it's name is " << _ECS->tag(_ids.front()) << std::endl;
         std::cout << "Launching systems ..." << std::endl;
+
+        // Getting the system that we want to use
+        auto movementSystem = static_cast<ECS::System::MovementSystem *>(_ECS->system(ECS::System::Flags::Movement).get());
+
+        // Getting the position of an entity via the system
+        auto position = movementSystem->transform(_ECS->entity(_ids.front()));
+
+        // Setting new coordinates
+        movementSystem->setTransform(_ECS->entity(_ids.front()),
+                        std::get<0>(position) + 50,
+                        std::get<1>(position) + 50,
+                        std::get<2>(position) + 50);
+
+        // Moving the entity
+        movementSystem->move(_ECS->entity(_ids.front()), 10, 10, 10);
+
+        // Updating systems
+        _ECS->update();
         _ECS->update();
         return false;
     }

@@ -12,9 +12,10 @@ Module::EntityComponentSystem::EntityComponentSystem() : _newId(0), _initialised
     init();
 }
 
-void Module::EntityComponentSystem::addSystem(std::unique_ptr<ECS::ISystem> &system)
+void Module::EntityComponentSystem::addSystem(ECS::flagType type, std::unique_ptr<ECS::ISystem> &system)
 {
-    _systems.push_back(std::move(system));
+    if (_systems.find(type) == _systems.end())
+        _systems.emplace(type, std::move(system));
 }
 
 unsigned long long Module::EntityComponentSystem::createEntity(const std::string &tag)
@@ -65,6 +66,16 @@ std::string Module::EntityComponentSystem::tag(unsigned long long id)
     return _entities[id]->tag();
 }
 
+std::shared_ptr<ECS::ISystem> &Module::EntityComponentSystem::system(ECS::flagType type)
+{
+    return _systems[type];
+}
+
+std::shared_ptr<ECS::Entity> &Module::EntityComponentSystem::entity(unsigned long long id)
+{
+    return _entities[id];
+}
+
 std::size_t Module::EntityComponentSystem::systems() const
 {
     return _systems.size();
@@ -79,7 +90,7 @@ void Module::EntityComponentSystem::update()
 {
     // std::async ?
     for (auto &system : _systems)
-        system->update(_entities);
+        system.second->update(_entities);
 }
 
 void Module::EntityComponentSystem::init()
