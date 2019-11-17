@@ -55,6 +55,7 @@ set(SRC_SERVER
     src/engine/ecs/ECS.cpp
     src/engine/ecs/entities/Entity.cpp
     src/engine/ecs/systems/MovementSystem.cpp
+    src/engine/ecs/systems/HealthManipulatorSystem.cpp
 )
 
 ## Include headers to program
@@ -108,6 +109,8 @@ add_executable(unit_tests
   tests/ecs/test_ecs.cpp
   tests/entity/test_entity.cpp
   tests/engine/test_gameEngine.cpp
+  tests/component/test_health.cpp
+  tests/systems/test_healthManipulator.cpp
 )
 
 ## Linking libraries
