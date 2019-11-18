@@ -21,6 +21,8 @@ enable_testing()
 find_package(Threads)
 find_package(GTest REQUIRED)
 
+find_package(Boost 1.67 REQUIRED)
+
 ## Lib sources
 set(LIB
     lib/src/Exception/Exception.cpp
@@ -58,6 +60,19 @@ set(SRC_SERVER
     src/engine/ecs/systems/HealthManipulatorSystem.cpp
 )
 
+## Game sources
+
+set (SRC_GAME
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/game/scenes/SplashScene.cpp
+)
+
+## Game include location
+
+set (INCLUDE_GAME
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/game/entities
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/game/scenes
+)
+
 ## Include headers to program
 include_directories(
   include
@@ -73,7 +88,7 @@ include_directories(
   src/engine
   src/network
   src
-  src/game/entities
+  ${INCLUDE_GAME}
 )
 
 ## Creating Librairies
@@ -86,6 +101,7 @@ add_executable(r-type_server
   ${LIB}
   ${SRC}
   ${SRC_SERVER}
+  ${SRC_GAME}
   main.cpp
 )
 
@@ -117,6 +133,7 @@ add_executable(unit_tests
 target_link_libraries(r-type_server
     CONAN_PKG::sfml
     CONAN_PKG::boost_system
+    CONAN_PKG::boost_asio
     ${CMAKE_THREAD_LIBS_INIT}
     ${CMAKE_DL_LIBS}
 )
@@ -126,6 +143,7 @@ target_link_libraries(unit_tests PUBLIC
     ${GTEST_LIBRARIES}
     pthread
     CONAN_PKG::boost_system
+    CONAN_PKG::boost_asio
     ${CMAKE_THREAD_LIBS_INIT}
     ${CMAKE_DL_LIBS}
 )
