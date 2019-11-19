@@ -34,6 +34,7 @@ Netcode:
 4xx: server communication
     401: player in hub
     402: server tick
+    403: send any text to client
 
 5xx: server error
     501: Server error
