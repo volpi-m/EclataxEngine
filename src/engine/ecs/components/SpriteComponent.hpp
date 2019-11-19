@@ -39,9 +39,3 @@ namespace ECS {
         };
     }
 }
-            // /// \brief adds a texture to the sprite component
-            // /// \param _texture : texture file to add to the sprite
-            // void addTexture(const std::string &_texture);
-
-            // /// \brief the sprite is loaded by the client. (the client tries to load the sprite until the atttribute is set to true)
-            // void setLoaded();

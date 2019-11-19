@@ -56,6 +56,7 @@ set(SRC_SERVER
     src/engine/scenesManagement/scenes/DumyScene.cpp
     src/engine/ecs/ECS.cpp
     src/engine/ecs/entities/Entity.cpp
+    src/engine/ecs/systems/RenderSystem.cpp
     src/engine/ecs/systems/MovementSystem.cpp
     src/engine/ecs/systems/HealthManipulatorSystem.cpp
 )
@@ -128,6 +129,7 @@ add_executable(unit_tests
   tests/component/test_health.cpp
   tests/component/test_sprite.cpp
   tests/systems/test_healthManipulator.cpp
+  tests/systems/test_Render.cpp
 )
 
 ## Linking libraries
