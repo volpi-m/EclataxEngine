@@ -59,6 +59,7 @@ set(SRC_SERVER
     src/engine/ecs/entities/Entity.cpp
     src/engine/ecs/systems/RenderSystem.cpp
     src/engine/ecs/systems/MovementSystem.cpp
+    src/engine/ecs/systems/CollisionSystem.cpp
     src/engine/ecs/systems/HealthManipulatorSystem.cpp
 )
 
@@ -126,6 +127,7 @@ set (SRC_TEST
     tests/component/test_collisionBox.cpp
     tests/systems/test_healthManipulator.cpp
     tests/systems/test_Render.cpp
+    tests/systems/test_collision.cpp
 )
 
 ## Creating executable of unit tests

@@ -26,7 +26,7 @@ namespace ECS {
         struct CollisionBox : public IComponent {
             
             /// \brief constructor
-            CollisionBox() {}
+            CollisionBox() : rectangle(Game::Rect(0, 0, 0, 0)) {}
 
             /// \brief constructor
             CollisionBox(float _top, float _left, float _width, float _height) : rectangle(Game::Rect(_top, _left, _width, _height)) {}
