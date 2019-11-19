@@ -126,6 +126,7 @@ add_executable(unit_tests
   tests/entity/test_entity.cpp
   tests/engine/test_gameEngine.cpp
   tests/component/test_health.cpp
+  tests/component/test_sprite.cpp
   tests/systems/test_healthManipulator.cpp
 )
 
