@@ -123,6 +123,7 @@ set (SRC_TEST
     tests/entity/test_entity.cpp
     tests/engine/test_gameEngine.cpp
     tests/component/test_health.cpp
+    tests/component/test_collisionBox.cpp
     tests/systems/test_healthManipulator.cpp
     tests/systems/test_Render.cpp
 )
