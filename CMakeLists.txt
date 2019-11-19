@@ -43,6 +43,7 @@ set(ENTITY_ENNEMY
 ## General sources
 set(SRC
     src/engine/GameEngine.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/Mediator.cpp
 )
 
 ## Server sources
@@ -64,6 +65,7 @@ set(SRC_SERVER
 
 set (SRC_GAME
     ${CMAKE_CURRENT_SOURCE_DIR}/src/game/scenes/SplashScene.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/game/scenes/AScene.cpp
 )
 
 ## Game include location
@@ -105,28 +107,33 @@ add_executable(r-type_server
   main.cpp
 )
 
+set (SRC_TEST
+    tests/main.cpp
+    tests/Exception/test_exception.cpp
+    tests/Log/test_logger.cpp
+    tests/network/test_tcp.cpp
+    tests/main.cpp
+    tests/Exception/test_exception.cpp
+    tests/Log/test_logger.cpp
+    tests/sceneMachine/test_sceneMachine.cpp
+    tests/scenes/test_dummyScene.cpp
+    tests/Benchmarking/test_breakpoints.cpp
+    tests/ecs/test_ecs.cpp
+    tests/entity/test_entity.cpp
+    tests/engine/test_gameEngine.cpp
+    tests/component/test_health.cpp
+    tests/systems/test_healthManipulator.cpp
+)
+
 ## Creating executable of unit tests
 include(GoogleTest)
 set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ../tests)
 add_executable(unit_tests
   ${LIB}
   ${SRC_SERVER}
-  tests/main.cpp
-  tests/Exception/test_exception.cpp
-  tests/Log/test_logger.cpp
-  tests/network/test_tcp.cpp
+  ${SRC_GAME}
   ${SRC}
-  tests/main.cpp
-  tests/Exception/test_exception.cpp
-  tests/Log/test_logger.cpp
-  tests/sceneMachine/test_sceneMachine.cpp
-  tests/scenes/test_dummyScene.cpp
-  tests/Benchmarking/test_breakpoints.cpp
-  tests/ecs/test_ecs.cpp
-  tests/entity/test_entity.cpp
-  tests/engine/test_gameEngine.cpp
-  tests/component/test_health.cpp
-  tests/systems/test_healthManipulator.cpp
+  ${SRC_TEST}
 )
 
 ## Linking libraries
