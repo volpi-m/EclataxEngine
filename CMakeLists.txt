@@ -21,6 +21,8 @@ enable_testing()
 find_package(Threads)
 find_package(GTest REQUIRED)
 
+find_package(Boost 1.67 REQUIRED)
+
 ## Lib sources
 set(LIB
     lib/src/Exception/Exception.cpp
@@ -41,6 +43,7 @@ set(ENTITY_ENNEMY
 ## General sources
 set(SRC
     src/engine/GameEngine.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/Mediator.cpp
 )
 
 ## Server sources
@@ -55,6 +58,21 @@ set(SRC_SERVER
     src/engine/ecs/ECS.cpp
     src/engine/ecs/entities/Entity.cpp
     src/engine/ecs/systems/MovementSystem.cpp
+    src/engine/ecs/systems/HealthManipulatorSystem.cpp
+)
+
+## Game sources
+
+set (SRC_GAME
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/game/scenes/SplashScene.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/game/scenes/AScene.cpp
+)
+
+## Game include location
+
+set (INCLUDE_GAME
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/game/entities
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/game/scenes
 )
 
 ## Include headers to program
@@ -72,7 +90,7 @@ include_directories(
   src/engine
   src/network
   src
-  src/game/entities
+  ${INCLUDE_GAME}
 )
 
 ## Creating Librairies
@@ -85,7 +103,26 @@ add_executable(r-type_server
   ${LIB}
   ${SRC}
   ${SRC_SERVER}
+  ${SRC_GAME}
   main.cpp
+)
+
+set (SRC_TEST
+    tests/main.cpp
+    tests/Exception/test_exception.cpp
+    tests/Log/test_logger.cpp
+    tests/network/test_tcp.cpp
+    tests/main.cpp
+    tests/Exception/test_exception.cpp
+    tests/Log/test_logger.cpp
+    tests/sceneMachine/test_sceneMachine.cpp
+    tests/scenes/test_dummyScene.cpp
+    tests/Benchmarking/test_breakpoints.cpp
+    tests/ecs/test_ecs.cpp
+    tests/entity/test_entity.cpp
+    tests/engine/test_gameEngine.cpp
+    tests/component/test_health.cpp
+    tests/systems/test_healthManipulator.cpp
 )
 
 ## Creating executable of unit tests
@@ -94,26 +131,16 @@ set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ../tests)
 add_executable(unit_tests
   ${LIB}
   ${SRC_SERVER}
-  tests/main.cpp
-  tests/Exception/test_exception.cpp
-  tests/Log/test_logger.cpp
-  tests/network/test_tcp.cpp
+  ${SRC_GAME}
   ${SRC}
-  tests/main.cpp
-  tests/Exception/test_exception.cpp
-  tests/Log/test_logger.cpp
-  tests/sceneMachine/test_sceneMachine.cpp
-  tests/scenes/test_dummyScene.cpp
-  tests/Benchmarking/test_breakpoints.cpp
-  tests/ecs/test_ecs.cpp
-  tests/entity/test_entity.cpp
-  tests/engine/test_gameEngine.cpp
+  ${SRC_TEST}
 )
 
 ## Linking libraries
 target_link_libraries(r-type_server
     CONAN_PKG::sfml
     CONAN_PKG::boost_system
+    CONAN_PKG::boost_asio
     ${CMAKE_THREAD_LIBS_INIT}
     ${CMAKE_DL_LIBS}
 )
@@ -123,6 +150,7 @@ target_link_libraries(unit_tests PUBLIC
     ${GTEST_LIBRARIES}
     pthread
     CONAN_PKG::boost_system
+    CONAN_PKG::boost_asio
     ${CMAKE_THREAD_LIBS_INIT}
     ${CMAKE_DL_LIBS}
 )

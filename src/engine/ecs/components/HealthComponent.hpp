@@ -24,16 +24,18 @@ namespace ECS {
 
         /// \struct Life
         /// \brief Life structure, create the Life component
-        struct Life : public IComponent {
+        struct Health : public IComponent {
             
             /// \brief constructor
-            Life() : life(0) {}
+            Health() : health(1), healthLimit(0) {}
 
             /// \brief constructor
-            Life(std::size_t _life) :life(_life) {}
+            Health(std::size_t _health, std::size_t _healthLimit = 0) : health(_health), healthLimit(_healthLimit) {}
 
-            /*! life attribute */
-            std::size_t life;
+            /*! health attribute */
+            std::size_t health;
+            /*! health limit attribute (O is unlimited) */
+            std::size_t healthLimit;
         };
     }
 }

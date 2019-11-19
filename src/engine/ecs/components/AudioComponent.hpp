@@ -27,9 +27,11 @@ namespace ECS {
         struct Audio : public IComponent {
 
             /// \brief constructor
-            Audio() : _file("") {}
+            Audio() : file(""), active(false) {}
             /*! file name attribute */
-            std::string _file;
+            std::string file;
+            /*! is the sound active */
+            bool active;
         };
     }
 }
