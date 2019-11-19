@@ -52,3 +52,26 @@ Netcode:
 typedef enum event {
     eventUp, eventDown, eventLeft ...
 } event_t;
+
+=========================================
+
+Client scenes:
+    - SplashScreen
+    - Menu
+        - Options
+        - Play Solo
+        - Play Multiplayer -> request a hub
+            - 
+
+
+=========================================
+
+Client keymap: up, down, left, right, shoot, bonus
+
+=========================================
+
+Client send events:
+
+max packet size: 512 - sizeof(short)
+
+to send events from client to server we send a
