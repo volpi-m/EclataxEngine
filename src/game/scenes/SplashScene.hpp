@@ -5,21 +5,64 @@
 ** splash screen
 */
 
+/// \file SplashScene.hpp
+/// \author Arthur L.
+/// \brief SplashScene class declaration
+
 #pragma once
 
 #include <iostream>
 
-#include "IScene.hpp"
+#include "AScene.hpp"
+#include "TransformComponent.hpp"
+#include "MovementSystem.hpp"
 
+/// \namespace Scenes
+/// \brief Used for all scenes
 namespace Scenes {
 
-    class SplashScene : public IScene {
+    /// \class SplashScene
+    /// \brief SplashScene class
+    class SplashScene : public AScene {
 
         public:
-            SplashScene();
-            ~SplashScene();
+            /// \param name : the new name of the current scene
+            /// \param ECS : ECS instance to pass to the scene
+            /// \brief scene constructor
+            SplashScene(const std::string &name, std::shared_ptr<Module::EntityComponentSystem> &ECS);
+
+            /// \param name : the new name of the current scene
+            /// \param ECS : ECS instance to pass to the scene
+            /// \brief scene constructor
+            SplashScene(const char *name, std::shared_ptr<Module::EntityComponentSystem> &ECS);
+
+            /// \param name : the new name of the current scene
+            /// \brief scene constructor
+            SplashScene(const std::string &name = default_tag);
+
+            /// \param name : the new name of the current scene
+            /// \brief scene constructor
+            SplashScene(const char *name = default_tag);
+
+            /// \brief default scene destructor
+            ~SplashScene() override = default;
+
+            /// \return a bool representing the state of the scene
+            /// \brief run the scenes logic
+            bool run() override;
+
+            /// \param bool : the visible state of the scene
+            /// \brief set visible state of the scene
+            void setVisible(bool state) override;
+
+            /// \brief remove all the entities of the scene
+            void remove() override;
 
         private:
-            /* data */
+            /*! scene entities */
+            std::vector<unsigned long long> _ids;
+
+            /// \brief method for initialize all scene components
+            void initComponents();
     };
 }

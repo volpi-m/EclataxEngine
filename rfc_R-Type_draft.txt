@@ -34,6 +34,7 @@ Netcode:
 4xx: server communication
     401: player in hub
     402: server tick
+    403: send any text to client
 
 5xx: server error
     501: Server error
@@ -52,3 +53,26 @@ Netcode:
 typedef enum event {
     eventUp, eventDown, eventLeft ...
 } event_t;
+
+=========================================
+
+Client scenes:
+    - SplashScreen
+    - Menu
+        - Options
+        - Play Solo
+        - Play Multiplayer -> request a hub
+            - 
+
+
+=========================================
+
+Client keymap: up, down, left, right, shoot, bonus
+
+=========================================
+
+Client send events:
+
+max packet size: 512 - sizeof(short)
+
+to send events from client to server we send a
