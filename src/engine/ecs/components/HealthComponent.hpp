@@ -5,9 +5,9 @@
 ** Component interface
 */
 
-/// \file LifeComponent.hpp
+/// \file HealthComponent.hpp
 /// \author Lucas T.
-/// \brief LifeComponent class declaration
+/// \brief HealthComponent class declaration
 
 #pragma once
 
@@ -22,8 +22,8 @@ namespace ECS {
     /// \brief Used for the all component
     namespace Component {
 
-        /// \struct Life
-        /// \brief Life structure, create the Life component
+        /// \struct Health
+        /// \brief Health structure, create the Health component
         struct Health : public IComponent {
             
             /// \brief constructor

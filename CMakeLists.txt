@@ -57,7 +57,10 @@ set(SRC_SERVER
     src/engine/scenesManagement/scenes/DumyScene.cpp
     src/engine/ecs/ECS.cpp
     src/engine/ecs/entities/Entity.cpp
+    src/engine/ecs/systems/IASystem.cpp
+    src/engine/ecs/systems/RenderSystem.cpp
     src/engine/ecs/systems/MovementSystem.cpp
+    src/engine/ecs/systems/CollisionSystem.cpp
     src/engine/ecs/systems/HealthManipulatorSystem.cpp
 )
 
@@ -135,6 +138,11 @@ set (SRC_TEST
     tests/entity/test_entity.cpp
     tests/engine/test_gameEngine.cpp
     tests/component/test_health.cpp
+    tests/component/test_collisionBox.cpp
+    tests/component/test_script.cpp
+    tests/systems/test_IA.cpp
+    tests/systems/test_Render.cpp
+    tests/systems/test_collision.cpp
     tests/systems/test_healthManipulator.cpp
 )
 

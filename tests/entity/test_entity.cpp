@@ -15,6 +15,8 @@ TEST(EntityTests, EntityInstance)
     second.update();
     ASSERT_STREQ(first.tag().c_str(), "entity from string");
     ASSERT_STREQ(second.tag().c_str(), "entity from char");
+    first.setTag("new tag!");
+    ASSERT_STREQ(first.tag().c_str(), "new tag!");
 }
 
 TEST(EntityTests, EntityAddChild)
