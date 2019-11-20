@@ -7,13 +7,21 @@
 
 #pragma once
 
-#include "Entity.hpp"
+#include <string>
 
-class Ennemy : public ECS::Entity
-{
-	public:
-		Ennemy(const std::string &tag = "Ennemy");
-		~Ennemy();
+#include "IEnnemy.hpp"
 
-	private:
-};
+/// \namespace Game
+/// \brief Used for the game part classes
+namespace Game {
+
+	class Ennemy : public Game::IEnnemy
+	{
+		public:
+			Ennemy();
+			~Ennemy();
+
+            void initComponent();
+		private:
+	};
+}

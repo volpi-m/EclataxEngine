@@ -7,16 +7,17 @@
 
 #include "Asteroid.hpp"
 
-extern "C" ECS::Entity *entryPoint()
+extern "C" Game::IEnnemy *entryPoint()
 {
-    return new Asteroid;
+    return new Game::Asteroid;
 }
 
-Asteroid::Asteroid(const std::string &tag) : Entity(tag)
+Game::Asteroid::Asteroid()
 {
     std::cout << "Rapablung I'm falling into space" << std::endl;
 }
 
-Asteroid::~Asteroid()
-{
-}
+// Game::Asteroid::initComponent()
+// {
+    
+// }

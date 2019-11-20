@@ -7,16 +7,16 @@
 
 #include "Ennemy.hpp"
 
-extern "C" ECS::Entity *entryPoint()
+extern "C" Game::IEnnemy *entryPoint()
 {
-    return new Ennemy;
+    return new Game::Ennemy;
 }
 
-Ennemy::Ennemy(const std::string &tag) : Entity(tag)
+Game::Ennemy::Ennemy()
 {
     std::cout << "Here I am to destroy the player" << std::endl;
 }
 
-Ennemy::~Ennemy()
+Game::Ennemy::~Ennemy()
 {
 }
