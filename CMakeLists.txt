@@ -58,7 +58,10 @@ set(SRC_SERVER
     src/engine/scenesManagement/scenes/DumyScene.cpp
     src/engine/ecs/ECS.cpp
     src/engine/ecs/entities/Entity.cpp
+    src/engine/ecs/systems/IASystem.cpp
+    src/engine/ecs/systems/RenderSystem.cpp
     src/engine/ecs/systems/MovementSystem.cpp
+    src/engine/ecs/systems/CollisionSystem.cpp
     src/engine/ecs/systems/HealthManipulatorSystem.cpp
 )
 
@@ -76,6 +79,12 @@ set (INCLUDE_GAME
     ${CMAKE_CURRENT_SOURCE_DIR}/src/game/scenes
 )
 
+## Client sources
+
+set (SRC_CLIENT
+  src/client/UdpConnection.cpp
+)
+
 ## Include headers to program
 include_directories(
   include
@@ -90,6 +99,7 @@ include_directories(
   src/engine/ecs
   src/engine
   src/network
+  src/client
   src
   ${INCLUDE_GAME}
 )
@@ -108,6 +118,12 @@ add_executable(r-type_server
   main.cpp
 )
 
+## Client executable
+add_executable(r-type_client
+  ${SRC_CLIENT}
+  src/client/main.cpp
+)
+
 set (SRC_TEST
     tests/main.cpp
     tests/Exception/test_exception.cpp
@@ -123,6 +139,11 @@ set (SRC_TEST
     tests/entity/test_entity.cpp
     tests/engine/test_gameEngine.cpp
     tests/component/test_health.cpp
+    tests/component/test_collisionBox.cpp
+    tests/component/test_script.cpp
+    tests/systems/test_IA.cpp
+    tests/systems/test_Render.cpp
+    tests/systems/test_collision.cpp
     tests/systems/test_healthManipulator.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/tests/Game/test_hub.cpp
 )
@@ -147,6 +168,10 @@ target_link_libraries(r-type_server
     ${CMAKE_DL_LIBS}
 )
 
+target_link_libraries(r-type_client
+    CONAN_PKG::sfml
+)
+
 target_link_libraries(unit_tests PUBLIC
     CONAN_PKG::gtest
     ${GTEST_LIBRARIES}
@@ -155,4 +180,8 @@ target_link_libraries(unit_tests PUBLIC
     CONAN_PKG::boost_asio
     ${CMAKE_THREAD_LIBS_INIT}
     ${CMAKE_DL_LIBS}
+)
+
+ADD_CUSTOM_COMMAND(TARGET r-type_client POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/ressources/ $<TARGET_FILE_DIR:r-type_client>/ressources/
 )

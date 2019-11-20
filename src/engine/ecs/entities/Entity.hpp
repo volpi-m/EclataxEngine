@@ -63,6 +63,10 @@ namespace ECS {
             /// \brief get the tag of the current instance
             std::string tag() const;
 
+            /// \param tag : string containing the new tag
+            /// \brief set the tag of the current instance
+            void setTag(const std::string &tag);
+
             /// \return the number of children of the entity
             /// \brief get the number of children of the entity
             std::size_t children() const;
