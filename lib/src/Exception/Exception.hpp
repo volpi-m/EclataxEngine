@@ -19,7 +19,7 @@ namespace Debug {
 
         void debugErrorMessage() const;
 
-    private:
+    protected:
         std::string _what;
         std::string _where;
     };

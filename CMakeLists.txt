@@ -26,6 +26,7 @@ find_package(Boost 1.67 REQUIRED)
 ## Lib sources
 set(LIB
     lib/src/Exception/Exception.cpp
+    lib/src/Exception/MissingFileException.cpp
     lib/src/Log/Logger.cpp
     lib/src/Benchmarking/Breakpoint.cpp
 )
@@ -120,6 +121,7 @@ add_executable(r-type_server
 ## Client executable
 add_executable(r-type_client
   ${SRC_CLIENT}
+  ${LIB}
   src/client/main.cpp
 )
 
