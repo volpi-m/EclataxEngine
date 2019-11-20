@@ -7,14 +7,13 @@
 #include "MovementSystem.hpp"
 #include <gtest/gtest.h>
 
-
 TEST(CollisionSystemTests, collisionBetweenTwoEntities)
 {
     Module::EntityComponentSystem ECS;
     std::shared_ptr<ECS::IComponent> transform1(new ECS::Component::Transform);
     std::shared_ptr<ECS::IComponent> transform2(new ECS::Component::Transform(50, 50, 50));
-    std::shared_ptr<ECS::IComponent> collisionBox1(new ECS::Component::CollisionBox(-10, -10, 20, 20));
-    std::shared_ptr<ECS::IComponent> collisionBox2(new ECS::Component::CollisionBox(-10, -10, 20, 20));
+    std::shared_ptr<ECS::IComponent> collisionBox1(new ECS::Component::CollisionBox2D(-10, -10, 20, 20));
+    std::shared_ptr<ECS::IComponent> collisionBox2(new ECS::Component::CollisionBox2D(-10, -10, 20, 20));
     ECS::System::CollisionSystem collisionSystem;
     ECS::System::MovementSystem movementSystem;
 
@@ -24,13 +23,13 @@ TEST(CollisionSystemTests, collisionBetweenTwoEntities)
     ASSERT_EQ(ECS.hasEntity(entity1), true);
     ASSERT_EQ(ECS.hasEntity(entity2), true);
     ECS.addComponentToEntity(entity1, ECS::Component::Flags::transform, transform1);
-    ECS.addComponentToEntity(entity1, ECS::Component::Flags::collisionBox, collisionBox1);
+    ECS.addComponentToEntity(entity1, ECS::Component::Flags::collisionBox2D, collisionBox1);
     ECS.addComponentToEntity(entity2, ECS::Component::Flags::transform, transform2);
-    ECS.addComponentToEntity(entity2, ECS::Component::Flags::collisionBox, collisionBox2);
+    ECS.addComponentToEntity(entity2, ECS::Component::Flags::collisionBox2D, collisionBox2);
     ASSERT_EQ(ECS.hasComponent(entity1, ECS::Component::Flags::transform), true);
-    ASSERT_EQ(ECS.hasComponent(entity1, ECS::Component::Flags::collisionBox), true);
+    ASSERT_EQ(ECS.hasComponent(entity1, ECS::Component::Flags::collisionBox2D), true);
     ASSERT_EQ(ECS.hasComponent(entity2, ECS::Component::Flags::transform), true);
-    ASSERT_EQ(ECS.hasComponent(entity2, ECS::Component::Flags::collisionBox), true);
+    ASSERT_EQ(ECS.hasComponent(entity2, ECS::Component::Flags::collisionBox2D), true);
 
     // Testing collisions (need furthur testing)
     ASSERT_EQ(collisionSystem.onCollide2D(ECS.entity(entity1), ECS.entity(entity2)), false);
@@ -41,14 +40,14 @@ TEST(CollisionSystemTests, collisionBetweenTwoEntities)
 TEST(CollisionSystemTests, update)
 {
     Module::EntityComponentSystem ECS;
-    std::shared_ptr<ECS::IComponent> collisionBox(new ECS::Component::CollisionBox(-10, -10, 20, 20));
+    std::shared_ptr<ECS::IComponent> collisionBox(new ECS::Component::CollisionBox2D(-10, -10, 20, 20));
     ECS::System::CollisionSystem system;
 
     // Adding entities to the system and setting up a transforms and collision box components
     auto entity = ECS.createEntity(std::string("The best entity"));
     ASSERT_EQ(ECS.hasEntity(entity), true);
-    ECS.addComponentToEntity(entity, ECS::Component::Flags::collisionBox, collisionBox);
-    ASSERT_EQ(ECS.hasComponent(entity, ECS::Component::Flags::collisionBox), true);
+    ECS.addComponentToEntity(entity, ECS::Component::Flags::collisionBox2D, collisionBox);
+    ASSERT_EQ(ECS.hasComponent(entity, ECS::Component::Flags::collisionBox2D), true);
 
     // Creating an unordered map with our entity
     std::unordered_map<unsigned long long, std::shared_ptr<ECS::Entity>> entityMap;

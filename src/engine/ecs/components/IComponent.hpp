@@ -18,7 +18,7 @@ namespace ECS {
         /// \namespace Flags
         /// \brief Flags for components
         namespace Flags {
-            typedef enum e_flags {transform, audio, physic, script, health, particules, parallax, sprite, collisionBox} flags;
+            typedef enum e_flags {transform, audio, physic, script, health, particules, parallax, sprite, collisionBox2D} flags;
         }
     }
 

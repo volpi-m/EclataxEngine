@@ -2,13 +2,13 @@
 // Created by tabis on 10/10/2019.
 //
 
-#include "CollisionBoxComponent.hpp"
+#include "CollisionBox2DComponent.hpp"
 #include <gtest/gtest.h>
 
 TEST(CollisionBoxComponentsTest, createBasicComponent)
 {
-    ECS::Component::CollisionBox componentDefault;
-    ECS::Component::CollisionBox component(-110, -110, 220, 220);
+    ECS::Component::CollisionBox2D componentDefault;
+    ECS::Component::CollisionBox2D component(-110, -110, 220, 220);
 
     ASSERT_EQ(componentDefault.rectangle.height, 0);
     ASSERT_EQ(componentDefault.rectangle.width, 0);

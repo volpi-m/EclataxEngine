@@ -19,7 +19,7 @@
 #include "ISystem.hpp"
 #include "Entity.hpp"
 #include "TransformComponent.hpp"
-#include "CollisionBoxComponent.hpp"
+#include "CollisionBox2DComponent.hpp"
 
 /// \namespace ECS
 /// \brief Used for the all entity component system subclasses
