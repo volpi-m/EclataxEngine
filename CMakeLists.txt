@@ -75,6 +75,12 @@ set (INCLUDE_GAME
     ${CMAKE_CURRENT_SOURCE_DIR}/src/game/scenes
 )
 
+## Client sources
+
+set (SRC_CLIENT
+  src/client/UdpConnection.cpp
+)
+
 ## Include headers to program
 include_directories(
   include
@@ -89,6 +95,7 @@ include_directories(
   src/engine/ecs
   src/engine
   src/network
+  src/client
   src
   ${INCLUDE_GAME}
 )
@@ -105,6 +112,12 @@ add_executable(r-type_server
   ${SRC_SERVER}
   ${SRC_GAME}
   main.cpp
+)
+
+## Client executable
+add_executable(r-type_client
+  ${SRC_CLIENT}
+  src/client/main.cpp
 )
 
 set (SRC_TEST
@@ -143,6 +156,10 @@ target_link_libraries(r-type_server
     CONAN_PKG::boost_asio
     ${CMAKE_THREAD_LIBS_INIT}
     ${CMAKE_DL_LIBS}
+)
+
+target_link_libraries(r-type_client
+    CONAN_PKG::sfml
 )
 
 target_link_libraries(unit_tests PUBLIC
