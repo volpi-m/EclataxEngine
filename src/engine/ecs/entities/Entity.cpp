@@ -40,6 +40,11 @@ std::string ECS::Entity::tag() const
     return _tag;
 }
 
+void ECS::Entity::setTag(const std::string &tag)
+{
+    _tag = tag;
+}
+
 std::size_t ECS::Entity::children() const
 {
     return _children.size();
