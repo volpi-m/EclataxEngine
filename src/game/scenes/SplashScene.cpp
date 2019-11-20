@@ -22,19 +22,23 @@ Scenes::SplashScene::SplashScene(const char *name) : AScene(name) {}
 
 bool Scenes::SplashScene::run()
 {
-    Debug::Logger *l = Debug::Logger::getInstance();
-    l->generateDebugMessage(Debug::type::INFO , "Why are you running ?", "SplashScene::run()");
-    return false;
+    auto sps = _ECS->entity(_ids.front());
+    auto movementSystem = static_cast<ECS::System::MovementSystem *>(_ECS->system(ECS::System::Flags::Movement).get());
+    if (std::get<0>(movementSystem->transform(sps)) < 1920) {
+        movementSystem->move(sps, 2, 0, 0);
+        return true;
+    } else
+        return false;
 }
 
 void Scenes::SplashScene::setVisible(bool state)
 {
-
+    state = state;
 }
 
 void Scenes::SplashScene::remove()
 {
-
+    
 }
 
 void Scenes::SplashScene::initComponents()
@@ -44,4 +48,5 @@ void Scenes::SplashScene::initComponents()
     _ids.push_back(_ECS->createEntity("Spaceship"));
     _ECS->addComponentToEntity(_ids.front(), ECS::Component::Flags::transform, transform);
     _ECS->addSystem(ECS::System::Flags::Movement, system);
+    _ids.push_back(_ECS->createEntity("Background"));
 }

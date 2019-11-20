@@ -45,6 +45,7 @@ set(ENTITY_ENNEMY
 set(SRC
     src/engine/GameEngine.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Mediator.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/Hub.cpp
 )
 
 ## Server sources
@@ -146,6 +147,7 @@ set (SRC_TEST
     tests/systems/test_Render.cpp
     tests/systems/test_collision.cpp
     tests/systems/test_healthManipulator.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/tests/Game/test_hub.cpp
 )
 
 ## Creating executable of unit tests
