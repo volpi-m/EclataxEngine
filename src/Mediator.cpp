@@ -7,22 +7,21 @@
 
 #include "Mediator.hpp"
 
-rType::Mediator::Mediator()
+Game::Mediator::Mediator()
 {
     start();
 }
 
-rType::Mediator::~Mediator()
+Game::Mediator::~Mediator()
 {
 }
 
-void rType::Mediator::start()
+void Game::Mediator::start()
 {
     Debug::Logger *l = Debug::Logger::getInstance();
     l->generateDebugMessage(Debug::type::INFO , "Enter the game", "main");
-    Scenes::SplashScene("TOTO");
-    // auto scene = std::shared_ptr<Scenes::IScene>(new Scenes::SplashScene("Splash scene", engine.ECS()));
+    auto scene = std::shared_ptr<Scenes::IScene>(new Scenes::SplashScene("Splash scene", engine.ECS()));
 
-    // engine.SceneMachine()->push(scene);
-    // engine.SceneMachine()->run();
+    engine.SceneMachine()->push(scene);
+    engine.SceneMachine()->run();
 }
