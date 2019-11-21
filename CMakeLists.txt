@@ -141,10 +141,11 @@ set (SRC_TEST
     tests/entity/test_entity.cpp
     tests/engine/test_gameEngine.cpp
     tests/component/test_text.cpp
+    tests/component/test_Life.cpp
+    tests/component/test_Speed.cpp
     tests/component/test_script.cpp
     tests/component/test_damage.cpp
     tests/component/test_health.cpp
-    tests/component/test_Speed.cpp
     tests/component/test_Particules.cpp
     tests/component/test_Acceleration.cpp
     tests/component/test_collisionBox.cpp
