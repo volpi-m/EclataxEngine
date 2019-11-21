@@ -1,0 +1,13 @@
+//
+// Created by Someone
+//
+
+#include "TEMPLATEComponent.hpp"
+#include <gtest/gtest.h>
+
+TEST(TEMPLATEComponentsTest, createBasicComponent)
+{
+    ECS::Component::TEMPLATE component;
+
+    ASSERT_EQ(TEMPLATE.someAttribute, someValue);
+}
