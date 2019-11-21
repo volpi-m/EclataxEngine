@@ -140,6 +140,7 @@ set (SRC_TEST
     tests/ecs/test_ecs.cpp
     tests/entity/test_entity.cpp
     tests/engine/test_gameEngine.cpp
+    tests/component/test_text.cpp
     tests/component/test_script.cpp
     tests/component/test_damage.cpp
     tests/component/test_health.cpp
