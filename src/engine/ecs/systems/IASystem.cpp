@@ -16,6 +16,27 @@ void ECS::System::IASystem::update(std::unordered_map<unsigned long long, std::s
             auto component = static_cast<ECS::Component::Script *>(entity.second->component(Component::Flags::script).get());
 
             // Using the script
-            component->updateScript(entity.second);
+            if (component->updateScript)
+                component->updateScript(entity.second);
         }
+}
+
+void ECS::System::IASystem::setScript(std::shared_ptr<Entity> &entity, void (*func)(std::shared_ptr<ECS::Entity> &entity))
+{
+    // Casting the script component
+    auto component = static_cast<ECS::Component::Script *>(entity->component(Component::Flags::script).get());
+    
+    // if not null assign the pointer
+    if (func)
+        component->updateScript = func;
+}
+
+void ECS::System::IASystem::deleteScript(std::shared_ptr<Entity> &entity)
+{
+    // Casting the script component
+    auto component = static_cast<ECS::Component::Script *>(entity->component(Component::Flags::script).get());
+    
+    // Assigning pointer to null
+    if (component->updateScript)
+        component->updateScript = nullptr;
 }
