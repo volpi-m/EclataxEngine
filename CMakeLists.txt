@@ -140,9 +140,10 @@ set (SRC_TEST
     tests/ecs/test_ecs.cpp
     tests/entity/test_entity.cpp
     tests/engine/test_gameEngine.cpp
+    tests/component/test_script.cpp
+    tests/component/test_damage.cpp
     tests/component/test_health.cpp
     tests/component/test_collisionBox.cpp
-    tests/component/test_script.cpp
     tests/systems/test_IA.cpp
     tests/systems/test_Render.cpp
     tests/systems/test_collision.cpp
