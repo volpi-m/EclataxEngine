@@ -1,0 +1,35 @@
+/*
+** EPITECH PROJECT, 2019
+** CPP_rtype_2019
+** File description:
+** Component TEMPLATE
+*/
+
+/// \file TEMPLATE.hpp
+/// \author Someone
+/// \brief TEMPLATEComponent class declaration
+
+#pragma once
+
+#include <string>
+
+#include "IComponent.hpp"
+
+/// \namespace ECS
+/// \brief Used for the all entity component system subclasses
+namespace ECS {
+    /// \namespace Component
+    /// \brief Used for the all component
+    namespace Component {
+
+        /// \struct TEMPLATE
+        /// \brief TEMPLATE structure, create the TEMPLATE component
+        struct TEMPLATE : public IComponent {
+            
+            /// \brief constructor
+            TEMPLATE() {}
+
+            /*! attribute */
+        };
+    }
+}
