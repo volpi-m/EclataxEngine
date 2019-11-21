@@ -9,5 +9,5 @@ TEST(TEMPLATEComponentsTest, createBasicComponent)
 {
     ECS::Component::TEMPLATE component;
 
-    ASSERT_EQ(TEMPLATE.someAttribute, someValue);
+    ASSERT_EQ(component.someAttribute, someValue);
 }
