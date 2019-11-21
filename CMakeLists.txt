@@ -145,6 +145,7 @@ set (SRC_TEST
     tests/component/test_damage.cpp
     tests/component/test_health.cpp
     tests/component/test_Speed.cpp
+    tests/component/test_Acceleration.cpp
     tests/component/test_collisionBox.cpp
     tests/systems/test_IA.cpp
     tests/systems/test_Render.cpp
