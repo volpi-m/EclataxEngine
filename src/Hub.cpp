@@ -7,7 +7,7 @@
 
 #include "Hub.hpp"
 
-Game::Hub::Hub(int newId, const std::string &creator) : _id(newId)
+Server::Hub::Hub(int newId, const std::string &creator) : _id(newId)
 {
     // Debug::Logger *l = Debug::Logger::getInstance();
     // std::string msg("create hub with : ")
@@ -15,24 +15,31 @@ Game::Hub::Hub(int newId, const std::string &creator) : _id(newId)
     addMember(creator);
 }
 
-Game::Hub::~Hub()
+Server::Hub::~Hub()
 {
 }
 
-bool Game::Hub::addMember(const std::string &newMember)
+bool Server::Hub::addMember(const std::string &newMember)
 {
     if (isFull())
         return false;
     else {
-        _members.push_back(newMember);
+        _players.emplace_back(Server::Player(newMember, false));
         return true;
     }
 }
 
-bool Game::Hub::isFull()
+bool Server::Hub::isFull()
 {
-    if (_members.size() >= HUBLIMIT)
+    if (_players.size() >= HUBLIMIT)
         return true;
     else
         return false;
+}
+
+void Server::Hub::setPlayerReady(const std::string &ip, bool state)
+{
+    for (auto &i : _players)
+        if (i.ip == ip)
+            i.isReady = state;
 }

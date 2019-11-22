@@ -7,21 +7,35 @@
 
 #include "Mediator.hpp"
 
-Game::Mediator::Mediator()
+Server::Mediator::Mediator() : _tcp(_ioContext)
 {
-    start();
+    _boostThread = std::thread(&Server::Mediator::launchBoost, this);
+    // start();
 }
 
-Game::Mediator::~Mediator()
+Server::Mediator::~Mediator()
 {
 }
 
-void Game::Mediator::start()
+void Server::Mediator::launchBoost()
 {
-    Debug::Logger *l = Debug::Logger::getInstance();
-    l->generateDebugMessage(Debug::type::INFO , "Enter the game", "main");
-    auto scene = std::shared_ptr<Scenes::IScene>(new Scenes::SplashScene("Splash scene", engine.ECS()));
-
-    engine.SceneMachine()->push(scene);
-    engine.SceneMachine()->run();
+    _ioContext.run();
 }
+
+void Server::Mediator::start()
+{
+    _tcp.startAccept();
+}
+
+void Server::Mediator::createHub(const std::string &ip)
+{
+    //need to initialize a thread
+    _hubs.emplace_back(Server::Hub(_hubs.size() + 1, ip));
+}
+
+// Debug::Logger *l = Debug::Logger::getInstance();
+// l->generateDebugMessage(Debug::type::INFO , "Enter the game", "main");
+// auto scene = std::shared_ptr<Scenes::IScene>(new Scenes::SplashScene("Splash scene", engine.ECS()));
+
+// engine.SceneMachine()->push(scene);
+// engine.SceneMachine()->run();

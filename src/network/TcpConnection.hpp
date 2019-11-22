@@ -81,6 +81,8 @@ namespace Server
         /// \brief Write a packet on network, use the structure defined in Voip.hpp to send data
         void writeback(const uint, const char *, const std::size_t);
 
+        void getBuffer();
+
         /*! Socket used for the TcpConnection with a client */
         tcp::socket _socket;
         /*! Buffer filled by received packets */

@@ -11,16 +11,18 @@
 
 #pragma once
 
-#include "GameEngine.hpp"
+#include <thread>
+
 #include "TcpNetwork.hpp"
 #include "UdpNetwork.hpp"
 #include "Logger.hpp"
 #include "IScene.hpp"
 #include "SplashScene.hpp"
+#include "Hub.hpp"
 
-/// \namespace Game
-/// \brief Used for the game part classes
-namespace Game {
+/// \namespace Server
+/// \brief Used for the all server classes
+namespace Server {
 
     /// \class Mediator
     /// \brief Encapsulate interaction between all elements of rType game
@@ -34,14 +36,25 @@ namespace Game {
             /// Destroy Mediator class
             ~Mediator();
 
+            /// \brief create a hub for player
+            /// The hub is create in a different thread
+            void createHub(const std::string &ip);
+            /// \brief Launch Boost librairire
+            void launchBoost();
+
         private:
-            /*! The game engine */
-            Game::GameEngine engine;
+            /*! Boost contexte */
+            boost::asio::io_context _ioContext;
+            /*! Object handling tcp dialogue */
+            Server::TcpNetwork _tcp;
+            /*! Thread for running boost */
+            std::thread _boostThread;
+            /*! List of hub */
+            std::vector<Server::Hub> _hubs;
+
 
             /// \brief method for starting the Mediator
             void start();
-            /// \brief method for starting a game
-            void startGame();
             /// \brief method for creating a new hub
             void createHub();
 
