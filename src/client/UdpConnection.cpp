@@ -42,7 +42,7 @@ std::string Client::UdpConnection::receive()
 
 void Client::UdpConnection::requireIP()
 {
-    std::ifstream file("ressources/.conff");
+    std::ifstream file("ressources/.conf");
 
     if (!file)
         throw Debug::MissingFileException("file 'ressources/.conf' not found",
