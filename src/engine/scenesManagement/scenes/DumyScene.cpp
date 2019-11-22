@@ -26,7 +26,7 @@ std::string Scenes::DumyScene::name() const
     return _name;
 }
 
-bool Scenes::DumyScene::run()
+Scenes::IScene *Scenes::DumyScene::run()
 {
     if (_ids.empty()) {
         // Creating a basic component to add to an entity, and a system that wil access it.
@@ -59,9 +59,10 @@ bool Scenes::DumyScene::run()
         // Updating systems
         _ECS->update();
         _ECS->update();
-        return false;
+        _pop = true;
+        return nullptr;
     }
-    return true;
+    return nullptr;
 }
 
 bool Scenes::DumyScene::isToPop() const

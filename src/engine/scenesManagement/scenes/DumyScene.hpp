@@ -57,9 +57,9 @@ namespace Scenes {
             /// \brief get the name of the current scene
             std::string name() const override;
 
-            /// \return a bool representing the state of the scene
+            /// \return a scene representing the state of the scene
             /// \brief run the scenes logic
-            bool run() override;
+            IScene *run() override;
             
             /// \return a bool if the scene needs to be poped when destroyed
             /// \brief scene deletion characteristic

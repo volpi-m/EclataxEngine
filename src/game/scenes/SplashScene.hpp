@@ -13,6 +13,7 @@
 
 #include <iostream>
 
+
 #include "AScene.hpp"
 #include "TransformComponent.hpp"
 #include "MovementSystem.hpp"
@@ -49,7 +50,7 @@ namespace Scenes {
 
             /// \return a bool representing the state of the scene
             /// \brief run the scenes logic
-            bool run() override;
+            IScene *run() override;
 
             /// \param bool : the visible state of the scene
             /// \brief set visible state of the scene

@@ -23,5 +23,5 @@ int main()
 
     Debug::Breakpoint("Fuck off", "yes");
     engine.SceneMachine()->push(scene);
-    engine.SceneMachine()->run();
+    while (engine.SceneMachine()->run());
 }

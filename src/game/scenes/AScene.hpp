@@ -64,7 +64,7 @@ namespace Scenes {
 
             /// \return a bool representing the state of the scene
             /// \brief run the scenes logic
-            virtual bool run() override = 0;
+            virtual IScene *run() override = 0;
 
             /// \param bool : the visible state of the scene
             /// \brief set visible state of the scene

@@ -70,7 +70,7 @@ namespace Module {
             bool isToSwap() const;
 
             /// \brief starts the machine
-            void run();
+            bool run();
         private:
             /*! the stack of scenes */
             std::stack<std::shared_ptr<Scenes::IScene>> _scenes;
