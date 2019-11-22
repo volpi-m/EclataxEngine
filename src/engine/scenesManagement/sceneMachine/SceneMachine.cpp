@@ -81,7 +81,7 @@ bool Module::SceneMachine::run()
     } else if (_scenes.top()->isToPop() && !_scenes.top()->isToSwap()) {
         pop();
         if (!_scenes.empty()) {
-            // _scenes.top()->setPop(false);
+            _scenes.top()->setPop(false);
             _scenes.top()->setVisible(true);
     	}
     } else if (_scenes.top()->isToPop() && _scenes.top()->isToSwap())

@@ -11,10 +11,10 @@
 
 #include "DumyScene.hpp"
 
-Scenes::DumyScene::DumyScene(const std::string &name, std::shared_ptr<Module::EntityComponentSystem> &ECS) : _name(name), _ECS(ECS), _pop(true), _swap(false) {}
-Scenes::DumyScene::DumyScene(const char *name, std::shared_ptr<Module::EntityComponentSystem> &ECS) : _name(name), _ECS(ECS), _pop(true), _swap(false) {}
-Scenes::DumyScene::DumyScene(const std::string &name) : _name(name), _pop(true), _swap(false) {}
-Scenes::DumyScene::DumyScene(const char *name) : _name(name), _pop(true), _swap(false) {}
+Scenes::DumyScene::DumyScene(const std::string &name, std::shared_ptr<Module::EntityComponentSystem> &ECS) : _name(name), _ECS(ECS), _pop(false), _swap(false) {}
+Scenes::DumyScene::DumyScene(const char *name, std::shared_ptr<Module::EntityComponentSystem> &ECS) : _name(name), _ECS(ECS), _pop(false), _swap(false) {}
+Scenes::DumyScene::DumyScene(const std::string &name) : _name(name), _pop(false), _swap(false) {}
+Scenes::DumyScene::DumyScene(const char *name) : _name(name), _pop(false), _swap(false) {}
 
 void Scenes::DumyScene::setName(const std::string &name)
 {
@@ -79,6 +79,11 @@ void Scenes::DumyScene::setVisible(bool state)
 {
     for (auto &it : _ids)
         _ECS->setEntityVisibleState(it, state);
+}
+
+void Scenes::DumyScene::setPop(bool pop)
+{
+    _pop = pop;
 }
 
 void Scenes::DumyScene::remove()

@@ -73,6 +73,10 @@ namespace Scenes {
             /// \brief set visible state of the scene
             void setVisible(bool state) override;
 
+            /// \param bool : if the scene as to be poped
+            /// \brief set the pop state of the scene
+            void setPop(bool pop) override;
+
             /// \brief remove all the entities of the scene
             void remove() override;
 

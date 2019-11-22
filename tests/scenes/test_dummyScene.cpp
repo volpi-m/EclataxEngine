@@ -61,3 +61,13 @@ TEST(DummySceneTest, ECSInstance)
     scene->setECSInstance(engine.ECS());
     ASSERT_EQ(scene->run(), nullptr);
 }
+
+TEST(DummySceneTest, pop)
+{
+    Game::GameEngine engine;
+    auto scene = std::shared_ptr<Scenes::IScene>(new Scenes::DumyScene("Dummy scene"));
+
+    ASSERT_EQ(scene->isToPop(), false);
+    scene->setPop(true);
+    ASSERT_EQ(scene->isToPop(), true);
+}

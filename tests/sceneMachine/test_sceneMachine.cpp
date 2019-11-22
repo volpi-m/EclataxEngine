@@ -69,6 +69,7 @@ TEST(SceneMachineTests, isToPopAndSwapScene)
     Module::SceneMachine machine;
     auto scene = std::shared_ptr<Scenes::IScene>(new Scenes::DumyScene("Dummy scene", engine.ECS()));
 
+    scene->setPop(true);
     ASSERT_EQ(machine.isToPop(), false);
     ASSERT_EQ(machine.isToSwap(), false);
     machine.push(scene);
@@ -83,5 +84,6 @@ TEST(SceneMachineTests, runScene)
     auto scene = std::shared_ptr<Scenes::IScene>(new Scenes::DumyScene("Dummy scene", engine.ECS()));
 
     machine.push(scene);
-    machine.run();
+    ASSERT_EQ(machine.run(), true);
+    ASSERT_EQ(machine.run(), false);
 }
