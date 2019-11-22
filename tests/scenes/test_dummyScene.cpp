@@ -37,8 +37,8 @@ TEST(DummySceneTest, run)
     Game::GameEngine engine;
     auto scene = std::shared_ptr<Scenes::IScene>(new Scenes::DumyScene("Dummy scene", engine.ECS()));
 
-    ASSERT_EQ(scene->run(), true);
-    ASSERT_EQ(scene->run(), false);
+    ASSERT_EQ(scene->run(), nullptr);
+    ASSERT_EQ(scene->run(), nullptr);
 }
 
 TEST(DummySceneTest, hideEntities)
@@ -46,10 +46,10 @@ TEST(DummySceneTest, hideEntities)
     Game::GameEngine engine;
     auto scene = std::shared_ptr<Scenes::IScene>(new Scenes::DumyScene("Dummy scene", engine.ECS()));
 
-    ASSERT_EQ(scene->run(), true);
+    ASSERT_EQ(scene->run(), nullptr);
     scene->setVisible(false);
     scene->remove();
-    ASSERT_EQ(scene->run(), false);
+    ASSERT_EQ(scene->run(), nullptr);
 }
 
 TEST(DummySceneTest, ECSInstance)
@@ -59,5 +59,15 @@ TEST(DummySceneTest, ECSInstance)
 
     engine.ECS()->createEntity("test");
     scene->setECSInstance(engine.ECS());
-    ASSERT_EQ(scene->run(), true);
+    ASSERT_EQ(scene->run(), nullptr);
+}
+
+TEST(DummySceneTest, pop)
+{
+    Game::GameEngine engine;
+    auto scene = std::shared_ptr<Scenes::IScene>(new Scenes::DumyScene("Dummy scene"));
+
+    ASSERT_EQ(scene->isToPop(), false);
+    scene->setPop(true);
+    ASSERT_EQ(scene->isToPop(), true);
 }

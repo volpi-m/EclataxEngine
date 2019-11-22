@@ -35,6 +35,11 @@ bool Scenes::AScene::isToSwap() const
     return _swap;
 }
 
+void Scenes::AScene::setPop(bool pop)
+{
+    _pop = pop;
+}
+
 void Scenes::AScene::setECSInstance(std::shared_ptr<Module::EntityComponentSystem> &ECS)
 {
     _ECS = ECS;

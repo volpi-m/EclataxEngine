@@ -20,15 +20,15 @@ Scenes::SplashScene::SplashScene(const std::string &name) : AScene(name) {}
 
 Scenes::SplashScene::SplashScene(const char *name) : AScene(name) {}
 
-bool Scenes::SplashScene::run()
+Scenes::IScene *Scenes::SplashScene::run()
 {
     auto sps = _ECS->entity(_ids.front());
     auto movementSystem = static_cast<ECS::System::MovementSystem *>(_ECS->system(ECS::System::Flags::Movement).get());
     if (std::get<0>(movementSystem->transform(sps)) < 1920) {
         movementSystem->move(sps, 2, 0, 0);
-        return true;
+        return nullptr;
     } else
-        return false;
+        return nullptr;
 }
 
 void Scenes::SplashScene::setVisible(bool state)

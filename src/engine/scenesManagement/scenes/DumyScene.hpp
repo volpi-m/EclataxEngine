@@ -57,9 +57,9 @@ namespace Scenes {
             /// \brief get the name of the current scene
             std::string name() const override;
 
-            /// \return a bool representing the state of the scene
+            /// \return a scene representing the state of the scene
             /// \brief run the scenes logic
-            bool run() override;
+            IScene *run() override;
             
             /// \return a bool if the scene needs to be poped when destroyed
             /// \brief scene deletion characteristic
@@ -72,6 +72,10 @@ namespace Scenes {
             /// \param bool : the visible state of the scene
             /// \brief set visible state of the scene
             void setVisible(bool state) override;
+
+            /// \param bool : if the scene as to be poped
+            /// \brief set the pop state of the scene
+            void setPop(bool pop) override;
 
             /// \brief remove all the entities of the scene
             void remove() override;

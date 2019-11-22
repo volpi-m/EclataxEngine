@@ -1,9 +1,9 @@
-/*
-** EPITECH PROJECT, 2019
-** Rtype
-** File description:
-** Mediator definition
-*/
+// /*
+// ** EPITECH PROJECT, 2019
+// ** Rtype
+// ** File description:
+// ** Mediator definition
+// */
 
 #include "Mediator.hpp"
 

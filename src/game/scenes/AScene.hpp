@@ -64,11 +64,15 @@ namespace Scenes {
 
             /// \return a bool representing the state of the scene
             /// \brief run the scenes logic
-            virtual bool run() override = 0;
+            virtual IScene *run() override = 0;
 
             /// \param bool : the visible state of the scene
             /// \brief set visible state of the scene
             virtual void setVisible(bool state) override = 0;
+
+            /// \param bool : if the scene as to be poped
+            /// \brief set the pop state of the scene
+            void setPop(bool pop) override;
 
             /// \brief remove all the entities of the scene
             virtual void remove() override = 0;
