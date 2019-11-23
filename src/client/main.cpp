@@ -10,6 +10,7 @@
 /// \brief main function for client
 
 #include "UdpConnection.hpp"
+#include "GraphicalModule.hpp"
 
 int main()
 {

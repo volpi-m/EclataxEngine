@@ -83,9 +83,11 @@ set (INCLUDE_GAME
 ## Client sources
 
 set (SRC_CLIENT
-  src/client/UdpConnection.cpp
-  src/client/TcpConnection.cpp
-  src/client/ConfReader.cpp
+    src/client/GraphicalModule.cpp
+    src/client/UdpConnection.cpp
+    src/client/TcpConnection.cpp
+    src/client/EntityClient.cpp
+    src/client/ConfReader.cpp
 )
 
 ## Include headers to program
