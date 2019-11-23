@@ -12,6 +12,7 @@
 #include "TcpConnection.hpp"
 
 Client::TcpConnection::TcpConnection()
+    : _conf("ressources/rtype.conf")
 {
     // Get server ip and connection port from configuration file
     std::optional<std::string> ip = _conf.conf("server_ip");

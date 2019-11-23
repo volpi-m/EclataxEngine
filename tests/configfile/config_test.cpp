@@ -12,7 +12,7 @@ TEST(ConfigTest, ValidFile)
 {
     try {
         Client::ConfReader c("ressources/tests/.conf");
-    } catch (Debug::MissingFileException &e) {
+    } catch (Debug::MissingFileException &) {
         ASSERT_TRUE(false);
         return;
     }
@@ -23,7 +23,18 @@ TEST(ConfigTest, InvalidFile)
 {
     try {
         Client::ConfReader c("ressources/tests/ouais.conf");
-    } catch (Debug::MissingFileException &e) {
+    } catch (Debug::MissingFileException &) {
+        ASSERT_TRUE(true);
+        return;
+    }
+    ASSERT_FALSE(true);
+}
+
+TEST(ConfigTest, SimpleConstructor)
+{
+    try {
+        Client::ConfReader c;
+    } catch (Debug::MissingFileException &) {
         ASSERT_TRUE(true);
         return;
     }
@@ -76,7 +87,7 @@ TEST(ConfigTest, InvalidFormatting)
     testing::internal::CaptureStdout();
     try {
         Client::ConfReader conf("ressources/tests/.conf");
-    } catch (std::exception &e) {
+    } catch (std::exception &) {
         ASSERT_FALSE(true);
         return;
     }
