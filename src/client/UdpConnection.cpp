@@ -12,6 +12,7 @@
 #include "UdpConnection.hpp"
 
 Client::UdpConnection::UdpConnection()
+    : _conf("ressources/rtype.conf")
 {
     // Retrieve server's ip and port from configuration file
     std::optional<std::string> ip = _conf.conf("server_ip");
