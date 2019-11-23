@@ -10,15 +10,23 @@
 /// \brief main function for client
 
 #include "UdpConnection.hpp"
+#include "GraphicalModule.hpp"
 
 int main()
 {
-    try {
-        Client::UdpConnection c;
-    } catch (Debug::MissingFileException &e) {
-        e.debugErrorMessage();
-        return 84;
-    }
+    Client::GraphicalModule graph;
+    sf::IntRect rect(0, 0, 532, 372);
+
+    graph.createEntity(0, "../ressources/r-typesheet1.gif", rect);
+    while (true)
+        graph.run();
+
+    // try {
+    //     Client::UdpConnection c;
+    // } catch (Debug::MissingFileException &e) {
+    //     e.debugErrorMessage();
+    //     return 84;
+    // }
 
     // sf::Clock clock;
     // while (true) {
