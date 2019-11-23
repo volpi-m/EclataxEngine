@@ -40,10 +40,12 @@ char *Client::UdpConnection::receive()
     sf::IpAddress sender;
     unsigned short port = 0;
 
-    if (_socket.receive(_buf, UDP_BUF_SIZE, received, sender, port) == sf::Socket::Done)
+    if (_socket.receive(_buf, UDP_BUF_SIZE, received, sender, port) == sf::Socket::Done) {
         std::cout << sender.toString() << " said: " << _buf << std::endl;
-
-    char *b = new char(UDP_BUF_SIZE);
-    std::memcpy(b, _buf, UDP_BUF_SIZE);
-    return b;
+        char *b = new char[UDP_BUF_SIZE + 1];
+        std::memset(b, 0, UDP_BUF_SIZE + 1);
+        std::memcpy(b, _buf, UDP_BUF_SIZE);
+        return b;
+    }
+    return nullptr;
 }

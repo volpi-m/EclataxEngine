@@ -6,15 +6,24 @@
 */
 
 #include "ConfReader.hpp"
+#include "Logger.hpp"
 
 Client::ConfReader::ConfReader()
 {
-    readFile("ressources/.conf");
+    try {
+        readFile("ressources/.conf");
+    } catch (Debug::MissingFileException &e) {
+        throw e;
+    }
 }
 
 Client::ConfReader::ConfReader(const std::string &file)
 {
-    readFile(file);
+    try {
+        readFile(file);
+    } catch (Debug::MissingFileException &e) {
+        throw e;
+    }
 }
 
 Client::ConfReader::~ConfReader() {}
@@ -37,11 +46,17 @@ void Client::ConfReader::readFile(const std::string &file)
     std::string line;
     while (std::getline(ifs, line)) {
         auto pos = line.find(":");
+        std::cout << pos << std::endl;
+        if (pos == std::string::npos) {
+            Debug::Logger *log = Debug::Logger::getInstance(Debug::STANDARD, Debug::Flags::fatal_off);
+            log->generateDebugMessage(Debug::WARNING, "invalid line in configuration file",
+                "Client::ConfReader::readFile");
+            continue;
+        }
+
         std::string key = line.substr(0, pos);
         std::string value = line.substr(pos + 1, line.size());
 
         _conf.insert({key, value});
     }
-    for (auto p : _conf)
-        std::cout << p.first << " " << p.second << std::endl;
 }

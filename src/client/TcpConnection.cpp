@@ -40,9 +40,12 @@ void Client::TcpConnection::send(const char *data, const std::size_t size)
 char *Client::TcpConnection::receive()
 {
     std::size_t received;
-    _socket.receive(_buf, TCP_BUF_SIZE, received);
-
-    char *b = new char(received);
-    std::memcpy(b, _buf, received);
-    return b;
+    
+    if (_socket.receive(_buf, TCP_BUF_SIZE, received) == sf::Socket::Done) {
+        char *b = new char[received + 1];
+        std::memset(b, 0, received + 1);
+        std::memcpy(b, _buf, received);
+        return b;
+    }
+    return nullptr;
 }
