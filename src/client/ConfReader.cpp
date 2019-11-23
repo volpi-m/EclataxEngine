@@ -46,7 +46,7 @@ void Client::ConfReader::readFile(const std::string &file)
     std::string line;
     while (std::getline(ifs, line)) {
         auto pos = line.find(":");
-        std::cout << pos << std::endl;
+
         if (pos == std::string::npos) {
             Debug::Logger *log = Debug::Logger::getInstance(Debug::STANDARD, Debug::Flags::fatal_off);
             log->generateDebugMessage(Debug::WARNING, "invalid line in configuration file",
