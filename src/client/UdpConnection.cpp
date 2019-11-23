@@ -13,47 +13,39 @@
 
 Client::UdpConnection::UdpConnection()
 {
-    _socket.bind(12345);
-    try {
-        requireIP();
-    } catch (Debug::MissingFileException &e) {
-        throw e;
-    }
+    // Retrieve server's ip and port from configuration file
+    std::optional<std::string> ip = _conf.conf("server_ip");
+    std::optional<std::string> port = _conf.conf("udp_port");
+
+    // Throw an exception if one of the value is not present
+    if (!ip.has_value() && !port.has_value())
+        throw std::exception();
+
+    // Bind udp socket to a specified port and set the socket non blocking
+    _socket.bind(std::stoi(port.value()));
+    _socket.setBlocking(false);
 }
 
 Client::UdpConnection::~UdpConnection() {}
 
-void Client::UdpConnection::send(const char *data, const unsigned short port)
+void Client::UdpConnection::send(const char *data, const unsigned short port, std::size_t size)
 {
-    _socket.send(_buf, UDP_SIZE, _servIP, port);
+    std::memcpy(_buf, data, size);
+    _socket.send(_buf, size, _servIP, port);
 }
 
-std::string Client::UdpConnection::receive()
+char *Client::UdpConnection::receive()
 {
     std::size_t received = 0;
     sf::IpAddress sender;
     unsigned short port = 0;
 
-    if (_socket.receive(_buf, UDP_SIZE, received, sender, port) == sf::Socket::Done)
+    if (_socket.receive(_buf, UDP_BUF_SIZE, received, sender, port) == sf::Socket::Done) {
         std::cout << sender.toString() << " said: " << _buf << std::endl;
-
-    return std::string(_buf);
-}
-
-void Client::UdpConnection::requireIP()
-{
-    std::ifstream file("ressources/.conf");
-
-    if (!file)
-        throw Debug::MissingFileException("file 'ressources/.conf' not found",
-            "Client::UdpConnection::requireIP");
-
-    std::string line;
-    while (std::getline(file, line)) {
-        int pos = line.find_first_of(":");
-        if (pos == 2 && !std::strncmp(line.c_str(), "ip", 2)) {
-            _servIP = line.substr(pos + 1, line.size());
-            std::cout << _servIP << std::endl;
-        }
+        char *b = new char[UDP_BUF_SIZE + 1];
+        std::memset(b, 0, UDP_BUF_SIZE + 1);
+        std::memcpy(b, _buf, UDP_BUF_SIZE);
+        return b;
     }
+    return nullptr;
 }

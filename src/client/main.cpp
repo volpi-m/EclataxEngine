@@ -15,7 +15,8 @@ int main()
 {
     try {
         Client::UdpConnection c;
-        c.receive();
+        while (true)
+            c.receive();
     } catch (Debug::MissingFileException &e) {
         e.debugErrorMessage();
         return 84;
