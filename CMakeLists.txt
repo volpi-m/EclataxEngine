@@ -84,6 +84,8 @@ set (INCLUDE_GAME
 
 set (SRC_CLIENT
   src/client/UdpConnection.cpp
+  src/client/TcpConnection.cpp
+  src/client/ConfReader.cpp
 )
 
 ## Include headers to program
@@ -153,6 +155,7 @@ set (SRC_TEST
     tests/systems/test_Render.cpp
     tests/systems/test_collision.cpp
     tests/systems/test_healthManipulator.cpp
+#    tests/configfile/config_test.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/tests/Game/test_hub.cpp
 )
 
