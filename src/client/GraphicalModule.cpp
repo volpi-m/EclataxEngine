@@ -28,7 +28,7 @@ void Client::GraphicalModule::createEntity(unsigned long long id, const std::str
     _entities.emplace(id, Entity(filepath, rect));
 }
 
-std::string &Client::GraphicalModule::run()
+void Client::GraphicalModule::run()
 {
     if (_window.isOpen()) {
 

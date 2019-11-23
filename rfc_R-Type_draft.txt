@@ -27,6 +27,7 @@ Netcode:
     203: client not ready
     204: request sprites
     205: client tick
+    206: Server debug
 
 3xx: client error
     301: Client error
@@ -34,7 +35,9 @@ Netcode:
 4xx: server communication
     401: player in hub
     402: server tick
-    403: send any text to client
+    403: New player in hub
+    404: New ennemy information
+    406: Client debug
 
 5xx: server error
     501: Server error
@@ -62,12 +65,12 @@ Client scenes:
         - Options
         - Play Solo
         - Play Multiplayer -> request a hub
-            - 
-
+            - Hub
+            - Game
 
 =========================================
 
-Client keymap: up, down, left, right, shoot, bonus
+Client keymap: up, down, left, right, shoot
 
 =========================================
 
@@ -76,3 +79,9 @@ Client send events:
 max packet size: 512 - sizeof(short)
 
 to send events from client to server we send a
+
+=========================================
+
+Server send:
+    For each sprite:
+        ID de l'ennemi + x + y + scaleX + scaleY

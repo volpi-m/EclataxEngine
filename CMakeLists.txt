@@ -83,9 +83,11 @@ set (INCLUDE_GAME
 ## Client sources
 
 set (SRC_CLIENT
-    src/client/EntityClient.cpp
-    src/client/UdpConnection.cpp
     src/client/GraphicalModule.cpp
+    src/client/UdpConnection.cpp
+    src/client/TcpConnection.cpp
+    src/client/EntityClient.cpp
+    src/client/ConfReader.cpp
 )
 
 ## Include headers to program
@@ -156,6 +158,7 @@ set (SRC_TEST
     tests/systems/test_Render.cpp
     tests/systems/test_collision.cpp
     tests/systems/test_healthManipulator.cpp
+    tests/configfile/config_test.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/tests/Game/test_hub.cpp
 )
 
@@ -168,6 +171,7 @@ add_executable(unit_tests
   ${SRC_GAME}
   ${SRC}
   ${SRC_TEST}
+  ${SRC_CLIENT}
 )
 
 ## Linking libraries
@@ -189,6 +193,7 @@ target_link_libraries(unit_tests PUBLIC
     pthread
     CONAN_PKG::boost_system
     CONAN_PKG::boost_asio
+    CONAN_PKG::sfml
     ${CMAKE_THREAD_LIBS_INIT}
     ${CMAKE_DL_LIBS}
 )

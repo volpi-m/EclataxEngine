@@ -46,7 +46,7 @@ namespace Client {
         void createMultipleEntities(std::vector<unsigned long long> &ids);
 
         /// \brief run the graphical client
-        std::string run();
+        void run();
 
     private:
         /// \brief detect events and threat them

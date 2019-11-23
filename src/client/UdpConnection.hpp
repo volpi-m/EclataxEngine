@@ -21,10 +21,11 @@
 #include <SFML/Network.hpp>
 #include <SFML/System.hpp>
 #include "MissingFileException.hpp"
+#include "ConfReader.hpp"
 
 /// \def UDP_SIZE
 /// \brief brief
-constexpr auto const UDP_SIZE = 512;
+constexpr auto const UDP_BUF_SIZE = 512;
 
 /// \namespace Client
 /// \brief Used for Client classes
@@ -46,22 +47,22 @@ namespace Client
         /// \brief Send packets to server
         /// \param data : data to send to server
         /// \param port : port of the server you send your data to
-        void send(const char *, const unsigned short);
+        /// \param size : size of packet to send
+        void send(const char *, const unsigned short, std::size_t);
 
         /// \brief Receive packets from server
-        /// \return Return a string with server's IP
-        std::string receive();
+        /// \return Return a pointer to what server send
+        char *receive();
 
     private:
-        /// \brief Read and stores server's IP in configuration file
-        void requireIP();
-
+        /*! Configuration file parser */
+        Client::ConfReader _conf;
         /*! Server's IP, get from a config file */
         std::string _servIP;
         /*! Udp Socket, bound to a specific IP on server */
         sf::UdpSocket _socket;
         /*! Buffer for received message */
-        char _buf[UDP_SIZE];
+        char _buf[UDP_BUF_SIZE];
     };
 }
 
