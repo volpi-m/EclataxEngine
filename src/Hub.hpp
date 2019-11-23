@@ -11,12 +11,24 @@
 #include <string>
 
 #include "Logger.hpp"
+#include "GameEngine.hpp"
 
 constexpr auto const HUBLIMIT = 4;
 
-/// \namespace Game
-/// \brief Used for the game part classes
-namespace Game {
+/// \namespace Server
+/// \brief Used for the all server classes
+namespace Server {
+
+    /// \class Player
+    /// \brief Caracteristics of member of a hub
+    struct Player
+    {
+        Player(std::string ip, bool isReady) : ip(ip), isReady(isReady) {};
+        /*! ip of the member */
+        std::string ip;
+        /*! state of the member, if he is ready or not */
+        bool isReady;
+    };
 
     /// \class Hub
     /// \brief Groupe a list of client around a game
@@ -42,10 +54,22 @@ namespace Game {
             /// \brief check if the hub is full
             bool isFull();
 
+            /// \param ip : ip of the player
+            /// \param state : state of the player
+            /// \brief method for starting a game
+            void setPlayerReady(const std::string &ip, bool state);
+
+            /// \brief method for starting a game
+            void startGame();
+
+            /// \brief method for process member messages
+            void processMemberMessage();
 
         private:
+            /*! Game engine */
+            Game::GameEngine _engine;
             /*! All ip of members */
-            std::vector<std::string> _members;
+            std::vector<Server::Player> _players;
             /*! number of the hub */
             int _id;
             /*! port of the hub */
