@@ -39,8 +39,10 @@ namespace Server {
             /// \brief create a hub for player
             /// The hub is create in a different thread
             void createHub(const std::string &ip);
-            /// \brief Launch Boost librairire
-            void launchBoost();
+            /// \brief return number of hub
+            int hubNumber();
+            /// \brief method for starting the Mediator
+            void start();
 
         private:
             /*! Boost contexte */
@@ -51,12 +53,16 @@ namespace Server {
             std::thread _boostThread;
             /*! List of hub */
             std::vector<Server::Hub> _hubs;
+            /*! Mediator mutex */
+            std::mutex _mut;
+            /*! state of the server */
+            bool _isRunning;
 
 
-            /// \brief method for starting the Mediator
-            void start();
             /// \brief method for creating a new hub
             void createHub();
+            /// \brief Launch Boost librairire
+            void launchBoost();
 
     };
 }
