@@ -34,7 +34,8 @@ void Server::TcpNetwork::handleAccept(
     if (!error) {
         const std::string ip = co->getSocket().remote_endpoint().address().to_string();
         const ushort port = co->getSocket().remote_endpoint().port();
-        std::cout << "Client: " << ip << " " << port << std::endl;
+        Debug::Logger *log = Debug::Logger::getInstance(".log");
+        log->generateDebugMessage(Debug::type::INFO, "Client: " + ip + " " + std::to_string(port), "TcpNetwork::handlAccept");
         co->setIP(ip);
         co->start();
     }

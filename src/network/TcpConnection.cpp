@@ -39,8 +39,10 @@ void Server::TcpConnection::start()
 
 void Server::TcpConnection::handleWrite(const boost::system::error_code &error, [[maybe_unused]] const size_t b)
 {
-    if (!error)
-        std::cout << "Packet sent to " << _ip << std::endl;
+    if (!error) {
+        Debug::Logger *log = Debug::Logger::getInstance(".log");
+        log->generateDebugMessage(Debug::type::INFO, "Packet sent to " + _ip, "TcpConnection::handleWrite");
+    }
     else
         disconnect(error);
 }
@@ -63,10 +65,13 @@ void Server::TcpConnection::handleRead(const boost::system::error_code &error, [
 
 void Server::TcpConnection::disconnect(const boost::system::error_code &error)
 {
-    std::cout << "Disconnect client with ip: " + _ip << std::endl;
+    Debug::Logger *log = Debug::Logger::getInstance(".log");
+    log->generateDebugMessage(Debug::type::INFO, "Disconnect client with ip: " + _ip, "TcpConnection::disconnect");
 
-    if (error.value() != 2)
+    if (error.value() != 2) {
+        log->generateDebugMessage(Debug::type::ERROR, "Error: " + error.message());
         std::cerr << "Error: " << error.message() << std::endl;
+    }
     _socket.close();
 }
 

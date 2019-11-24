@@ -16,6 +16,7 @@
 #include <boost/asio.hpp>
 #include <boost/shared_ptr.hpp>
 #include "TcpConnection.hpp"
+#include "Logger.hpp"
 
 /// \namespace Server
 /// \brief Used for the all server classes
