@@ -1,6 +1,6 @@
 /*
 ** EPITECH PROJECT, 2019
-** CPP_babel_2019
+** Rtype
 ** File description:
 ** main
 */
@@ -9,6 +9,7 @@
 /// \author Lucas T.
 /// \brief main function
 
+#include "Mediator.hpp"
 #include "TcpNetwork.hpp"
 #include "UdpNetwork.hpp"
 #include "GameEngine.hpp"
@@ -18,10 +19,12 @@
 /// \brief main function
 int main()
 {
-    Game::GameEngine engine;
-    auto scene = std::shared_ptr<Scenes::IScene>(new Scenes::DumyScene("Dummy scene", engine.ECS()));
+    Server::Mediator m;
+    m.start();
+    // Game::GameEngine engine;
+    // auto scene = std::shared_ptr<Scenes::IScene>(new Scenes::DumyScene("Dummy scene", engine.ECS()));
 
-    Debug::Breakpoint("Fuck off", "yes");
-    engine.SceneMachine()->push(scene);
-    while (engine.SceneMachine()->run());
+    // Debug::Breakpoint("Fuck off", "yes");
+    // engine.SceneMachine()->push(scene);
+    // while (engine.SceneMachine()->run());
 }

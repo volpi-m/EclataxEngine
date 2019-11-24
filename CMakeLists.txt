@@ -44,8 +44,6 @@ set(ENTITY_ENNEMY
 ## General sources
 set(SRC
     src/engine/GameEngine.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/Mediator.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/Hub.cpp
 )
 
 ## Server sources
@@ -64,6 +62,8 @@ set(SRC_SERVER
     src/engine/ecs/systems/MovementSystem.cpp
     src/engine/ecs/systems/CollisionSystem.cpp
     src/engine/ecs/systems/HealthManipulatorSystem.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/Mediator.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/Hub.cpp
 )
 
 ## Game sources
@@ -114,7 +114,7 @@ add_library(asteroid SHARED ${ENTITY_ASTEROID})
 
 add_library(ennemy SHARED ${ENTITY_ENNEMY})
 
-## Creating executable
+## Creating server executable
 add_executable(r-type_server
   ${LIB}
   ${SRC}
