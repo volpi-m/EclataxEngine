@@ -1,3 +1,242 @@
+
+
+
+
+
+
+R-Type working Group                                          Matteo V.
+Category: Informational                                        Lucas T.
+Fack                                                          Arthur L.
+November 2019                                                 Paulin F.
+
+
+                    Instruction to R-Type Developper
+
+Copyright Notice
+
+        Copyleft (C) R-Compris Working Group. All Right left.
+
+Table of Contents
+
+    1.  Introduction . . . . . . . . . . . . . . . . . . 2
+    2.  Network Protocol . . . . . . . . . . . . . . . . 2
+    2a. Client network codes . . . . . . . . . . . . . . 3
+    2b. Server network codes
+    3.  Client gameloop
+    3a. Client event sending
+    4.  Server gameloop
+    4a. Server event sending
+
+
+
+
+
+
+    X.  Authors' details
+    Y.  Full Copyright Statement
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Informational                                                  [Page 1]
+
+                Matteo V. Lucas T. Arthur L. Paulin F.
+
+=======================================================================
+RFC -42             Instruction to R-Type Developper      November 2019
+
+
+1.   Introduction
+
+    This present document is written to help people of the
+    R-Type Working Group to find all the information they need
+    to code freely.
+
+    You are strongly advised to read this document before coding.
+
+    Any code author cannot blame this RFC of the RFC author in
+    any case, either for complaining about bad explanations of
+    protocols or about non-functionnal code.
+
+
+2.   Network Protocol
+
+    Network Protocol was carefully designed by brilliant students
+    who cared deeply about making a good project.
+
+    First, you need to know that the client and the server must
+    produce an output and send data to each other every 16
+    milliseconds, wich means they both run at 60 frames per
+    seconds.
+
+    Every information that will be sent during the game will be
+    send over UDP network. On both client and server side, a
+    variable of type `void *` is REQUIRED to be passed as
+    argument to the corresponding `send` method.
+
+    So you SHOULD create a structure where you will store the
+    communication code and a void pointer to your data. This void
+    pointer can also be a structure, or a string, or an array of
+    int or whatever you need to send.
+
+    The structure SHOULD looks like this:
+
+    struct UdpData {
+        int code;
+        void *data
+    };
+
+    The communication code MUST be placed at first position in the
+    structure.
+
+    The following list of communication code lists all available
+    codes in the program, for both UDP and TCP communication
+
+
+
+
+
+
+Informational                                                  [Page 2]
+
+                Matteo V. Lucas T. Arthur L. Paulin F.
+
+=======================================================================
+RFC -42             Instruction to R-Type Developper      November 2019
+
+
+    2a. Client network codes
+
+        Here's all codes used by any client when trying to
+        communicate with the server.
+
+        These protocols codes MUST be used only for their main
+        purpose. The server implementation require specifics codes
+        to communicate properly, I reapeat, you MUST NOT use these
+        protocols codes for any other purpose.
+
+        Here are the codes:
+
+        201: Client ask for a hub to the server. (TCP)
+
+        - Optional data:
+        You MAY give optional information in the data field of the
+        UDP structure.
+
+        If you choose to provide an additional data you MUST send
+        the hub where you want to be integrated. If the hub you
+        mentionned doesn't exist yet, the server will know create
+        a new hub with this name. In contrary, if the hub already
+        exists, the client will be transfered to that hub.
+
+        202: Client warn the server that he is ready to launch
+        a game. (TCP)
+
+        203: Client warn the server that he is not ready to
+        launch a game. (TCP)
+
+        204: Client ask the server what ressource it will need
+        to run properly, get a response from Server. If any
+        ressource is missing, Server will automatically download
+        ressources to Client. (TCP)
+
+        You SHOULD probably worry more about other codes and
+        implement this one only when you have a good R-Type.
+
+        205: Client tick and send a packet with all his inputs
+        with an associated boolean to Server.
+
+        Your MAY use an int and use bitwise operators to store
+        informations about pressed inputs and decipher with
+        an enum on server side.
+
+        42 => 00101010
+
+        enum inputs {up = 1, down = 2, left = 4, right = 8 ...}
+
+
+
+Informational                                                  [Page 3]
+
+                Matteo V. Lucas T. Arthur L. Paulin F.
+
+=======================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Informational                                                  [Page 4]
+
+                Matteo V. Lucas T. Arthur L. Paulin F.
+
+=======================================================================
+
+
+
 Netcode:
     Tick every 16 ms (~60 t/s)
 
@@ -11,8 +250,8 @@ Netcode:
 
     send_events():
         send a packet each tick
-        every packet is composed of a queue of events
-            [eventCode, eventCode ...]
+        every packet is composed of a map of events
+        {up: True, down: False, left: True ...}
 
     read_network():
         read a packet each tick
