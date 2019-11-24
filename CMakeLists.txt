@@ -89,6 +89,7 @@ set (SRC_CLIENT
     src/client/EntityClient.cpp
     src/client/ConfReader.cpp
     src/client/ConfWriter.cpp
+    src/client/ClientMediator.cpp
 )
 
 ## Include headers to program
