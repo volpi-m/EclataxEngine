@@ -16,7 +16,7 @@
 #include <cstring>
 #include "ConfReader.hpp"
 
-constexpr auto const TCP_BUF_SIZE = 512;
+constexpr auto const TCP_BUF_SIZE = 1024;
 
 namespace Client
 {

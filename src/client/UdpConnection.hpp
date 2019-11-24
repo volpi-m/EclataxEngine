@@ -25,12 +25,17 @@
 
 /// \def UDP_SIZE
 /// \brief maximum size of a Datagram packet
-constexpr auto const UDP_BUF_SIZE = 512;
+constexpr auto const UDP_BUF_SIZE = 1024;
+
+typedef struct UdpPacket_s {
+    int code;
+    void *data;
+} UdpPacket;
 
 namespace Client
 {
     /// \class UdpConnection
-    /// \brief Handle UDP connection with server, uses sf::UdpSocket 
+    /// \brief Handle UDP connection with server, uses sf::UdpSocket
     class UdpConnection
     {
     public:
@@ -46,11 +51,11 @@ namespace Client
         /// \param data : data to send to server
         /// \param port : port of the server you send your data to
         /// \param size : size of packet to send
-        void send(const char *, const unsigned short, std::size_t);
+        void send(const void *, const unsigned short, std::size_t);
 
         /// \brief Receive packets from server
         /// \return Return a pointer to what server send
-        char *receive();
+        void *receive();
 
     private:
         /*! Configuration file parser */
