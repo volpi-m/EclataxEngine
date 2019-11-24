@@ -1,7 +1,6 @@
 [requires]
 boost_asio/1.67.0@bincrafters/stable
 boost_system/1.67.0@bincrafters/stable
-bzip2/1.0.6@conan/stable
 sfml/2.5.1@bincrafters/stable
 gtest/1.8.1@bincrafters/stable
 
