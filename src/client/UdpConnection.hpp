@@ -24,15 +24,13 @@
 #include "ConfReader.hpp"
 
 /// \def UDP_SIZE
-/// \brief brief
+/// \brief maximum size of a Datagram packet
 constexpr auto const UDP_BUF_SIZE = 512;
 
-/// \namespace Client
-/// \brief Used for Client classes
 namespace Client
 {
     /// \class UdpConnection
-    /// \brief UdpConnection class, handle UDP connection with server, uses sf::UdpSocket 
+    /// \brief Handle UDP connection with server, uses sf::UdpSocket 
     class UdpConnection
     {
     public:

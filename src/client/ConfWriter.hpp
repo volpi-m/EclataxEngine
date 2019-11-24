@@ -20,6 +20,8 @@
 
 namespace Client
 {
+    /// \class ConfWriter
+    /// \brief Write a given configuration in a configuration file
     class ConfWriter
     {
     public:

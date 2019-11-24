@@ -18,8 +18,6 @@
 
 constexpr auto const TCP_BUF_SIZE = 512;
 
-/// \namespace Client
-/// \brief Used for Client classes
 namespace Client
 {
     /// \class TcpConnection
