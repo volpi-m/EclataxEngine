@@ -7,6 +7,7 @@
 
 #include <gtest/gtest.h>
 #include "ConfReader.hpp"
+#include "ConfWriter.hpp"
 
 TEST(ConfigTest, ValidFile)
 {
@@ -91,4 +92,24 @@ TEST(ConfigTest, InvalidFormatting)
         return;
     }
     ASSERT_TRUE(true);
+}
+
+TEST(ConfigTest, writeInFile)
+{
+    std::unordered_map<std::string, std::string> conf;
+
+    conf.emplace("var1", "value1");
+    conf.emplace("var2", "value2");
+    conf.emplace("var3", "value3");
+    conf.emplace("var4", "value4");
+
+    // Writing the configuration and reading it
+    Client::ConfWriter write(conf, "ressources/tests/.confw");
+    Client::ConfReader read("ressources/tests/.confw");
+
+    ASSERT_STREQ(read.conf("var1").value().c_str(), "value1");
+    ASSERT_STREQ(read.conf("var2").value().c_str(), "value2");
+    ASSERT_STREQ(read.conf("var3").value().c_str(), "value3");
+    ASSERT_STREQ(read.conf("var4").value().c_str(), "value4");
+    remove("ressources/tests/.confw");
 }

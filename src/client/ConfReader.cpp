@@ -43,6 +43,7 @@ void Client::ConfReader::readFile(const std::string &file)
         throw Debug::MissingFileException("configuration file not found",
             "Client::ConfReader::readFile");
 
+    // Reading the configuration file
     std::string line;
     while (std::getline(ifs, line)) {
         auto pos = line.find(":");
@@ -54,9 +55,12 @@ void Client::ConfReader::readFile(const std::string &file)
             continue;
         }
 
+        // Reading configuration and storing it
         std::string key = line.substr(0, pos);
         std::string value = line.substr(pos + 1, line.size());
 
+        // Store
         _conf.insert({key, value});
     }
+    ifs.close();
 }

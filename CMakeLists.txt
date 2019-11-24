@@ -88,6 +88,7 @@ set (SRC_CLIENT
     src/client/TcpConnection.cpp
     src/client/EntityClient.cpp
     src/client/ConfReader.cpp
+    src/client/ConfWriter.cpp
 )
 
 ## Include headers to program
