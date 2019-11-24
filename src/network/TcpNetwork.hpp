@@ -14,6 +14,7 @@
 
 #include <iostream>
 #include <boost/asio.hpp>
+#include <boost/shared_ptr.hpp>
 #include "TcpConnection.hpp"
 
 /// \namespace Server
@@ -42,7 +43,7 @@ namespace Server
         /// \param co : instance of Connection Class wrapped in a smart pointer
         /// \param error : error code given by boost if something went wrong
         /// \brief Handle new connection to the server
-        void handleAccept(std::shared_ptr<Server::TcpConnection> &, const boost::system::error_code &);
+        void handleAccept(boost::shared_ptr<Server::TcpConnection> &, const boost::system::error_code &);
 
         /*! Acceptor use by boost to accept input connections */
         tcp::acceptor _acceptor;

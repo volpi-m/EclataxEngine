@@ -15,6 +15,7 @@
 #include <iostream>
 #include <array>
 #include <boost/bind.hpp>
+#include <boost/shared_ptr.hpp>
 #include <boost/enable_shared_from_this.hpp>
 #include <boost/asio.hpp>
 #include "macro.hpp"
@@ -37,7 +38,7 @@ namespace Server
         /// \param io : boost's io_contect used by every I/O object in boost::asio
         /// \return new Connection instance as a shared pointer
         /// \brief Return a new Connection instance as a shared pointer
-        static std::shared_ptr<TcpConnection> create(boost::asio::io_context &);
+        static boost::shared_ptr<TcpConnection> create(boost::asio::io_context &);
 
         /// \return Socket reference from the class
         /// \brief Return the socket

@@ -1,9 +1,9 @@
-// /*
-// ** EPITECH PROJECT, 2019
-// ** Rtype
-// ** File description:
-// ** Mediator definition
-// */
+/*
+** EPITECH PROJECT, 2019
+** Rtype
+** File description:
+** Mediator definition
+*/
 
 #include "Mediator.hpp"
 
@@ -11,8 +11,7 @@ Server::Mediator::Mediator() : _tcp(_ioContext), _isRunning(true)
 {
     Debug::Logger *l = Debug::Logger::getInstance();
     l->generateDebugMessage(Debug::type::INFO , "Create Mediator", "Mediator ctor");
-    _ioContext.run();
-    // _boostThread = std::thread(&Server::Mediator::launchBoost, this);
+    _boostThread = std::thread(&Server::Mediator::launchBoost, this);
 }
 
 Server::Mediator::~Mediator()
