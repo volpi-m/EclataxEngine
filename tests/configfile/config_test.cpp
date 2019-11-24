@@ -84,7 +84,6 @@ TEST(ConfigTest, ManyDoublePoint)
 
 TEST(ConfigTest, InvalidFormatting)
 {
-    testing::internal::CaptureStdout();
     try {
         Client::ConfReader conf("ressources/tests/.conf");
     } catch (std::exception &) {

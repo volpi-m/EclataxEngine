@@ -16,7 +16,9 @@ int main()
 {
     try {
         Client::UdpConnection udp;
-        while (true)
+        Client::GraphicalModule graph;
+
+        while (!graph.run())
             udp.receive();
     } catch (Debug::MissingFileException &e) {
         e.debugErrorMessage();

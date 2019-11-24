@@ -11,7 +11,7 @@
 
 #include "GraphicalModule.hpp"
 
-Client::GraphicalModule::GraphicalModule() : _window(sf::RenderWindow(sf::VideoMode(1920, 1080), "SFML works!")) {}
+Client::GraphicalModule::GraphicalModule() : _window(sf::RenderWindow(sf::VideoMode(1920, 1080), "SFML works!")), _closed(false) {}
 
 sf::RenderWindow &Client::GraphicalModule::window()
 {
@@ -28,7 +28,7 @@ void Client::GraphicalModule::createEntity(unsigned long long id, const std::str
     _entities.emplace(id, Entity(filepath, rect));
 }
 
-void Client::GraphicalModule::run()
+bool Client::GraphicalModule::run()
 {
     if (_window.isOpen()) {
 
@@ -36,6 +36,7 @@ void Client::GraphicalModule::run()
         processEvents();
         display();
     }
+    return _closed;
 }
 
 void Client::GraphicalModule::processEvents()
@@ -43,8 +44,10 @@ void Client::GraphicalModule::processEvents()
     while (_window.pollEvent(_events)) {
 
         // The window has been closed
-        if (_events.type == sf::Event::Closed)
+        if (_events.type == sf::Event::Closed) {
             _window.close();
+            _closed = true;
+        }
     }
 }
 

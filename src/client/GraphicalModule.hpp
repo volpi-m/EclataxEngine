@@ -46,7 +46,8 @@ namespace Client {
         void createMultipleEntities(std::vector<unsigned long long> &ids);
 
         /// \brief run the graphical client
-        void run();
+        /// \return a bool that is true is the client is closed, false otherwise
+        bool run();
 
     private:
         /// \brief detect events and threat them
@@ -61,5 +62,7 @@ namespace Client {
         sf::Event _events;
         /*! entities stocked attribute */
         std::unordered_map<unsigned long long, Entity> _entities;
+        /*! closed window attribute */
+        bool _closed;
     };
 }
