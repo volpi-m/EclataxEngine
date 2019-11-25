@@ -11,15 +11,17 @@
 
 #include "TcpConnection.hpp"
 
-Server::TcpConnection::TcpConnection(boost::asio::io_context &io)
-    : _socket(io)
+Server::TcpConnection::TcpConnection(boost::asio::io_context &io, 
+    std::function<void(const boost::system::error_code &, std::array<char, BUFFER_SIZE>)> fct)
+    : _socket(io), _callBack(fct)
 {}
 
 Server::TcpConnection::~TcpConnection() {}
 
-boost::shared_ptr<Server::TcpConnection> Server::TcpConnection::create(boost::asio::io_context &io)
+boost::shared_ptr<Server::TcpConnection> Server::TcpConnection::create(boost::asio::io_context &io, 
+    std::function<void(const boost::system::error_code &, std::array<char, BUFFER_SIZE>)> fct)
 {
-    return boost::shared_ptr<Server::TcpConnection>(new Server::TcpConnection(io));
+    return boost::shared_ptr<Server::TcpConnection>(new Server::TcpConnection(io, fct));
 }
 
 tcp::socket &Server::TcpConnection::getSocket()
@@ -49,12 +51,7 @@ void Server::TcpConnection::handleWrite(const boost::system::error_code &error, 
 
 void Server::TcpConnection::handleRead(const boost::system::error_code &error, [[maybe_unused]] const size_t b)
 {
-    // Babel::tcpHeader *received = static_cast<Babel::tcpHeader *>((void *)_buf.data());
-    // std::cout << b << " bytes packet received from: " + _ip << std::endl;
-    // std::cout << "\tCODE='" << received->code << "'" << std::endl;
-    // std::cout << "\tMSG='" << received->data << "'" << std::endl;
-    std::cout << _buf.data();
-
+    _callBack(error, _buf);
     for (size_t i = 0; i < BUFFER_SIZE; i++)
         _buf[i] = 0;
     if (error)
@@ -83,17 +80,15 @@ void Server::TcpConnection::read()
         boost::asio::placeholders::bytes_transferred));
 }
 
-void Server::TcpConnection::writeback([[maybe_unused]] const uint code, [[maybe_unused]] const char *data, const std::size_t size)
+void Server::TcpConnection::write(const void *data, const std::size_t size)
 {
-    char *toSend = new char(10);
     // Babel::tcpHeader *toSend = new Babel::tcpHeader();
     // toSend->code = code;
     // std::memset(&(toSend->data), 0, TCP_BUFFER_SIZE);
     // std::strcpy((char *) &(toSend->data), data);
     // std::cout << "Packet will be send to: " + _ip << " with code: " << toSend->code << " and message: '" << toSend->data << "'" << std::endl;
-    _socket.async_write_some(boost::asio::buffer(static_cast<void *>(toSend), 4 + size),
+    _socket.async_write_some(boost::asio::buffer(data, size),
         boost::bind(&TcpConnection::handleWrite, shared_from_this(),
         boost::asio::placeholders::error,
         boost::asio::placeholders::bytes_transferred));
-    delete toSend;
 }

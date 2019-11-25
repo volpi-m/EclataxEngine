@@ -11,8 +11,9 @@
 
 #include "TcpNetwork.hpp"
 
-Server::TcpNetwork::TcpNetwork(boost::asio::io_context &io)
-    : _acceptor(io, tcp::endpoint(tcp::v4(), 1234))
+Server::TcpNetwork::TcpNetwork(boost::asio::io_context &io, 
+    std::function<void(const boost::system::error_code &, std::array<char, BUFFER_SIZE>)> fct)
+    : _acceptor(io, tcp::endpoint(tcp::v4(), 1234)) , _callBack(fct)
 {
     startAccept();
 }
@@ -21,7 +22,7 @@ Server::TcpNetwork::~TcpNetwork() {}
 
 void Server::TcpNetwork::startAccept()
 {
-    boost::shared_ptr<Server::TcpConnection> co = Server::TcpConnection::create(_acceptor.get_executor().context());
+    boost::shared_ptr<Server::TcpConnection> co = Server::TcpConnection::create(_acceptor.get_executor().context(), _callBack);
     _acceptor.async_accept(co->getSocket(),
         boost::bind(&TcpNetwork::handleAccept, this, co, boost::asio::placeholders::error));
 }

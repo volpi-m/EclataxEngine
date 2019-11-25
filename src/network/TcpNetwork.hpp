@@ -28,9 +28,10 @@ namespace Server
     {
     public:
         /// \param io : io_context used by every I/O object of boost
+        /// \param fct : function use as callback for all connections
         /// \brief Constructor
         /// Initialize network acceptor and call startAccept
-        TcpNetwork(boost::asio::io_context &);
+        TcpNetwork(boost::asio::io_context &io, std::function<void(const boost::system::error_code &, std::array<char, BUFFER_SIZE>)> fct);
 
         /// \brief Destructor
         /// Do nothing special
@@ -48,6 +49,8 @@ namespace Server
 
         /*! Acceptor use by boost to accept input connections */
         tcp::acceptor _acceptor;
+        /*! call back function for all connections */
+        std::function<void(const boost::system::error_code &, std::array<char, BUFFER_SIZE> buf)> _callBack;
     };
 }
 

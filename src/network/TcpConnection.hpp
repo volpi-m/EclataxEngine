@@ -37,9 +37,11 @@ namespace Server
         ~TcpConnection();
 
         /// \param io : boost's io_contect used by every I/O object in boost::asio
+        /// \param fct : callBack function
         /// \return new Connection instance as a shared pointer
         /// \brief Return a new Connection instance as a shared pointer
-        static boost::shared_ptr<TcpConnection> create(boost::asio::io_context &);
+        static boost::shared_ptr<TcpConnection> create(boost::asio::io_context &io, 
+            std::function<void(const boost::system::error_code &, std::array<char, BUFFER_SIZE>)> fct);
 
         /// \return Socket reference from the class
         /// \brief Return the socket
@@ -53,11 +55,21 @@ namespace Server
         /// reading functions to their respectives callback
         void start();
 
+        /// \brief Bind the read action with a callback, must be called by the callback to read again on network
+        void read();
+
+        /// \param data : data to be written on network with network code
+        /// \param size : size of the string to be written on network
+        /// \brief Write a packet on network, use the structure defined in Voip.hpp to send data
+        void write(const void *data, const std::size_t size);
+
     private:
+        /// \param io : boost's io_context used by every I/O object in boost::asio
+        /// \param fct : callback function
         /// \brief constructor.
         /// Initialize socket
-        /// \param io : boost's io_context used by every I/O object in boost::asio
-        TcpConnection(boost::asio::io_context &);
+        TcpConnection(boost::asio::io_context &,
+            std::function<void(const boost::system::error_code &, std::array<char, BUFFER_SIZE>)> fct);
 
         /// \param error : error code set by boost::asio
         /// \param b : number of bytes written
@@ -74,23 +86,14 @@ namespace Server
         /// \brief Show the error message and disconnect the socket
         void disconnect(const boost::system::error_code &);
 
-        /// \brief Bind the read action with a callback, must be called by the callback to read again on network
-        void read();
-
-        /// \param code : network code to be written on the network (see Voip.hpp for all codes available)
-        /// \param data : string to be written on network with network code
-        /// \param size : size of the string to be written on network
-        /// \brief Write a packet on network, use the structure defined in Voip.hpp to send data
-        void writeback(const uint, const char *, const std::size_t);
-
-        void getBuffer();
-
         /*! Socket used for the TcpConnection with a client */
         tcp::socket _socket;
         /*! Buffer filled by received packets */
         std::array<char, BUFFER_SIZE> _buf;
         /*! IP address of the client connected to this instance of the TcpConnection class */
         std::string _ip;
+        /*! Call Back function */
+        std::function<void(const boost::system::error_code &, std::array<char, BUFFER_SIZE>)> _callBack;
     };
 }
 

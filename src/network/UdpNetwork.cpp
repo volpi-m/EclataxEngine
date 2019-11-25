@@ -38,9 +38,9 @@ void Server::UdpNetwork::handleWrite([[maybe_unused]] const std::size_t size)
     std::cout << "Packet sent to IP" << std::endl;
 }
 
-void Server::UdpNetwork::writeback([[maybe_unused]] const uint code, const char *data, const std::size_t size)
+void Server::UdpNetwork::write(const void *data, const std::size_t size)
 {
-    _socket.async_send_to(boost::asio::buffer(static_cast<const void *>(data), size), _endpoint,
+    _socket.async_send_to(boost::asio::buffer(data, size), _endpoint,
         boost::bind(&UdpNetwork::handleWrite, this,
             boost::asio::placeholders::bytes_transferred));
 }

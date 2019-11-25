@@ -9,9 +9,11 @@
 
 #include <vector>
 #include <string>
+#include <boost/asio.hpp>
 
 #include "Logger.hpp"
 #include "GameEngine.hpp"
+#include "UdpNetwork.hpp"
 
 constexpr auto const HUBLIMIT = 4;
 
@@ -26,6 +28,8 @@ namespace Server {
         Player(std::string ip, bool isReady) : ip(ip), isReady(isReady) {};
         /*! ip of the member */
         std::string ip;
+        /*! port of the member */
+        int port;
         /*! state of the member, if he is ready or not */
         bool isReady;
     };
@@ -37,9 +41,10 @@ namespace Server {
         public:
             /// \param newId : id of the hub
             /// \param creator : ip of the first Hub's member
+            /// \param ioContexte : io contexte for boost
             /// \brief constructor
             /// Initialize Hub class
-            Hub(int newId, const std::string &creator);
+            Hub(int newId, const std::string &creator, boost::asio::io_context &ioContext);
             /// \brief destructor
             /// Destroy Hub class
             ~Hub();
@@ -60,19 +65,27 @@ namespace Server {
             void setPlayerReady(const std::string &ip, bool state);
 
             /// \brief method for starting a game
-            void startGame();
+            void startGame(); // to implement
 
             /// \brief method for process member messages
             void processMemberMessage();
 
+            /// \param code : code for the message
+            /// \param msg : message to send
+            /// \param size : size of the message
+            /// \brief method for send message to all player of the hub
+            void sendToAllPlayer(const uint code, void *msg, const std::size_t size);
+
         private:
             /*! Game engine */
             Game::GameEngine _engine;
-            /*! All ip of members */
-            std::vector<Server::Player> _players;
+            /*! Object for handling udp dialogue */
+            Server::UdpNetwork _udp;
             /*! number of the hub */
             int _id;
             /*! port of the hub */
             unsigned short _port;
+            /*! All ip of members */
+            std::vector<Server::Player> _players;
     };
 }

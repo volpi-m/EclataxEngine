@@ -7,7 +7,7 @@
 
 #include "Mediator.hpp"
 
-Server::Mediator::Mediator() : _tcp(_ioContext), _isRunning(true)
+Server::Mediator::Mediator() : _tcp (_ioContext, &Mediator::processTcpMessage), _isRunning(true)
 {
     Debug::Logger *l = Debug::Logger::getInstance();
     l->generateDebugMessage(Debug::type::INFO , "Create Mediator", "Mediator ctor");
@@ -40,13 +40,19 @@ void Server::Mediator::createHub(const std::string &ip)
 {
     //need to initialize a thread
     _mut.lock();
-    _hubs.emplace_back(Server::Hub(_hubs.size() + 1, ip));
+    _hubs.emplace_back(std::make_unique<Server::Hub>(_hubs.size() + 1, ip, _ioContext));
     _mut.unlock();
 }
 
 int Server::Mediator::hubNumber()
 {
     return _hubs.size();
+}
+
+void Server::Mediator::processTcpMessage(const boost::system::error_code &, std::array<char, BUFFER_SIZE> buf)
+{
+    Debug::Logger *l = Debug::Logger::getInstance();
+    l->generateDebugMessage(Debug::type::INFO , "Enter the callback function !", "Mediator");
 }
 
 // Debug::Logger *l = Debug::Logger::getInstance();

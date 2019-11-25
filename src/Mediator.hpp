@@ -19,6 +19,7 @@
 #include "IScene.hpp"
 #include "SplashScene.hpp"
 #include "Hub.hpp"
+// #include "macro.hpp"
 
 /// \namespace Server
 /// \brief Used for the all server classes
@@ -43,6 +44,7 @@ namespace Server {
             int hubNumber();
             /// \brief method for starting the Mediator
             void start();
+            static void processTcpMessage(const boost::system::error_code &, std::array<char, BUFFER_SIZE> buf);
 
         private:
             /*! Boost contexte */
@@ -52,7 +54,7 @@ namespace Server {
             /*! Thread for running boost */
             std::thread _boostThread;
             /*! List of hub */
-            std::vector<Server::Hub> _hubs;
+            std::vector<std::unique_ptr<Server::Hub>> _hubs;
             /*! Mediator mutex */
             std::mutex _mut;
             /*! state of the server */
