@@ -17,8 +17,6 @@
 
 #include "Logger.hpp"
 
-/// \namespace Client
-/// \brief Used for all Client system subclasses
 namespace Client {
 
     /// \class Entity

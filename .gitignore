@@ -55,3 +55,4 @@ cmake-build-debug/
 conaninfo.txt
 conanbuildinfo.txt
 *.lock
+doc/

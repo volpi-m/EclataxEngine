@@ -21,6 +21,8 @@
 
 namespace Client
 {
+    /// \class ConfReader
+    /// \brief Read values from a configuration file and store it in a map
     class ConfReader
     {
     public:

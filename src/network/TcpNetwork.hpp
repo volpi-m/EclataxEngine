@@ -22,8 +22,8 @@
 /// \brief Used for the all server classes
 namespace Server
 {
-    /// \class Server
-    /// \brief Server class, used in parallel with Connection class
+    /// \class TcpNetwork
+    /// \brief TcpNetwork class, used in parallel with TcpConnection class
     class TcpNetwork
     {
     public:

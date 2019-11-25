@@ -17,13 +17,14 @@
 
 #include "EntityClient.hpp"
 
-/// \namespace Game
-/// \brief Used for the all Game subclasses
-namespace Client {
-
+namespace Client
+{
     /// \class GraphicalModule
-    class GraphicalModule {
+    /// \brief Create Entity and draw them on screen
+    class GraphicalModule
+    {
     public:
+        /// \brief Constructor
         GraphicalModule();
 
         /// \brief get the render window
