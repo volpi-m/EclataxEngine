@@ -31,7 +31,7 @@ namespace Server
         /// \param fct : function use as callback for all connections
         /// \brief Constructor
         /// Initialize network acceptor and call startAccept
-        TcpNetwork(boost::asio::io_context &io, std::function<void(const boost::system::error_code &, std::array<char, BUFFER_SIZE>)> fct);
+        TcpNetwork(boost::asio::io_context &io, std::function<void(Server::TcpConnection *)> fct);
 
         /// \brief Destructor
         /// Do nothing special
@@ -45,12 +45,12 @@ namespace Server
         /// \param co : instance of Connection Class wrapped in a smart pointer
         /// \param error : error code given by boost if something went wrong
         /// \brief Handle new connection to the server
-        void handleAccept(boost::shared_ptr<Server::TcpConnection> &, const boost::system::error_code &);
+        void handleAccept(boost::shared_ptr<Server::TcpConnection> &co, const boost::system::error_code &error);
 
         /*! Acceptor use by boost to accept input connections */
         tcp::acceptor _acceptor;
         /*! call back function for all connections */
-        std::function<void(const boost::system::error_code &, std::array<char, BUFFER_SIZE> buf)> _callBack;
+        std::function<void(Server::TcpConnection*)> _callBack;
     };
 }
 

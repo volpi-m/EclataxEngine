@@ -12,7 +12,7 @@
 #include "TcpNetwork.hpp"
 
 Server::TcpNetwork::TcpNetwork(boost::asio::io_context &io, 
-    std::function<void(const boost::system::error_code &, std::array<char, BUFFER_SIZE>)> fct)
+    std::function<void(Server::TcpConnection *)> fct)
     : _acceptor(io, tcp::endpoint(tcp::v4(), 1234)) , _callBack(fct)
 {
     startAccept();

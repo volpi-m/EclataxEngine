@@ -49,10 +49,12 @@ int Server::Mediator::hubNumber()
     return _hubs.size();
 }
 
-void Server::Mediator::processTcpMessage(const boost::system::error_code &, std::array<char, BUFFER_SIZE> buf)
+void Server::Mediator::processTcpMessage(Server::TcpConnection *socket)
 {
     Debug::Logger *l = Debug::Logger::getInstance();
     l->generateDebugMessage(Debug::type::INFO , "Enter the callback function !", "Mediator");
+    Server::header *h = static_cast<Server::header *>((void *)socket->buffer().data());
+    std::cout << "Message from : " << socket->ip() << std::endl;
 }
 
 // Debug::Logger *l = Debug::Logger::getInstance();

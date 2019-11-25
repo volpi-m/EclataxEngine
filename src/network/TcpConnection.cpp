@@ -12,14 +12,14 @@
 #include "TcpConnection.hpp"
 
 Server::TcpConnection::TcpConnection(boost::asio::io_context &io, 
-    std::function<void(const boost::system::error_code &, std::array<char, BUFFER_SIZE>)> fct)
+    std::function<void(Server::TcpConnection *)> fct)
     : _socket(io), _callBack(fct)
 {}
 
 Server::TcpConnection::~TcpConnection() {}
 
 boost::shared_ptr<Server::TcpConnection> Server::TcpConnection::create(boost::asio::io_context &io, 
-    std::function<void(const boost::system::error_code &, std::array<char, BUFFER_SIZE>)> fct)
+    std::function<void(Server::TcpConnection *)> fct)
 {
     return boost::shared_ptr<Server::TcpConnection>(new Server::TcpConnection(io, fct));
 }
@@ -51,13 +51,14 @@ void Server::TcpConnection::handleWrite(const boost::system::error_code &error, 
 
 void Server::TcpConnection::handleRead(const boost::system::error_code &error, [[maybe_unused]] const size_t b)
 {
-    _callBack(error, _buf);
-    for (size_t i = 0; i < BUFFER_SIZE; i++)
-        _buf[i] = 0;
     if (error)
         disconnect(error);
-    else
+    else {
+        _callBack(this);
+        for (size_t i = 0; i < BUFFER_SIZE; i++)
+            _buf[i] = 0;
         read();
+    }
 }
 
 void Server::TcpConnection::disconnect(const boost::system::error_code &error)

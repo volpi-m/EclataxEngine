@@ -41,7 +41,7 @@ namespace Server
         /// \return new Connection instance as a shared pointer
         /// \brief Return a new Connection instance as a shared pointer
         static boost::shared_ptr<TcpConnection> create(boost::asio::io_context &io, 
-            std::function<void(const boost::system::error_code &, std::array<char, BUFFER_SIZE>)> fct);
+            std::function<void(Server::TcpConnection *)> fct);
 
         /// \return Socket reference from the class
         /// \brief Return the socket
@@ -63,13 +63,18 @@ namespace Server
         /// \brief Write a packet on network, use the structure defined in Voip.hpp to send data
         void write(const void *data, const std::size_t size);
 
+        /// \brief get the current buffer
+        std::array<char, BUFFER_SIZE> buffer() { return _buf; };
+        /// \brief get the ip
+        std::string ip() { return _ip; };
+
     private:
         /// \param io : boost's io_context used by every I/O object in boost::asio
         /// \param fct : callback function
         /// \brief constructor.
         /// Initialize socket
         TcpConnection(boost::asio::io_context &,
-            std::function<void(const boost::system::error_code &, std::array<char, BUFFER_SIZE>)> fct);
+            std::function<void(Server::TcpConnection *)> fct);
 
         /// \param error : error code set by boost::asio
         /// \param b : number of bytes written
@@ -93,7 +98,7 @@ namespace Server
         /*! IP address of the client connected to this instance of the TcpConnection class */
         std::string _ip;
         /*! Call Back function */
-        std::function<void(const boost::system::error_code &, std::array<char, BUFFER_SIZE>)> _callBack;
+        std::function<void(Server::TcpConnection *)> _callBack;
     };
 }
 
