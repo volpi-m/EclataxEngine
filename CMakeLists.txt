@@ -57,6 +57,7 @@ set(SRC_SERVER
     src/engine/scenesManagement/scenes/DumyScene.cpp
     src/engine/ecs/ECS.cpp
     src/engine/ecs/entities/Entity.cpp
+    src/engine/ecs/entities/EntityFactory.cpp
     src/engine/ecs/systems/IASystem.cpp
     src/engine/ecs/systems/RenderSystem.cpp
     src/engine/ecs/systems/MovementSystem.cpp
@@ -144,6 +145,7 @@ set (SRC_TEST
     tests/Benchmarking/test_breakpoints.cpp
     tests/ecs/test_ecs.cpp
     tests/entity/test_entity.cpp
+    tests/entity/test_entityFactory.cpp
     tests/engine/test_gameEngine.cpp
     tests/component/test_text.cpp
     tests/component/test_Life.cpp

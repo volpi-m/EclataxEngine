@@ -38,6 +38,11 @@ namespace ECS {
             /// \param tag (raw char pointer) of the entity, default is empty
             Entity(const char *tag = default_tag);
 
+            /// \brief copy constructor
+            /// Initialize Entity class from another object
+            /// \param entity : then entity to clone
+            Entity(const Entity &entity);
+
             /// \brief destructor
             /// Destroy the Entity class
             ~Entity() = default;
@@ -69,7 +74,11 @@ namespace ECS {
 
             /// \return the number of children of the entity
             /// \brief get the number of children of the entity
-            std::size_t children() const;
+            std::size_t childrenSize() const;
+
+            /// \return the vector of children
+            /// \brief get all children of the entity
+            const std::vector<std::shared_ptr<Entity>> &children() const;
 
             /// \param flag : the flag that we want to look for
             /// \return a boolean, true if the component is attached, false otherwise

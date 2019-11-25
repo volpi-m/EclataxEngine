@@ -9,7 +9,7 @@
 
 namespace ECS {
 
-    using flagType = unsigned char;
+    using flagType = int;
 
     /// \namespace Component
     /// \brief Used for all the Component subclasses
@@ -18,15 +18,27 @@ namespace ECS {
         /// \namespace Flags
         /// \brief Flags for components
         namespace Flags {
-            typedef enum e_flags {transform, audio, physic, script, health, particules, parallax, sprite, collisionBox2D} flags;
+            typedef enum e_flags {transform = 1,
+                                  audio = 2,
+                                  physic = 4,
+                                  script = 8,
+                                  health = 16,
+                                  particules = 32,
+                                  parallax = 64,
+                                  sprite = 128,
+                                  collisionBox2D = 256,
+                                  spawner = 512,
+                                  acceleration = 1024,
+                                  damage = 2048,
+                                  life = 4096,
+                                  speed = 8192,
+                                  text = 16384
+            } flags;
         }
     }
 
     class IComponent {
     public:
         virtual ~IComponent() = default;
-
-        // template<class ...Args>
-        // void update(Args... args) {};
     };
 }

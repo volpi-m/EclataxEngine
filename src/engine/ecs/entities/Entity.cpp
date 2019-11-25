@@ -15,6 +15,8 @@ ECS::Entity::Entity(const std::string &tag) : _tag(tag), _deleted(false), _visib
 
 ECS::Entity::Entity(const char *tag) : _tag(tag), _deleted(false), _visible(true) {}
 
+ECS::Entity::Entity(const ECS::Entity &entity) : _tag(entity.tag()), _components({}), _children(entity.children()), _deleted(entity.deleted()), _visible(entity.isVisible()) {}
+
 void ECS::Entity::update()
 {
 
@@ -45,9 +47,14 @@ void ECS::Entity::setTag(const std::string &tag)
     _tag = tag;
 }
 
-std::size_t ECS::Entity::children() const
+std::size_t ECS::Entity::childrenSize() const
 {
     return _children.size();
+}
+
+const std::vector<std::shared_ptr<ECS::Entity>> &ECS::Entity::children() const
+{
+    return _children;
 }
 
 bool ECS::Entity::hasComponent(flagType flag) const

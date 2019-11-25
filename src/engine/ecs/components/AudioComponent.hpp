@@ -28,6 +28,9 @@ namespace ECS {
 
             /// \brief constructor
             Audio() : file(""), active(false) {}
+
+            /// \brief constructor
+            Audio(const std::string &_file, bool _active) : file(_file), active(_active) {}
             /*! file name attribute */
             std::string file;
             /*! is the sound active */

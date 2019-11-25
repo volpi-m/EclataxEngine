@@ -10,10 +10,12 @@ TEST(EntityTests, EntityInstance)
 {
     ECS::Entity first(std::string("entity from string"));
     ECS::Entity second(std::string("entity from char"));
+    ECS::Entity third(second);
 
     first.update();
     second.update();
     ASSERT_STREQ(first.tag().c_str(), "entity from string");
+    ASSERT_STREQ(second.tag().c_str(), "entity from char");
     ASSERT_STREQ(second.tag().c_str(), "entity from char");
     first.setTag("new tag!");
     ASSERT_STREQ(first.tag().c_str(), "new tag!");
@@ -24,9 +26,9 @@ TEST(EntityTests, EntityAddChild)
     ECS::Entity first(std::string("entity from string"));
     std::shared_ptr<ECS::Entity> second(new ECS::Entity(std::string("entity from char")));
 
-    ASSERT_EQ(first.children(), 0);
+    ASSERT_EQ(first.childrenSize(), 0);
     first.addChild(second);
-    ASSERT_EQ(first.children(), 1);
+    ASSERT_EQ(first.childrenSize(), 1);
 }
 
 TEST(EntityTests, addComponentToEntity)
@@ -62,9 +64,9 @@ TEST(EntityTests, deleteEntityAndChildren)
     ECS::Entity first(std::string("entity from string"));
     std::shared_ptr<ECS::Entity> second(new ECS::Entity(std::string("entity from char")));
 
-    ASSERT_EQ(first.children(), 0);
+    ASSERT_EQ(first.childrenSize(), 0);
     first.addChild(second);
-    ASSERT_EQ(first.children(), 1);
+    ASSERT_EQ(first.childrenSize(), 1);
     ASSERT_EQ(first.deleted(), false);
     ASSERT_EQ(second->deleted(), false);
     first.deleteEntity();
