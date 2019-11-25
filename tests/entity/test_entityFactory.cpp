@@ -185,3 +185,115 @@ TEST(EntityFactoryTests, createEntityWithBlanc)
     ASSERT_EQ(cpy->hasComponent(ECS::Component::Flags::text), true);
     ASSERT_EQ(cpy->hasComponent(ECS::Component::Flags::transform), true);
 }
+
+void dummyScript(std::shared_ptr<ECS::Entity> &entity)
+{
+    entity->setVisible(false);
+}
+
+TEST(EntityFactoryTests, createCopyedComponents)
+{
+    // Creating all components available
+    ECS::EntityFactory factory;
+    std::shared_ptr<ECS::Entity> entity(new ECS::Entity("dummy entity"));
+    std::shared_ptr<ECS::IComponent> acceleration(new ECS::Component::Acceleration(5));
+    std::shared_ptr<ECS::IComponent> audio(new ECS::Component::Audio("test_file", true));
+    std::shared_ptr<ECS::IComponent> collision(new ECS::Component::CollisionBox2D(0, 0, 200, 200));
+    std::shared_ptr<ECS::IComponent> damage(new ECS::Component::Damage(15));
+    std::shared_ptr<ECS::IComponent> health(new ECS::Component::Health(150));
+    std::shared_ptr<ECS::IComponent> life(new ECS::Component::Life(3));
+    std::shared_ptr<ECS::IComponent> particules(new ECS::Component::Particules(100, 5, 1));
+    std::shared_ptr<ECS::IComponent> script(new ECS::Component::Script(&dummyScript));
+    std::shared_ptr<ECS::IComponent> spwaner(new ECS::Component::Spawner(std::chrono::seconds(4), entity));
+    std::shared_ptr<ECS::IComponent> speed(new ECS::Component::Speed(20.5f));
+    std::shared_ptr<ECS::IComponent> sprite(new ECS::Component::Sprite("Texture_file.jpg"));
+    std::shared_ptr<ECS::IComponent> text(new ECS::Component::Text("Text to display"));
+    std::shared_ptr<ECS::IComponent> transform(new ECS::Component::Transform(10, 42, 84));
+
+    // Adding components to the entity
+    entity->addComponent(ECS::Component::Flags::acceleration, acceleration);
+    entity->addComponent(ECS::Component::Flags::audio, audio);
+    entity->addComponent(ECS::Component::Flags::collisionBox2D, collision);
+    entity->addComponent(ECS::Component::Flags::damage, damage);
+    entity->addComponent(ECS::Component::Flags::health, health);
+    entity->addComponent(ECS::Component::Flags::life, life);
+    entity->addComponent(ECS::Component::Flags::particules, particules);
+    entity->addComponent(ECS::Component::Flags::script, script);
+    entity->addComponent(ECS::Component::Flags::spawner, spwaner);
+    entity->addComponent(ECS::Component::Flags::speed, speed);
+    entity->addComponent(ECS::Component::Flags::sprite, sprite);
+    entity->addComponent(ECS::Component::Flags::text, text);
+    entity->addComponent(ECS::Component::Flags::transform, transform);
+
+    // Checking if all components are there
+    ASSERT_EQ(entity->hasComponent(ECS::Component::Flags::acceleration), true);
+    ASSERT_EQ(entity->hasComponent(ECS::Component::Flags::audio), true);
+    ASSERT_EQ(entity->hasComponent(ECS::Component::Flags::collisionBox2D), true);
+    ASSERT_EQ(entity->hasComponent(ECS::Component::Flags::damage), true);
+    ASSERT_EQ(entity->hasComponent(ECS::Component::Flags::health), true);
+    ASSERT_EQ(entity->hasComponent(ECS::Component::Flags::life), true);
+    ASSERT_EQ(entity->hasComponent(ECS::Component::Flags::particules), true);
+    ASSERT_EQ(entity->hasComponent(ECS::Component::Flags::script), true);
+    ASSERT_EQ(entity->hasComponent(ECS::Component::Flags::spawner), true);
+    ASSERT_EQ(entity->hasComponent(ECS::Component::Flags::speed), true);
+    ASSERT_EQ(entity->hasComponent(ECS::Component::Flags::sprite), true);
+    ASSERT_EQ(entity->hasComponent(ECS::Component::Flags::text), true);
+    ASSERT_EQ(entity->hasComponent(ECS::Component::Flags::transform), true);
+
+    // Copying all components of the entity to the copy
+    auto copy = factory.createEntity(*(entity.get()),
+                  ECS::Component::Flags::acceleration
+                | ECS::Component::Flags::audio
+                | ECS::Component::Flags::collisionBox2D
+                | ECS::Component::Flags::damage
+                | ECS::Component::Flags::health
+                | ECS::Component::Flags::life
+                | ECS::Component::Flags::particules
+                | ECS::Component::Flags::script
+                | ECS::Component::Flags::spawner
+                | ECS::Component::Flags::speed
+                | ECS::Component::Flags::sprite
+                | ECS::Component::Flags::text
+                | ECS::Component::Flags::transform);
+
+    // Getting all the components from the new entity
+    auto accelerationC = static_cast<ECS::Component::Acceleration *>(copy->component(ECS::Component::Flags::acceleration).get());
+    auto audioC = static_cast<ECS::Component::Audio *>(copy->component(ECS::Component::Flags::audio).get());
+    auto collisionBox2DC = static_cast<ECS::Component::CollisionBox2D *>(copy->component(ECS::Component::Flags::collisionBox2D).get());
+    auto damageC = static_cast<ECS::Component::Damage *>(copy->component(ECS::Component::Flags::damage).get());
+    auto healthC = static_cast<ECS::Component::Health *>(copy->component(ECS::Component::Flags::health).get());
+    auto lifeC = static_cast<ECS::Component::Life *>(copy->component(ECS::Component::Flags::life).get());
+    auto particulesC = static_cast<ECS::Component::Particules *>(copy->component(ECS::Component::Flags::particules).get());
+    auto scriptC = static_cast<ECS::Component::Script *>(copy->component(ECS::Component::Flags::script).get());
+    auto spawnerC = static_cast<ECS::Component::Spawner *>(copy->component(ECS::Component::Flags::spawner).get());
+    auto speedC = static_cast<ECS::Component::Speed *>(copy->component(ECS::Component::Flags::speed).get());
+    auto spriteC = static_cast<ECS::Component::Sprite *>(copy->component(ECS::Component::Flags::sprite).get());
+    auto textC = static_cast<ECS::Component::Text *>(copy->component(ECS::Component::Flags::text).get());
+    auto transformC = static_cast<ECS::Component::Transform *>(copy->component(ECS::Component::Flags::transform).get());
+
+    // Checking if the components have been copied
+    ASSERT_EQ(accelerationC->acceleration, 5);
+    ASSERT_STREQ(audioC->file.c_str(), "test_file");
+    ASSERT_EQ(audioC->active, true);
+    ASSERT_EQ(collisionBox2DC->rectangle.top, 0);
+    ASSERT_EQ(collisionBox2DC->rectangle.left, 0);
+    ASSERT_EQ(collisionBox2DC->rectangle.width, 200);
+    ASSERT_EQ(collisionBox2DC->rectangle.height, 200);
+    ASSERT_EQ(damageC->damage, 15);
+    ASSERT_EQ(healthC->health, 150);
+    ASSERT_EQ(healthC->healthLimit, 0);
+    ASSERT_EQ(lifeC->lifes, 3);
+    ASSERT_EQ(particulesC->samples, 100);
+    ASSERT_EQ(particulesC->size, 5);
+    ASSERT_EQ(particulesC->speed, 1);
+    ASSERT_EQ(scriptC->updateScript, &dummyScript);
+    ASSERT_EQ(spawnerC->blueprint->tag(), entity->tag());
+    ASSERT_EQ(spawnerC->seconds, std::chrono::seconds(4));
+    ASSERT_EQ(speedC->speed, 20);
+    ASSERT_EQ(spriteC->loaded, false);
+    ASSERT_STREQ(spriteC->texture.c_str(), "Texture_file.jpg");
+    ASSERT_STREQ(textC->text.c_str(), "Text to display");
+    ASSERT_EQ(transformC->x, 10);
+    ASSERT_EQ(transformC->y, 42);
+    ASSERT_EQ(transformC->z, 84);
+}
