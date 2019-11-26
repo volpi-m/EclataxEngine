@@ -1,4 +1,4 @@
-
+59 118 177 236 295
 
 
 
@@ -179,41 +179,41 @@ RFC -42             Instruction to R-Type Developper      November 2019
 
 
         301: Client send a debug message to server. This message
-        SHOULD be printed on server's console
+        SHOULD be printed on server's console (TCP/UDP)
 
         302: Client error. Send an error message to the server.
-        The message SHOULD be printed on server's console.
+        The message SHOULD be printed on server's console. (TCP/UDP)
 
     2b. Server network codes
 
         401: Player in Hub. Server tell that the client who asked
         for a hub is in a hub.
 
+        Server also send the hub number in which the client has
+        been placed. (TCP)
+
         402: Server tick and send to Client all drawable objects.
         Client MUST draw all objects as the server tell it.
+        (UDP)
 
         403: Server send to all clients in a specific hub that a
-        new player just arrived in the specific hub.
+        new player just arrived in the specific hub. (TCP)
 
         404: New enemy information. When server reload enemies
         and found a new enemy library (.so/.dll) it will send
         an update to Client to warn it than a completely new
         enemy is coming. Server will need to send the sprite of
-        the enemy (dunno how for now).
+        the enemy (dunno how for now). (TCP ?)
 
         405: Server send to all client in a hub that the game
         will start in a few seconds. Next Packet Client will
-        receive will probably be 402.
+        receive will probably be 402. (TCP)
 
-        501: Server send a debug message to client. The debug
-        message SHOULD be printed on client's console
+        501: Server send a debug message to client. Thi message
+        SHOULD be printed on client's console. (TCP/UDP)
 
         502: Server error. Send an error message to the client.
-        The message SHOULD be printed on client's console.
-
-
-
-
+        The message SHOULD be printed on client's console. (TCP/UDP)
 
 
 
@@ -241,11 +241,13 @@ RFC -42             Instruction to R-Type Developper      November 2019
 
     Client's gameloop look like this:
 
+    while (true) {
         read_network()
         read_events()
         send_events()
         update_positions()
         render_world()
+    }
 
     - read_network() receive udp packets from server and process it
 
@@ -262,8 +264,6 @@ RFC -42             Instruction to R-Type Developper      November 2019
     - render_world() render all newly updated entities on screen
 
     3a. Client event sending
-
-
 
 
 
