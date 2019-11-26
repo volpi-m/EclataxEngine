@@ -31,14 +31,23 @@ Scenes::IScene *Scenes::DumyScene::run()
     if (_ids.empty()) {
         // Creating a basic component to add to an entity, and a system that wil access it.
         std::shared_ptr<ECS::IComponent> transform(new ECS::Component::Transform(0, 1, 2));
-        std::unique_ptr<ECS::ISystem> system(new ECS::System::MovementSystem);
+        std::unique_ptr<ECS::ISystem> movement(new ECS::System::MovementSystem);
+        std::unique_ptr<ECS::ISystem> iA(new ECS::System::IASystem);
 
         // Creating the entity, adding the component, saving the system
         _ids.push_back(_ECS->createEntity("John Cena"));
+
+        // Creating an asteriod from a dynamic librart
+        auto id = _ECS->createEntityFromLibrary("lib/libasteroid.so");
+        if (id)
+            _ids.push_back(id);
         _ECS->addComponentToEntity(_ids.front(), ECS::Component::Flags::transform, transform);
-        _ECS->addSystem(ECS::System::Flags::Movement, system);
+        _ECS->addSystem(ECS::System::Flags::Movement, movement);
+        _ECS->addSystem(ECS::System::Flags::IA, iA);
     } else if (_ECS->hasEntity(_ids.front())) {
-        std::cout << "The Dumy scene posseses " << _ids.size() << " entitie(s), it's name is " << _ECS->tag(_ids.front()) << std::endl;
+        std::cout << std::endl << "The Dumy scene posseses " << _ids.size() << " entitie(s)" << std::endl;
+        for (auto &it : _ids)
+            std::cout << "- " << _ECS->tag(it) << std::endl;
         std::cout << "Launching systems ..." << std::endl;
 
         // Getting the system that we want to use
@@ -58,8 +67,19 @@ Scenes::IScene *Scenes::DumyScene::run()
 
         // Updating systems
         _ECS->update();
-        _ECS->update();
-        _pop = true;
+        if (_ids.size() == 1)
+            _pop = true;
+        else {
+            // Getting the position of an entity via the system
+            auto positionAsteriod = movementSystem->transform(_ECS->entity(_ids.back()));
+
+            if (std::get<0>(positionAsteriod) < -960) {
+
+                std::cout << "Asteriod out of range !" << _ids.back() << std::endl;
+                _ECS->deleteEntity(_ids.back());
+                _ids.erase(_ids.end() - 1);
+            }
+        }
         return nullptr;
     }
     return nullptr;

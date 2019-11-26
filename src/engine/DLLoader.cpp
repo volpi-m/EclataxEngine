@@ -8,14 +8,10 @@
 #include <iostream>
 #include "DLLoader.hpp"
 
-ECS::DLLoader::DLLoader()
-{ }
-
 ECS::DLLoader::~DLLoader()
 {
-    for (std::vector<void *>::iterator i = this->_ptr.begin(); i != this->_ptr.end(); i++) {
-        dlclose(*i);
-    }
+    for (auto &it : _ptr)
+        dlclose(it);
     this->_ptr.clear();
 }
 

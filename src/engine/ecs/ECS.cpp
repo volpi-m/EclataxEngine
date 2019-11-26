@@ -36,6 +36,45 @@ unsigned long long Module::EntityComponentSystem::createEntity(const char *tag)
     return _newId - 1;
 }
 
+unsigned long long Module::EntityComponentSystem::createEntityFromLibrary(const std::string &filepath)
+{
+    ECS::Entity *ptr = _loader.getInstance<ECS::Entity>(filepath);
+
+    // Checking if the library exists
+    if (!ptr)
+        return 0;
+
+    // Creating an new id for a new entity
+    std::shared_ptr<ECS::Entity> newEntity(ptr);
+    _newId++;
+    _entities.emplace(_newId - 1, newEntity);
+
+    return _newId - 1;
+}
+
+unsigned long long Module::EntityComponentSystem::createEntityFromLibrary(const char *filepath)
+{
+    ECS::Entity *ptr = _loader.getInstance<ECS::Entity>(filepath);
+
+    // Checking if the library exists
+    if (!ptr)
+        return 0;
+
+    // Creating an new id for a new entity
+    std::shared_ptr<ECS::Entity> newEntity(ptr);
+    _newId++;
+    _entities.emplace(_newId - 1, newEntity);
+
+    return _newId - 1;
+}
+
+void Module::EntityComponentSystem::deleteEntity(unsigned long long id)
+{
+    if (_entities.find(id) != _entities.end())
+        _entities.erase(id);
+}
+        
+
 void Module::EntityComponentSystem::addComponentToEntity(unsigned long long id, ECS::flagType flag, std::shared_ptr<ECS::IComponent> &component)
 {
     _entities[id]->addComponent(flag, component);

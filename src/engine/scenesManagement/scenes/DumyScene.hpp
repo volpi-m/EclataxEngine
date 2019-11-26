@@ -17,6 +17,7 @@
 
 #include "TransformComponent.hpp"
 #include "MovementSystem.hpp"
+#include "IASystem.hpp"
 #include "IScene.hpp"
 #include "Logger.hpp"
 

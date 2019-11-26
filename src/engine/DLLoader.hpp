@@ -21,7 +21,7 @@ namespace ECS {
 
     class DLLoader {
         public:
-            DLLoader();
+            DLLoader() = default;
             ~DLLoader();
 
             template<typename T>
@@ -42,9 +42,9 @@ namespace ECS {
         T *(*fct)(void);
 
         lib_ptr = dlopen(file.c_str(), RTLD_LAZY);
-        if (lib_ptr == nullptr)
+        if (lib_ptr == nullptr) {
             this->disp_error();
-        else {
+        } else {
             _ptr.push_back(lib_ptr);
             fct = (T *(*)())dlsym(lib_ptr, "entryPoint");
             if (fct != nullptr)

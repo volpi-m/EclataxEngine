@@ -19,12 +19,12 @@
 /// \brief main function
 int main()
 {
-    Server::Mediator m;
-    m.start();
-    // Game::GameEngine engine;
-    // auto scene = std::shared_ptr<Scenes::IScene>(new Scenes::DumyScene("Dummy scene", engine.ECS()));
+    // Server::Mediator m;
+    // m.start();
+    Game::GameEngine engine;
+    auto scene = std::shared_ptr<Scenes::IScene>(new Scenes::DumyScene("Dummy scene", engine.ECS()));
 
-    // Debug::Breakpoint("Fuck off", "yes");
-    // engine.SceneMachine()->push(scene);
-    // while (engine.SceneMachine()->run());
+    Debug::Breakpoint("Fuck off", "yes");
+    engine.SceneMachine()->push(scene);
+    while (engine.SceneMachine()->run());
 }

@@ -7,31 +7,36 @@
 
 #pragma once
 
-#include "IEnnemy.hpp"
+#include "Entity.hpp"
+#include "SpeedComponent.hpp"
+#include "AudioComponent.hpp"
+#include "DamageComponent.hpp"
+#include "HealthComponent.hpp"
+#include "ScriptComponent.hpp"
+#include "SpriteComponent.hpp"
+#include "TransformComponent.hpp"
+#include "ParticulesComponent.hpp"
+#include "AccelerationComponent.hpp"
+#include "CollisionBox2DComponent.hpp"
 
-/// \namespace Game
-/// \brief Used for the game part classes
 namespace Game {
 
     /// \class Asteroid
     /// \brief ennemy that falling on the player
-	class Asteroid : public IEnnemy
-	{
+	class Asteroid {
 		public:
             /// \brief constructor
             /// Initialize Asteroid class
-			Asteroid();
+			Asteroid() = default;
+
             /// \brief destructor
             /// Destroy Asteroid class
 			~Asteroid() = default;
 
-            /// \brief initialise the component in game engine
-            void initComponent() override;
-
-            // virtual void move() = 0;
-            // virtual void shot() = 0;
-            // virtual void kill() = 0;
-
-		private:
+            /// \brief initialise the entity
+            /// \return a pointer to the new entity
+            ECS::Entity *createEntity();
+        private:
+            static void IA(std::shared_ptr<ECS::Entity> &entity);
 	};
 }

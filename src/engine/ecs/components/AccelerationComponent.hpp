@@ -34,7 +34,7 @@ namespace ECS {
             Acceleration(std::size_t _acceleration) : acceleration(_acceleration) {}
 
             /*! acceleration attribute */
-            std::size_t acceleration;
+            float acceleration;
         };
     }
 }

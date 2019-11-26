@@ -18,6 +18,7 @@
 #include "IModule.hpp"
 #include "ISystem.hpp"
 #include "Entity.hpp"
+#include "DLLoader.hpp"
 
 /// \namespace Module
 /// \brief Used for all GameEngine modules
@@ -40,15 +41,25 @@ namespace Module {
         /// \brief add a system to the ECS's system list
         void addSystem(ECS::flagType type, std::unique_ptr<ECS::ISystem> &system);
 
-        /// \param tag : the new name of the current scene
-        /// \param ECS : ECS instance to pass to the scene
-        /// \brief scene constructor
+        /// \param tag : the new name of the entity
+        /// \brief creates an entity
         unsigned long long createEntity(const std::string &tag = "");
 
-        /// \param tag : the new name of the current scene
-        /// \param ECS : ECS instance to pass to the scene
-        /// \brief scene constructor
+        /// \param tag : the new name of the entity
+        /// \brief creates an entity
         unsigned long long createEntity(const char *tag = "");
+
+        /// \param filepath : the path to the dynamic library
+        /// \brief creates an entity from a dynamic library
+        unsigned long long createEntityFromLibrary(const std::string &filepath);
+
+        /// \param filepath : the path to the dynamic library
+        /// \brief creates an entity from a dynamic library
+        unsigned long long createEntityFromLibrary(const char *filepath);
+
+        /// \param id : the id of the entity to delete
+        /// \brief deletes an entity from the ECS
+        void deleteEntity(unsigned long long id);
 
         /// \param id : the id of the entity
         /// \param flag : the component flag
@@ -114,5 +125,7 @@ namespace Module {
         std::unordered_map<ECS::flagType, std::shared_ptr<ECS::ISystem>> _systems;
         /*! Entities unordered map (id and instance) */
         std::unordered_map<unsigned long long, std::shared_ptr<ECS::Entity>> _entities;
+        /*! library loader */
+        ECS::DLLoader _loader;
     };
 }

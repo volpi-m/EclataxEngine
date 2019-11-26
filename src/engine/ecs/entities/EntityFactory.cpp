@@ -29,6 +29,7 @@ void ECS::EntityFactory::registerEntity(const std::string &key, ECS::Entity &ent
     // Iterating over flags and adding them if found in the entity to copy
     for (auto &it : _flags) {
         if (entity.hasComponent(it)) {
+
             // Component found, creating a new empty one in the new entity
             auto newComponent = _emptyComponentFactory[i]();
             _blueprints.at(key).addComponent(it, newComponent);
