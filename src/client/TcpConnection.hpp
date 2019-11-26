@@ -15,8 +15,7 @@
 #include <SFML/Network.hpp>
 #include <cstring>
 #include "ConfReader.hpp"
-
-constexpr auto const TCP_BUF_SIZE = 1024;
+#include "Rfc.hpp"
 
 namespace Client
 {
@@ -35,7 +34,7 @@ namespace Client
         /// \brief Send message to server
         /// \param data : packet to send to server
         /// \param size : size of the buffer
-        void send(const char *, const std::size_t);
+        void send(const void *, const std::size_t);
 
         /// \brief Recieve message from server
         /// \return Pointer to what server send
@@ -47,7 +46,7 @@ namespace Client
         /*! TCP Socket, used for client-server communication */
         sf::TcpSocket _socket;
         /*! Buffer */
-        char _buf[TCP_BUF_SIZE];
+        char _buf[Network::TCP_BUF_SIZE + sizeof(int)];
     };
 }
 

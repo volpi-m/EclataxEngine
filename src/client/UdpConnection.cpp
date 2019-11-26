@@ -41,10 +41,10 @@ void *Client::UdpConnection::receive()
     sf::IpAddress sender;
     unsigned short port = 0;
 
-    if (_socket.receive(_buf, UDP_BUF_SIZE, received, sender, port) == sf::Socket::Done) {
-        char *b = new char[UDP_BUF_SIZE + 1];
-        std::memset(b, 0, UDP_BUF_SIZE + 1);
-        std::memcpy(b, _buf, UDP_BUF_SIZE);
+    if (_socket.receive(_buf, Network::UDP_BUF_SIZE, received, sender, port) == sf::Socket::Done) {
+        char *b = new char[Network::UDP_BUF_SIZE + 1];
+        std::memset(b, 0, Network::UDP_BUF_SIZE + 1);
+        std::memcpy(b, _buf, Network::UDP_BUF_SIZE);
         return b;
     }
     return nullptr;
