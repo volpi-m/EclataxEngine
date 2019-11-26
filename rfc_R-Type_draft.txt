@@ -21,7 +21,7 @@ Table of Contents
     1.  Introduction . . . . . . . . . . . . . . . . . . 2
     2.  Network Protocol . . . . . . . . . . . . . . . . 2
     2a. Client network codes . . . . . . . . . . . . . . 3
-    2b. Server network codes
+    2b. Server network codes . . . . . . . . . . . . . . 4
     3.  Client gameloop
     3a. Client event sending
     4.  Server gameloop
@@ -175,41 +175,41 @@ Informational                                                  [Page 3]
                 Matteo V. Lucas T. Arthur L. Paulin F.
 
 =======================================================================
+RFC -42             Instruction to R-Type Developper      November 2019
 
 
+        301: Client send a debug message to server. This message
+        SHOULD be printed on server's console
 
+        302: Client error. Send an error message to the server.
+        The message SHOULD be printed on server's console.
 
+    2b. Server network codes
 
+        401: Player in Hub. Server tell that the client who asked
+        for a hub is in a hub.
 
+        402: Server tick and send to Client all drawable objects.
+        Client MUST draw all objects as the server tell it.
 
+        403: Server send to all clients in a specific hub that a
+        new player just arrived in the specific hub.
 
+        404: New enemy information. When server reload enemies
+        and found a new enemy library (.so/.dll) it will send
+        an update to Client to warn it than a completely new
+        enemy is coming. Server will need to send the sprite of
+        the enemy (dunno how for now).
 
+        405: Server send to all client in a hub that the game
+        will start in a few seconds. Next Packet Client will
+        receive will probably be 402.
 
+        501: Server send a debug message to client. The debug
+        message SHOULD be printed on client's console
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        502: Server error. Send an error message to the client.
+        The message SHOULD be printed on client's console.
 
 
 
@@ -234,7 +234,65 @@ Informational                                                  [Page 4]
                 Matteo V. Lucas T. Arthur L. Paulin F.
 
 =======================================================================
+RFC -42             Instruction to R-Type Developper      November 2019
 
+
+3.  Client Gameloop
+
+    Client's gameloop look like this:
+
+        read_network()
+        read_events()
+        send_events()
+        update_positions()
+        render_world()
+
+    - read_network() receive udp packets from server and process it
+
+    - read_events() reads keyboard/joysticks/mouse events and stores
+        them, waiting to be send.
+        Events MUST be stored as a map of keys and their
+        corresponding state (true or false).
+
+    - send_events() send events to the server
+
+    - update_positions() use data processed in read_network() and
+        update position of all entites in the game
+
+    - render_world() render all newly updated entities on screen
+
+    3a. Client event sending
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Informational                                                  [Page 5]
+
+                Matteo V. Lucas T. Arthur L. Paulin F.
+
+=======================================================================
 
 
 Netcode:
@@ -266,20 +324,21 @@ Netcode:
     203: client not ready
     204: request sprites
     205: client tick
-    206: Server debug
 
 3xx: client error
-    301: Client error
+    301: Client debug
+    302: Client error
 
 4xx: server communication
-    401: player in hub
+    401: player is in hub
     402: server tick
     403: New player in hub
     404: New ennemy information
-    406: Client debug
+    405: Game is starting
 
 5xx: server error
-    501: Server error
+    501: Server debug
+    502: Server error
 
 
 - every key has an event associated
