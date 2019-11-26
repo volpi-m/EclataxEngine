@@ -191,6 +191,14 @@ void dummyScript(std::shared_ptr<ECS::Entity> &entity)
     entity->setVisible(false);
 }
 
+std::shared_ptr<ECS::Entity> dummySpawner(std::shared_ptr<ECS::Entity> &entity)
+{
+    (void)entity;
+
+    return std::shared_ptr<ECS::Entity>(new ECS::Entity("test"));
+}
+
+
 TEST(EntityFactoryTests, createCopyedComponents)
 {
     // Creating all components available
@@ -204,7 +212,7 @@ TEST(EntityFactoryTests, createCopyedComponents)
     std::shared_ptr<ECS::IComponent> life(new ECS::Component::Life(3));
     std::shared_ptr<ECS::IComponent> particules(new ECS::Component::Particules(100, 5, 1));
     std::shared_ptr<ECS::IComponent> script(new ECS::Component::Script(&dummyScript));
-    std::shared_ptr<ECS::IComponent> spwaner(new ECS::Component::Spawner(std::chrono::seconds(4), entity));
+    std::shared_ptr<ECS::IComponent> spwaner(new ECS::Component::Spawner(std::chrono::seconds(4), dummySpawner));
     std::shared_ptr<ECS::IComponent> speed(new ECS::Component::Speed(20.5f));
     std::shared_ptr<ECS::IComponent> sprite(new ECS::Component::Sprite("Texture_file.jpg"));
     std::shared_ptr<ECS::IComponent> text(new ECS::Component::Text("Text to display"));
@@ -287,7 +295,7 @@ TEST(EntityFactoryTests, createCopyedComponents)
     ASSERT_EQ(particulesC->size, 5);
     ASSERT_EQ(particulesC->speed, 1);
     ASSERT_EQ(scriptC->updateScript, &dummyScript);
-    ASSERT_EQ(spawnerC->blueprint->tag(), entity->tag());
+    ASSERT_STREQ(spawnerC->createBlueprint(copy)->tag().c_str(), "test");
     ASSERT_EQ(spawnerC->seconds, std::chrono::seconds(4));
     ASSERT_EQ(speedC->speed, 20);
     ASSERT_EQ(spriteC->loaded, false);

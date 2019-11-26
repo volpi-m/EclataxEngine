@@ -21,19 +21,21 @@ void Module::EntityComponentSystem::addSystem(ECS::flagType type, std::unique_pt
 unsigned long long Module::EntityComponentSystem::createEntity(const std::string &tag)
 {
     // Creating an new id for a new entity
-    _newId++;
-    _entities.emplace(_newId - 1, new ECS::Entity(tag));
+    while (_entities.find(_newId) != _entities.end())
+        _newId++;
+    _entities.emplace(_newId, new ECS::Entity(tag));
 
-    return _newId - 1;
+    return _newId;
 }
 
 unsigned long long Module::EntityComponentSystem::createEntity(const char *tag)
 {
     // Creating an new id for a new entity
-    _newId++;
-    _entities.emplace(_newId - 1, new ECS::Entity(tag));
+    while (_entities.find(_newId) != _entities.end())
+        _newId++;
+    _entities.emplace(_newId, new ECS::Entity(tag));
 
-    return _newId - 1;
+    return _newId;
 }
 
 unsigned long long Module::EntityComponentSystem::createEntityFromLibrary(const std::string &filepath)
@@ -41,15 +43,20 @@ unsigned long long Module::EntityComponentSystem::createEntityFromLibrary(const 
     ECS::Entity *ptr = _loader.getInstance<ECS::Entity>(filepath);
 
     // Checking if the library exists
-    if (!ptr)
+    if (!ptr) {
+        auto log = Debug::Logger::getInstance();
+
+        log->generateDebugMessage(Debug::WARNING, "Couldn't load an entity from a dynamic library.", "Module::EntityComponentSystem::createEntityFromLibrary");
         return 0;
+    }
 
     // Creating an new id for a new entity
     std::shared_ptr<ECS::Entity> newEntity(ptr);
-    _newId++;
-    _entities.emplace(_newId - 1, newEntity);
+    while (_entities.find(_newId) != _entities.end())
+        _newId++;
+    _entities.emplace(_newId, newEntity);
 
-    return _newId - 1;
+    return _newId;
 }
 
 unsigned long long Module::EntityComponentSystem::createEntityFromLibrary(const char *filepath)
@@ -57,15 +64,20 @@ unsigned long long Module::EntityComponentSystem::createEntityFromLibrary(const 
     ECS::Entity *ptr = _loader.getInstance<ECS::Entity>(filepath);
 
     // Checking if the library exists
-    if (!ptr)
+    if (!ptr) {
+        auto log = Debug::Logger::getInstance();
+
+        log->generateDebugMessage(Debug::WARNING, "Couldn't load an entity from a dynamic library.", "Module::EntityComponentSystem::createEntityFromLibrary");
         return 0;
+    }
 
     // Creating an new id for a new entity
     std::shared_ptr<ECS::Entity> newEntity(ptr);
-    _newId++;
-    _entities.emplace(_newId - 1, newEntity);
+    while (_entities.find(_newId) != _entities.end())
+        _newId++;
+    _entities.emplace(_newId, newEntity);
 
-    return _newId - 1;
+    return _newId;
 }
 
 void Module::EntityComponentSystem::deleteEntity(unsigned long long id)
@@ -130,6 +142,7 @@ void Module::EntityComponentSystem::update()
     // std::async ?
     for (auto &system : _systems)
         system.second->update(_entities);
+    std::cout << "The ecs posses " << _entities.size() << " entity(ies)" << std::endl;
 }
 
 void Module::EntityComponentSystem::init()

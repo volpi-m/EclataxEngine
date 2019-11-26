@@ -29,17 +29,19 @@ namespace ECS {
         struct Spawner : public IComponent {
             
             /// \brief constructor
-            Spawner() : seconds(5), blueprint(new Entity("blueprint")) {}
+            Spawner() : seconds(5), createBlueprint(nullptr), timeSinceLastSpawn(std::chrono::high_resolution_clock::now()) {}
 
             /// \brief constructor
             /// \param _seconds : time between each spawns
-            /// \param _entity : entity template that will be used
-            Spawner(std::chrono::seconds _seconds, std::shared_ptr<Entity> &_entity) : seconds(_seconds), blueprint(_entity) {}
+            /// \param _createBlueprint : entity template that will be used
+            Spawner(std::chrono::seconds _seconds, std::shared_ptr<Entity> (*_createBlueprint)(std::shared_ptr<Entity> &parent)) : seconds(_seconds), createBlueprint(_createBlueprint), timeSinceLastSpawn(std::chrono::high_resolution_clock::now()) {}
 
             /*! time between spawns attribute */
             std::chrono::seconds seconds;
-            /*! entity that will be spawnable attribute */
-            std::shared_ptr<Entity> blueprint;
+            /*! entity that will be spawned */
+            std::shared_ptr<Entity> (*createBlueprint)(std::shared_ptr<Entity> &parent);
+            /*! time between spawns attribute */
+            std::chrono::high_resolution_clock::time_point timeSinceLastSpawn;
         };
     }
 }

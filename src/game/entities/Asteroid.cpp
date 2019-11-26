@@ -20,7 +20,7 @@ ECS::Entity *Game::Asteroid::createEntity()
     std::shared_ptr<ECS::IComponent> audio(new ECS::Component::Audio("asteriod.mp3", false));
     std::shared_ptr<ECS::IComponent> damage(new ECS::Component::Damage(15));
     std::shared_ptr<ECS::IComponent> health(new ECS::Component::Health(1));
-    std::shared_ptr<ECS::IComponent> script(new ECS::Component::Script(&IA));
+    std::shared_ptr<ECS::IComponent> script(new ECS::Component::Script(&Asteroid::IA));
     std::shared_ptr<ECS::IComponent> sprite(new ECS::Component::Sprite("asteriod.png"));
     std::shared_ptr<ECS::IComponent> speed(new ECS::Component::Speed(2));
     std::shared_ptr<ECS::IComponent> transform(new ECS::Component::Transform(960, 0, 0));

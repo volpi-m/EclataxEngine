@@ -181,7 +181,7 @@ namespace ECS {
                 [](const std::shared_ptr<IComponent> &component)->std::shared_ptr<IComponent>
                 {
                     auto toCopy = static_cast<Component::Spawner *>(component.get());
-                    std::shared_ptr<IComponent> spawner(new Component::Spawner(toCopy->seconds, toCopy->blueprint));
+                    std::shared_ptr<IComponent> spawner(new Component::Spawner(toCopy->seconds, toCopy->createBlueprint));
 
                     return spawner;
                 },

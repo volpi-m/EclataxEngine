@@ -33,17 +33,19 @@ Scenes::IScene *Scenes::DumyScene::run()
         std::shared_ptr<ECS::IComponent> transform(new ECS::Component::Transform(0, 1, 2));
         std::unique_ptr<ECS::ISystem> movement(new ECS::System::MovementSystem);
         std::unique_ptr<ECS::ISystem> iA(new ECS::System::IASystem);
+        std::unique_ptr<ECS::ISystem> spawner(new ECS::System::SpawnerSystem);
 
         // Creating the entity, adding the component, saving the system
         _ids.push_back(_ECS->createEntity("John Cena"));
 
         // Creating an asteriod from a dynamic librart
-        auto id = _ECS->createEntityFromLibrary("lib/libasteroid.so");
+        auto id = _ECS->createEntityFromLibrary("lib/libship.so");
         if (id)
             _ids.push_back(id);
         _ECS->addComponentToEntity(_ids.front(), ECS::Component::Flags::transform, transform);
         _ECS->addSystem(ECS::System::Flags::Movement, movement);
         _ECS->addSystem(ECS::System::Flags::IA, iA);
+        _ECS->addSystem(ECS::System::Flags::Spawner, spawner);
     } else if (_ECS->hasEntity(_ids.front())) {
         std::cout << std::endl << "The Dumy scene posseses " << _ids.size() << " entitie(s)" << std::endl;
         for (auto &it : _ids)
@@ -71,11 +73,11 @@ Scenes::IScene *Scenes::DumyScene::run()
             _pop = true;
         else {
             // Getting the position of an entity via the system
-            auto positionAsteriod = movementSystem->transform(_ECS->entity(_ids.back()));
+            auto positionShip = movementSystem->transform(_ECS->entity(_ids.back()));
 
-            if (std::get<0>(positionAsteriod) < -960) {
+            if (std::get<0>(positionShip) < -960) {
 
-                std::cout << "Asteriod out of range !" << _ids.back() << std::endl;
+                std::cout << "ship out of range !" << std::endl;
                 _ECS->deleteEntity(_ids.back());
                 _ids.erase(_ids.end() - 1);
             }

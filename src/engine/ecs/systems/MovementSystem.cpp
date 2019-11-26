@@ -11,16 +11,7 @@ void ECS::System::MovementSystem::update(std::unordered_map<unsigned long long, 
 {
     for (auto &entity : entities)
         if (entity.second->hasComponent(Component::Flags::transform)) {
-            std::cout << "Transform component found. Casting ..." << std::endl;
-
-            auto component = static_cast<ECS::Component::Transform *>(entity.second->component(Component::Flags::transform).get());
-            std::cout << "values : " << std::endl;
-            std::cout << "x : " << component->x << std::endl;
-            std::cout << "y : " << component->y << std::endl;
-            std::cout << "z : " << component->z << std::endl;
-            
-            std::cout << "Increment x ..." << std::endl;
-            component->x++;
+            // OK
         }
 }
 
