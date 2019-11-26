@@ -35,6 +35,9 @@ constexpr auto const SERVER_DEBUG = 406;
 /// \def rfc code use when server encountering an error
 constexpr auto const SERVER_ERROR = 501;
 
+/// \def port used by clients
+constexpr auto const CLIENT_PORT = 1234;
+
 namespace Server {
 
     struct header {
@@ -42,5 +45,5 @@ namespace Server {
         void *data;
     };
 
-    
+
 }

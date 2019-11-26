@@ -38,34 +38,37 @@ namespace Server {
             /// Destroy Mediator class
             ~Mediator();
 
-            /// \brief create a hub for player
-            /// The hub is create in a different thread
-            void createHub(const std::string &ip);
             /// \brief return number of hub
             int hubNumber();
             /// \brief method for starting the Mediator
             void start();
-            static void processTcpMessage(Server::TcpConnection *socket);
+            /// \brief treat all Tcp message received
+            void processTcpMessage(Server::TcpConnection *socket);
 
         private:
             /*! Boost contexte */
             boost::asio::io_context _ioContext;
             /*! Object handling tcp dialogue */
             Server::TcpNetwork _tcp;
-            /*! Thread for running boost */
-            std::thread _boostThread;
-            /*! List of hub */
-            std::vector<std::unique_ptr<Server::Hub>> _hubs;
             /*! Mediator mutex */
             std::mutex _mut;
+            /*! Thread for running boost */
+            std::thread _boostThread;
+            /*! Thread list of all hub */
+            std::vector<std::thread> _threads;
+            /*! List of hub */
+            std::vector<std::unique_ptr<Server::Hub>> _hubs;
             /*! state of the server */
             bool _isRunning;
 
+            // std::unordered_map<int, std::function<void(Mediator *, const std::string &ip)>> _actions;
 
             /// \brief method for creating a new hub
-            void createHub();
+            void createHub(std::string ip);
             /// \brief Launch Boost librairire
             void launchBoost();
+            /// \brief assign a hub to the current ip. If no hub is available, it create a thread with the new hub inside.
+            int assignHub(std::string ip);
 
     };
 }

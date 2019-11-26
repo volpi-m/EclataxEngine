@@ -14,6 +14,7 @@
 #include "Logger.hpp"
 #include "GameEngine.hpp"
 #include "UdpNetwork.hpp"
+#include "Rfc.hpp"
 
 constexpr auto const HUBLIMIT = 4;
 
@@ -50,9 +51,9 @@ namespace Server {
             ~Hub();
 
             /// \brief get port of the hub
-            int port() { return _port; };
+            int port() const { return _port; };
             /// \brief get the number of the hub
-            int id() { return _id; };
+            int id() const { return _id; };
 
             /// \brief add an ip to the hub
             bool addMember(const std::string &newMember);
@@ -63,18 +64,16 @@ namespace Server {
             /// \param state : state of the player
             /// \brief method for starting a game
             void setPlayerReady(const std::string &ip, bool state);
-
             /// \brief method for starting a game
             void startGame(); // to implement
-
-            /// \brief method for process member messages
-            void processMemberMessage();
-
             /// \param code : code for the message
             /// \param msg : message to send
             /// \param size : size of the message
             /// \brief method for send message to all player of the hub
             void sendToAllPlayer(const uint code, void *msg, const std::size_t size);
+            /// \param udp : udp object
+            /// \brief call back method call when an udp message is received
+            void processUdpMessage(Server::UdpNetwork *udp);
 
         private:
             /*! Game engine */

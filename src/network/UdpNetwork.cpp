@@ -7,8 +7,8 @@
 
 #include "UdpNetwork.hpp"
 
-Server::UdpNetwork::UdpNetwork(boost::asio::io_context &io)
-    : _socket(io, udp::endpoint(udp::v4(), 1111))
+Server::UdpNetwork::UdpNetwork(boost::asio::io_context &io, std::function<void(Server::UdpNetwork *)> callBack)
+    : _socket(io, udp::endpoint(udp::v4(), 1111)), _callBack(callBack)
 {
     startAccept();
 }
@@ -25,9 +25,7 @@ void Server::UdpNetwork::startAccept()
 
 void Server::UdpNetwork::handleRead([[maybe_unused]] const std::size_t size)
 {
-    std::cout << "New client" << std::endl;
-    std::cout.write(_buf.data(), size);
-
+    _callBack(this);
     for (size_t i = 0; i < BUFFER_SIZE; i++)
         _buf[i] = 0;
     startAccept();

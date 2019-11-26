@@ -7,12 +7,14 @@
 
 #include "Hub.hpp"
 
-Server::Hub::Hub(int newId, const std::string &creator, boost::asio::io_context &ioContext) : _udp(ioContext), _id(newId)
+Server::Hub::Hub(int newId, const std::string &creator, boost::asio::io_context &ioContext) : 
+    _udp(ioContext, std::bind(&Server::Hub::processUdpMessage, this, std::placeholders::_1)),
+    _id(newId)
 {
-    // Debug::Logger *l = Debug::Logger::getInstance();
-    // std::string msg("create hub with : ")
-    // l->generateDebugMessage(Debug::type::INFO , msg + creator, "main");
-    // addMember(creator);
+    Debug::Logger *l = Debug::Logger::getInstance();
+    std::string msg("create hub with : ");
+    l->generateDebugMessage(Debug::type::INFO , msg + creator, "main");
+    addMember(creator);
 }
 
 Server::Hub::~Hub()
@@ -44,14 +46,15 @@ void Server::Hub::setPlayerReady(const std::string &ip, bool state)
             i.isReady = state;
 }
 
-void Server::Hub::processMemberMessage()
-{
-    //process message
-}
-
 void Server::Hub::sendToAllPlayer(const uint code, void *msg, const std::size_t size)
 {
     for (auto &i : _players) {
         _udp.write(msg, size);
     }
+}
+
+void Server::Hub::processUdpMessage(Server::UdpNetwork *udp)
+{
+    std::cout << "treat a message" << std::endl;
+    Server::header *h = static_cast<Server::header *>((void *)udp->buffer().data());
 }

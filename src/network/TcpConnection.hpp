@@ -64,9 +64,9 @@ namespace Server
         void write(const void *data, const std::size_t size);
 
         /// \brief get the current buffer
-        std::array<char, BUFFER_SIZE> buffer() { return _buf; };
+        std::array<char, BUFFER_SIZE> buffer() const { return _buf; };
         /// \brief get the ip
-        std::string ip() { return _ip; };
+        std::string ip() const { return _ip; };
 
     private:
         /// \param io : boost's io_context used by every I/O object in boost::asio

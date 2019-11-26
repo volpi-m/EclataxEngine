@@ -14,8 +14,10 @@
 
 #include <iostream>
 #include <array>
+#include <functional>
 #include <boost/bind.hpp>
 #include <boost/asio.hpp>
+
 #include "macro.hpp"
 
 using boost::asio::ip::udp;
@@ -30,13 +32,17 @@ namespace Server
     {
     public:
         /// \param io : io_context used by every I/O object of boost
+        /// \param callBack : callBack function
         /// \brief Constructor
         /// Initialize socket and wait for a new connection
-        UdpNetwork(boost::asio::io_context &);
+        UdpNetwork(boost::asio::io_context &io, std::function<void(Server::UdpNetwork *)>callBack);
 
         /// \brief Destructor
         /// Do nothing special
         ~UdpNetwork();
+
+        /// \brief get the buffer content
+        std::array<char, BUFFER_SIZE> buffer() const { return _buf; };
 
         /// \brief write packet to client
         /// \param data : any other data to be send
@@ -58,10 +64,12 @@ namespace Server
 
         /*! Socket used to receive data from udp */
         udp::socket _socket;
-        /*! Connection ednpoint */
+        /*! Connection endpoint */
         udp::endpoint _endpoint;
         /*! Buffer containing data got from remote client */
         std::array<char, BUFFER_SIZE> _buf;
+        /*! callBack function */
+        std::function<void(Server::UdpNetwork *)> _callBack;
     };
 }
 
