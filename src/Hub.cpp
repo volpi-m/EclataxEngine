@@ -9,9 +9,9 @@
 
 Server::Hub::Hub(int newId, const std::string &creator, boost::asio::io_context &ioContext) : 
     _udp(ioContext, std::bind(&Server::Hub::processUdpMessage, this, std::placeholders::_1)),
-    _id(newId)
+    _id(newId), _port(_udp.port())
 {
-    Debug::Logger *l = Debug::Logger::getInstance();
+    Debug::Logger *l = Debug::Logger::getInstance(".log");
     std::string msg("create hub with : ");
     l->generateDebugMessage(Debug::type::INFO , msg + creator, "main");
     addMember(creator);
@@ -71,5 +71,5 @@ void Server::Hub::startGame()
 void Server::Hub::processUdpMessage(Server::UdpNetwork *udp)
 {
     std::cout << "treat a message" << std::endl;
-    Server::headerUdp *h = static_cast<Server::headerUdp *>((void *)udp->buffer().data());
+    Network::headerUdp *h = static_cast<Network::headerUdp *>((void *)udp->buffer().data());
 }

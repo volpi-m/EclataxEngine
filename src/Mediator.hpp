@@ -42,6 +42,9 @@ namespace Server {
             /// \brief treat all Tcp message received
             void processTcpMessage(Server::TcpConnection *socket);
 
+
+            void askHub(Server::TcpConnection *socket, Network::headerTcp *packet);
+
         private:
             /*! Boost contexte */
             boost::asio::io_context _ioContext;
@@ -57,6 +60,8 @@ namespace Server {
             std::vector<std::unique_ptr<Server::Hub>> _hubs;
             /*! state of the server */
             bool _isRunning;
+
+            std::unordered_map<int, std::function<void(Server::TcpConnection *socket, Network::headerTcp *packet)>> _actions;
 
             // std::unordered_map<int, std::function<void(Mediator *, const std::string &ip)>> _actions;
 

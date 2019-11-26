@@ -7,7 +7,7 @@
 
 #pragma once
 
-namespace Server {
+namespace Network {
 
     /// \def rfc code for a client asking a hub
     constexpr auto const ASK_FOR_HUB = 201;
@@ -49,7 +49,7 @@ namespace Server {
 
     struct headerUdp {
         int code;
-        int hubNbr;
+        int hubPort;
         void *data;
     };
 

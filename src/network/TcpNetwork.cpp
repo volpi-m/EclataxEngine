@@ -13,7 +13,7 @@
 
 Server::TcpNetwork::TcpNetwork(boost::asio::io_context &io, 
     std::function<void(Server::TcpConnection *)> fct)
-    : _acceptor(io, tcp::endpoint(tcp::v4(), TCP_CLIENT_PORT)) , _callBack(fct) //change port
+    : _acceptor(io, tcp::endpoint(tcp::v4(), Network::TCP_CLIENT_PORT)) , _callBack(fct) //change port
 {
     startAccept();
 }
