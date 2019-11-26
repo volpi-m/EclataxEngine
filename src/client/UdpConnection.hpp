@@ -22,15 +22,7 @@
 #include <SFML/System.hpp>
 #include "MissingFileException.hpp"
 #include "ConfReader.hpp"
-
-/// \def UDP_SIZE
-/// \brief maximum size of a Datagram packet
-constexpr auto const UDP_BUF_SIZE = 1024;
-
-typedef struct UdpPacket_s {
-    int code;
-    void *data;
-} UdpPacket;
+#include "Rfc.hpp"
 
 namespace Client
 {
@@ -65,7 +57,7 @@ namespace Client
         /*! Udp Socket, bound to a specific IP on server */
         sf::UdpSocket _socket;
         /*! Buffer for received message */
-        char _buf[UDP_BUF_SIZE];
+        char _buf[Network::UDP_BUF_SIZE + sizeof(int) * 2];
     };
 }
 

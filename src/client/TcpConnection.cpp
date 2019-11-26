@@ -32,17 +32,17 @@ Client::TcpConnection::TcpConnection()
 
 Client::TcpConnection::~TcpConnection() {}
 
-void Client::TcpConnection::send(const char *data, const std::size_t size)
+void Client::TcpConnection::send(const void *data, const std::size_t size)
 {
     std::memcpy(_buf, data, size);
-    while (_socket.send(_buf, size) == sf::Socket::Partial);
+    while (_socket.send(_buf, size) != sf::Socket::Done);
 }
 
 char *Client::TcpConnection::receive()
 {
     std::size_t received;
     
-    if (_socket.receive(_buf, TCP_BUF_SIZE, received) == sf::Socket::Done) {
+    if (_socket.receive(_buf, Network::TCP_BUF_SIZE, received) == sf::Socket::Done) {
         char *b = new char[received + 1];
         std::memset(b, 0, received + 1);
         std::memcpy(b, _buf, received);

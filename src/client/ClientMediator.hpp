@@ -16,7 +16,6 @@
 #include "UdpConnection.hpp"
 #include "TcpConnection.hpp"
 #include "GraphicalModule.hpp"
-#include "Rfc.hpp"
 
 /// \namespace Client
 /// \brief Used for Client-related classes
@@ -37,8 +36,9 @@ namespace Client
         void run();
 
     private:
-        /*! UdpConnection instance, send and receive data from server */
+        /*! UdpConnection instance, send and receive data from server during a game */
         Client::UdpConnection _udp;
+        /*! TcpConnection instance, send and receive data from server before and after a game */
         Client::TcpConnection _tcp;
         /*! GraphicalModule instance, create entity and draw */
         Client::GraphicalModule _graph;
