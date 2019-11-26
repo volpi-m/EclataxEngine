@@ -16,11 +16,8 @@
 #include "TcpNetwork.hpp"
 #include "UdpNetwork.hpp"
 #include "Logger.hpp"
-#include "IScene.hpp"
-#include "SplashScene.hpp"
 #include "Hub.hpp"
 #include "Rfc.hpp"
-// #include "macro.hpp"
 
 /// \namespace Server
 /// \brief Used for the all server classes

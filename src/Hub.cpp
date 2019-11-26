@@ -46,10 +46,25 @@ void Server::Hub::setPlayerReady(const std::string &ip, bool state)
             i.isReady = state;
 }
 
-void Server::Hub::sendToAllPlayer(const uint code, void *msg, const std::size_t size)
+void Server::Hub::sendToAllPlayer(void *msg, const std::size_t size)
 {
     for (auto &i : _players) {
-        _udp.write(msg, size);
+        _udp.write(i.ip, msg, size);
+    }
+}
+
+void Server::Hub::startGame()
+{
+    Debug::Logger *l = Debug::Logger::getInstance(".log");
+    std::string msg("Hub number ");
+    l->generateDebugMessage(Debug::type::INFO , "Starting the game", msg + std::to_string(_id));
+    auto scene = std::shared_ptr<Scenes::IScene>(new Scenes::SplashScene("Splash scene", _engine.ECS()));
+
+    _engine.SceneMachine()->push(scene);
+    while(_engine.SceneMachine()->run() != false) {
+        // get everything to be send
+        // update event stack
+        // send event to scene
     }
 }
 

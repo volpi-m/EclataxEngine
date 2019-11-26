@@ -8,7 +8,7 @@
 #include "UdpNetwork.hpp"
 
 Server::UdpNetwork::UdpNetwork(boost::asio::io_context &io, std::function<void(Server::UdpNetwork *)> callBack)
-    : _socket(io, udp::endpoint(udp::v4(), 1111)), _callBack(callBack)
+    : _socket(io, udp::endpoint(udp::v4(), 1111)), _callBack(callBack) // need to redefined the port
 {
     startAccept();
 }
@@ -36,9 +36,10 @@ void Server::UdpNetwork::handleWrite([[maybe_unused]] const std::size_t size)
     std::cout << "Packet sent to IP" << std::endl;
 }
 
-void Server::UdpNetwork::write(const void *data, const std::size_t size)
+void Server::UdpNetwork::write(const std::string &ip, const void *data, const std::size_t size)
 {
-    _socket.async_send_to(boost::asio::buffer(data, size), _endpoint,
+    udp::endpoint destination(boost::asio::ip::address::from_string(ip.data()), 12345); // need to redefined the port
+    _socket.async_send_to(boost::asio::buffer(data, size), destination,
         boost::bind(&UdpNetwork::handleWrite, this,
             boost::asio::placeholders::bytes_transferred));
 }

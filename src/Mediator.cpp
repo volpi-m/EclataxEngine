@@ -72,10 +72,3 @@ void Server::Mediator::processTcpMessage(Server::TcpConnection *socket)
     if (h->code == ASK_FOR_HUB)
         assignHub(socket->ip());
 }
-
-// Debug::Logger *l = Debug::Logger::getInstance();
-// l->generateDebugMessage(Debug::type::INFO , "Enter the game", "main");
-// auto scene = std::shared_ptr<Scenes::IScene>(new Scenes::SplashScene("Splash scene", engine.ECS()));
-
-// engine.SceneMachine()->push(scene);
-// engine.SceneMachine()->run();
