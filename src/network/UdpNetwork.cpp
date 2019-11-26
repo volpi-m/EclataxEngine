@@ -38,7 +38,7 @@ void Server::UdpNetwork::handleWrite([[maybe_unused]] const std::size_t size)
 
 void Server::UdpNetwork::write(const std::string &ip, const void *data, const std::size_t size)
 {
-    udp::endpoint destination(boost::asio::ip::address::from_string(ip.data()), UDP_CLIENT_PORT);
+    udp::endpoint destination(boost::asio::ip::address::from_string(ip.data()), Network::UDP_CLIENT_PORT);
     _socket.async_send_to(boost::asio::buffer(data, size), destination,
         boost::bind(&UdpNetwork::handleWrite, this,
             boost::asio::placeholders::bytes_transferred));

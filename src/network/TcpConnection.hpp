@@ -23,7 +23,7 @@
 
 using boost::asio::ip::tcp;
 
-/// \namespace Serv
+/// \namespace Server
 /// \brief Used for the all server classes
 namespace Server
 {
