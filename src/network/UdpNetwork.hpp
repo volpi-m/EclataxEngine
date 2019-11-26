@@ -19,6 +19,7 @@
 #include <boost/asio.hpp>
 
 #include "macro.hpp"
+#include "Rfc.hpp"
 
 using boost::asio::ip::udp;
 
@@ -40,6 +41,8 @@ namespace Server
             /// \brief Destructor
             /// Do nothing special
             ~UdpNetwork();
+
+            // int port() const { return _socket}
 
             /// \brief get the buffer content
             std::array<char, BUFFER_SIZE> buffer() const { return _buf; };

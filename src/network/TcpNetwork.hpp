@@ -17,6 +17,7 @@
 #include <boost/shared_ptr.hpp>
 #include "TcpConnection.hpp"
 #include "Logger.hpp"
+#include "Rfc.hpp"
 
 /// \namespace Server
 /// \brief Used for the all server classes

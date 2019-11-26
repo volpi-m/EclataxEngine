@@ -74,6 +74,6 @@ void Server::Mediator::processTcpMessage(Server::TcpConnection *socket)
         h.code = SERVER_CLIENT_IS_IN_HUB;
         int n = assignHub(socket->ip());
         h.data = (void *)&n;
-        socket->write(static_cast<void *>(&h), sizeof(h));
+        socket.write(static_cast<void *>&h, sizeof(h));
     }
 }

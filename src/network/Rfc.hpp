@@ -37,8 +37,10 @@ namespace Server {
     /// \def rfc code use when server encountering an error
     constexpr auto const SERVER_ERROR = 501;
 
-    /// \def port used by clients
-    constexpr auto const CLIENT_PORT = 1234;
+    /// \def port used by clients for listening server in tcp
+    constexpr auto const TCP_CLIENT_PORT = 1234;
+    /// \def port used by clients for listening server in udp
+    constexpr auto const UDP_CLIENT_PORT = 4321;
 
     struct headerTcp {
         int code;
