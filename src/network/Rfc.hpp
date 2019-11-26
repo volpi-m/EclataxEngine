@@ -7,50 +7,97 @@
 
 #pragma once
 
-namespace Server {
-
-    /// \def rfc code for a client asking a hub
+/// \namespace Network
+/// \brief Namespace used both in client and server for communication
+namespace Network
+{
+    /// \def ADK_FOR_HUB
+    /// \brief rfc code for a client asking a hub
     constexpr auto const ASK_FOR_HUB = 201;
-    /// \def rfc code when a client is ready
+
+    /// \def CLIENT_IS_READY
+    /// \brief rfc code when a client is ready
     constexpr auto const CLIENT_IS_READY = 202;
-    /// \def rfc code when a client is not ready
+
+    /// \def CLIENT_IS_NOT_READY
+    /// \brief rfc code when a client is not ready
     constexpr auto const CLIENT_IS_NOT_READY = 203;
-    /// \def rfc code when a client request all needed sprites
+
+    /// \def CLIENT REQUEST_SPRITE
+    /// \brief rfc code when a client request all needed sprites
     constexpr auto const CLIENT_REQUEST_SPRITE = 204;
+
+    /// \def CLIENT_TICK
+    /// \brief rfc code when client send keyboards events to server
     constexpr auto const CLIENT_TICK = 205;
-    /// \def rfc code use for debuging client
-    constexpr auto const CLIENT_DEBUG = 206;
 
-    /// \def rfc code use when client have an error
-    constexpr auto const CLIENT_ERROR = 300;
+    /// \def CLIENT_DEBUG
+    /// \brief rfc code use for debuging client
+    constexpr auto const CLIENT_DEBUG = 301;
+
+    /// \def CLIENT_ERROR
+    /// \brief rfc code use when client have an error
+    constexpr auto const CLIENT_ERROR = 302;
 
 
-    /// \def rfc code use by server to notified a client is in the hub
+    /// \def SERVER_CLIENT_IS_IN_HUB
+    /// \brief rfc code use by server to notified a client is in the hub
     constexpr auto const SERVER_CLIENT_IS_IN_HUB = 401;
+
+    /// \def SERVER_TICK
+    /// \brief code used by server to send all enemy's position
     constexpr auto const SERVER_TICK = 402;
-    /// \def rfc code use by server to notified a new player entering in a hub
+
+    /// \def SERVER_NEW_PLAYER_IN_HUB
+    /// \brief rfc code use by server to notified a new player entering in a hub
     constexpr auto const SERVER_NEW_PLAYER_IN_HUB = 403;
+
+    /// \def SERVER_NEW_ENEMY_INFO
+    /// \brief rfc code used by server when a new enemy (.so/.dll) has been added to the game
     constexpr auto const SERVER_NEW_ENNEMY_INFO = 404;
-    /// \def rfc code use by server for printing debug in client
+
+    /// \def SERVER_DEBUG
+    /// \brief rfc code use by server for printing debug in client
     constexpr auto const SERVER_DEBUG = 406;
 
-    /// \def rfc code use when server encountering an error
+    /// \def SERVER_ERROR
+    /// \brief rfc code use when server encountering an error
     constexpr auto const SERVER_ERROR = 501;
 
-    /// \def port used by clients for listening server in tcp
+    /// \def TCP_CLIENT_PORT
+    /// \brief port used by clients for listening server in tcp
     constexpr auto const TCP_CLIENT_PORT = 1234;
-    /// \def port used by clients for listening server in udp
+
+    /// \def UDP_CLIENT_PORT
+    /// \brief port used by clients for listening server in udp
     constexpr auto const UDP_CLIENT_PORT = 4321;
 
+    /// \def TCP_BUF_SIZE
+    /// \brief Maximum size of a TCP buffer
+    constexpr auto const TCP_BUF_SIZE = 1024;
+
+    /// \def UDP_BUF_SIZE
+    /// \brief Maximum size of a UDP buffer
+    constexpr auto const UDP_BUF_SIZE = 1024;
+
+    /// \struct headerTcp
+    /// \brief data structure used when comminicating with TCP protocol
     struct headerTcp {
+        /*! Protocol code cf. above to see all available codes */
         int code;
-        char data[1024];
+        /*! Data to be sent over TCP protocol */
+        char data[TCP_BUF_SIZE];
     };
 
+    /// \struct headerUdp
+    /// \brief data structure used when communicating with UDP protocol
     struct headerUdp {
+        /*! Protocol code, cf. above to see all available codes */
         int code;
+        /*! Hub number in which the specific client is */
         int hubNbr;
-        void *data;
+        /*! Data to be sent over UDP protocol */
+        char data[UDP_BUF_SIZE];
     };
 
 }
