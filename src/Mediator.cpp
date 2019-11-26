@@ -67,13 +67,15 @@ void Server::Mediator::processTcpMessage(Server::TcpConnection *socket)
 {
     Debug::Logger *l = Debug::Logger::getInstance();
     l->generateDebugMessage(Debug::type::INFO , "Enter the callback function !", "Mediator");
+    
     Server::headerTcp *h = static_cast<Server::headerTcp *>((void *)socket->buffer().data());
     std::cout << "Message from : " << socket->ip() << std::endl;
+    
     if (h->code == ASK_FOR_HUB) {
-        Server::headerTcp h;
-        h.code = SERVER_CLIENT_IS_IN_HUB;
+        Server::headerTcp *toSend = new Server::headerTcp;
+        toSend->code = SERVER_CLIENT_IS_IN_HUB;
         int n = assignHub(socket->ip());
-        h.data = (void *)&n;
-        socket->write(static_cast<void *>(&h), sizeof(h));
+        std::memcpy(toSend->data, &n, sizeof(int));
+        socket->write(static_cast<void *>(toSend), sizeof(toSend));
     }
 }

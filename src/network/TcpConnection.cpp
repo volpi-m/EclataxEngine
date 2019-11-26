@@ -83,11 +83,6 @@ void Server::TcpConnection::read()
 
 void Server::TcpConnection::write(const void *data, const std::size_t size)
 {
-    // Babel::tcpHeader *toSend = new Babel::tcpHeader();
-    // toSend->code = code;
-    // std::memset(&(toSend->data), 0, TCP_BUFFER_SIZE);
-    // std::strcpy((char *) &(toSend->data), data);
-    // std::cout << "Packet will be send to: " + _ip << " with code: " << toSend->code << " and message: '" << toSend->data << "'" << std::endl;
     _socket.async_write_some(boost::asio::buffer(data, size),
         boost::bind(&TcpConnection::handleWrite, shared_from_this(),
         boost::asio::placeholders::error,

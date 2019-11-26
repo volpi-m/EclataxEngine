@@ -14,7 +14,9 @@
 #define CLIENTMEDIATOR_HPP_
 
 #include "UdpConnection.hpp"
+#include "TcpConnection.hpp"
 #include "GraphicalModule.hpp"
+#include "Rfc.hpp"
 
 /// \namespace Client
 /// \brief Used for Client-related classes
@@ -37,6 +39,7 @@ namespace Client
     private:
         /*! UdpConnection instance, send and receive data from server */
         Client::UdpConnection _udp;
+        Client::TcpConnection _tcp;
         /*! GraphicalModule instance, create entity and draw */
         Client::GraphicalModule _graph;
     };

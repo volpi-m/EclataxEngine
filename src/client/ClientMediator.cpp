@@ -19,8 +19,15 @@ Client::ClientMediator::~ClientMediator() {}
 
 void Client::ClientMediator::run()
 {
+    struct Server::headerTcp *data = new Server::headerTcp();
+
+    data->code = Server::ASK_FOR_HUB;
+    std::memset(data->data, 0, 1024);
+
+    _tcp.send((char *) data, sizeof(Server::headerTcp));
+
     while (!_graph.run()) {
-        char *a = static_cast<char *>(_udp.receive());
+        char *a = static_cast<char *>(_tcp.receive());
         if (a)
             std::cout.write(a, std::strlen(a));
     }
