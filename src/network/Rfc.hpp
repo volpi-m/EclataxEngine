@@ -44,7 +44,7 @@ namespace Server {
 
     struct headerTcp {
         int code;
-        void *data;
+        char data[1024];
     };
 
     struct headerUdp {
