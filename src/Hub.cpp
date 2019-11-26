@@ -71,5 +71,5 @@ void Server::Hub::startGame()
 void Server::Hub::processUdpMessage(Server::UdpNetwork *udp)
 {
     std::cout << "treat a message" << std::endl;
-    Server::header *h = static_cast<Server::header *>((void *)udp->buffer().data());
+    Server::headerUdp *h = static_cast<Server::headerUdp *>((void *)udp->buffer().data());
 }
