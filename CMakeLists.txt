@@ -36,9 +36,9 @@ set(ENTITY_ASTEROID
     ${CMAKE_CURRENT_SOURCE_DIR}/src/game/entities/Asteroid.cpp
 )
 
-set(ENTITY_ENNEMY
+set(ENTITY_SHIP
     ${CMAKE_CURRENT_SOURCE_DIR}/src/engine/ecs/entities/Entity.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/game/entities/Ennemy.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/game/entities/Ship.cpp
 )
 
 ## General sources
@@ -60,6 +60,7 @@ set(SRC_SERVER
     src/engine/ecs/entities/EntityFactory.cpp
     src/engine/ecs/systems/IASystem.cpp
     src/engine/ecs/systems/RenderSystem.cpp
+    src/engine/ecs/systems/SpawnerSystem.cpp
     src/engine/ecs/systems/MovementSystem.cpp
     src/engine/ecs/systems/CollisionSystem.cpp
     src/engine/ecs/systems/HealthManipulatorSystem.cpp
@@ -115,7 +116,7 @@ include_directories(
 ## Creating Librairies
 add_library(asteroid SHARED ${ENTITY_ASTEROID})
 
-add_library(ennemy SHARED ${ENTITY_ENNEMY})
+add_library(ship SHARED ${ENTITY_SHIP})
 
 ## Creating server executable
 add_executable(r-type_server

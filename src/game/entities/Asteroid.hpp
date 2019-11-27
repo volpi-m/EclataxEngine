@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "Entity.hpp"
+#include "IEnnemy.hpp"
 #include "SpeedComponent.hpp"
 #include "AudioComponent.hpp"
 #include "DamageComponent.hpp"
@@ -23,7 +23,7 @@ namespace Game {
 
     /// \class Asteroid
     /// \brief ennemy that falling on the player
-	class Asteroid {
+	class Asteroid : public IEnnemy {
 		public:
             /// \brief constructor
             /// Initialize Asteroid class
@@ -35,7 +35,7 @@ namespace Game {
 
             /// \brief initialise the entity
             /// \return a pointer to the new entity
-            ECS::Entity *createEntity();
+            ECS::Entity *createEntity() override;
         private:
             static void IA(std::shared_ptr<ECS::Entity> &entity);
 	};

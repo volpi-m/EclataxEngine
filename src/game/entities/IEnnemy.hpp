@@ -13,8 +13,8 @@
 
 #include <iostream>
 
-/// \namespace Game
-/// \brief Used for the game part classes
+#include "Entity.hpp"
+
 namespace Game {
 
     /// \class IEnnemy
@@ -22,13 +22,6 @@ namespace Game {
     class IEnnemy {
 
         public:
-            /// \brief constructor
-            /// Initialize IEnnemy class
-            IEnnemy();
-
-            virtual void initComponent() = 0;
-            // virtual void move() = 0;
-            // virtual void shot() = 0;
-            // virtual void kill() = 0;
+            virtual ECS::Entity *createEntity() = 0;
     };
 }

@@ -19,6 +19,7 @@
 #include "ISystem.hpp"
 #include "Entity.hpp"
 #include "DLLoader.hpp"
+#include "Logger.hpp"
 
 /// \namespace Module
 /// \brief Used for all GameEngine modules

@@ -35,7 +35,8 @@ Client::TcpConnection::~TcpConnection() {}
 void Client::TcpConnection::send(const void *data, const std::size_t size)
 {
     std::memcpy(_buf, data, size);
-    while (_socket.send(_buf, size) != sf::Socket::Done);
+    while (_socket.send(_buf, size, _sent) != sf::Socket::Done);
+    _sent = 0;
 }
 
 char *Client::TcpConnection::receive()

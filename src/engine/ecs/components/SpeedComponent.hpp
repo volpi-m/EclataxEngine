@@ -31,10 +31,10 @@ namespace ECS {
 
             /// \brief constructor
             /// \param _speed : speed value
-            Speed(std::size_t _speed) : speed(_speed) {}
+            Speed(float _speed) : speed(_speed) {}
 
             /*! attribute */
-            std::size_t speed;
+            float speed;
         };
     }
 }
