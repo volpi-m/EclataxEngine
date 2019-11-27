@@ -26,6 +26,16 @@ void Client::ClientMediator::run()
 
     _tcp.send((void *) data, sizeof(Network::headerTcp));
 
+    using namespace std::chrono_literals;
+    std::this_thread::sleep_for(1s);
+
+    char *a = static_cast<char *>(_tcp.receive());
+    Network::headerTcp *s = static_cast<Network::headerTcp *>((void *) a);
+    int b;
+    std::memcpy(&b, s->data, sizeof(int));
+    if (a)
+        std::cout << s->code << " " << b << std::endl;
+
     // while (!_graph.run()) {
     //     char *a = static_cast<char *>(_tcp.receive());
     //     if (a)
