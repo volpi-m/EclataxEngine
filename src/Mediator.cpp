@@ -62,7 +62,9 @@ int Server::Mediator::assignHub(std::string ip)
             return ((*i).id());
         }
     }
-    _threads.emplace_back(&Server::Mediator::createHub, this, ip);
+    createHub(ip);
+    // need to start hub
+    // _threads.emplace_back(&_hubs.back().get()->start, this, ip);
     return _hubs.size();
 }
 
@@ -70,12 +72,11 @@ void Server::Mediator::processTcpMessage(Server::TcpConnection *socket)
 {
     Network::headerTcp *h = static_cast<Network::headerTcp *>((void *)socket->buffer().data());
     if (_actions.find(h->code) != _actions.end()) {
-        std::cout << "find" << std::endl;
-        // _actions[h->code](socket, h);
+        _actions[h->code](socket, h);
     }
 }
 
-void Server::Mediator::askHub(Server::TcpConnection *socket, Network::headerTcp *packet)
+void Server::Mediator::askHub(Server::TcpConnection *socket, [[maybe_unused]] Network::headerTcp *packet)
 {
     std::cout << "Message from : " << socket->ip() << std::endl;
     Network::headerTcp *toSend = new Network::headerTcp;

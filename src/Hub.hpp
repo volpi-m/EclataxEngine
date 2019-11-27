@@ -63,16 +63,9 @@ namespace Server {
             /// \brief check if the hub is full
             bool isFull();
 
-            /// \param ip : ip of the player
-            /// \param state : state of the player
-            /// \brief method for starting a game
-            void setPlayerReady(const std::string &ip, bool state);
-            /// \brief method for starting a game
-            void startGame(); // to implement
-            /// \param msg : message to send
-            /// \param size : size of the message
-            /// \brief method for send message to all player of the hub
-            void sendToAllPlayer(void *msg, const std::size_t size);
+            /// \brief start a hub
+            void start();
+
             /// \param udp : udp object
             /// \brief call back method call when an udp message is received
             void processUdpMessage(Server::UdpNetwork *udp);
@@ -88,5 +81,20 @@ namespace Server {
             unsigned short _port;
             /*! All ip of members */
             std::vector<Server::Player> _players;
+
+            std::mutex _mutex;
+            std::condition_variable _cond_var;
+
+
+            /// \brief method for starting a game
+            void startGame(); // to implement
+            /// \param ip : ip of the player
+            /// \param state : state of the player
+            /// \brief method for starting a game
+            void setPlayerReady(const std::string &ip, bool state);
+            /// \param msg : message to send
+            /// \param size : size of the message
+            /// \brief method for send message to all player of the hub
+            void sendToAllPlayer(void *msg, const std::size_t size);
     };
 }

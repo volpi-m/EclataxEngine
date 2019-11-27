@@ -13,12 +13,24 @@ Server::Hub::Hub(int newId, const std::string &creator, boost::asio::io_context 
 {
     Debug::Logger *l = Debug::Logger::getInstance(".log");
     std::string msg("create hub with : ");
-    l->generateDebugMessage(Debug::type::INFO , msg + creator, "main");
+    l->generateDebugMessage(Debug::type::INFO , msg + creator, "hub constructor");
     addMember(creator);
 }
 
 Server::Hub::~Hub()
 {
+}
+
+void Server::Hub::start()
+{
+    Debug::Logger *l = Debug::Logger::getInstance(".log");
+    std::string msg("hub number ");
+    l->generateDebugMessage(Debug::type::INFO , msg + std::to_string(_id) + " is running !" , "hub starter");
+    std::unique_lock<std::mutex> lock(_mutex);
+    while(_players.size() != HUBLIMIT) {
+        _cond_var.wait(lock);
+    }
+    l->generateDebugMessage(Debug::type::INFO , "Here we go !!!!" , "hub starter");
 }
 
 bool Server::Hub::addMember(const std::string &newMember)
@@ -27,6 +39,7 @@ bool Server::Hub::addMember(const std::string &newMember)
         return false;
     else {
         _players.emplace_back(Server::Player(newMember, false));
+        _cond_var.notify_one();
         return true;
     }
 }
