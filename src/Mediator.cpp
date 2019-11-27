@@ -63,8 +63,8 @@ int Server::Mediator::assignHub(std::string ip)
         }
     }
     createHub(ip);
-    // need to start hub
-    // _threads.emplace_back(&_hubs.back().get()->start, this, ip);
+    _threads.emplace_back(std::bind(&Server::Hub::start, _hubs.back().get()));
+    //return number of hub
     return _hubs.size();
 }
 

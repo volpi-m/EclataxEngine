@@ -11,6 +11,7 @@ Server::Hub::Hub(int newId, const std::string &creator, boost::asio::io_context 
     _udp(ioContext, std::bind(&Server::Hub::processUdpMessage, this, std::placeholders::_1)),
     _id(newId), _port(_udp.port())
 {
+    std::cout << "Entering the hub constructor" << std::endl;
     Debug::Logger *l = Debug::Logger::getInstance(".log");
     std::string msg("create hub with : ");
     l->generateDebugMessage(Debug::type::INFO , msg + creator, "hub constructor");
@@ -27,21 +28,34 @@ void Server::Hub::start()
     std::string msg("hub number ");
     l->generateDebugMessage(Debug::type::INFO , msg + std::to_string(_id) + " is running !" , "hub starter");
     std::unique_lock<std::mutex> lock(_mutex);
-    while(_players.size() != HUBLIMIT) {
+    while(allIsReady()) {
         _cond_var.wait(lock);
     }
     l->generateDebugMessage(Debug::type::INFO , "Here we go !!!!" , "hub starter");
 }
 
-bool Server::Hub::addMember(const std::string &newMember)
+bool Server::Hub::allIsReady()
+{
+    for (auto &i : _players) {
+        if (i.isReady == false)
+            return false;
+    }
+    return true;
+}
+
+bool Server::Hub::addMember(const std::string &ip)
 {
     if (isFull())
         return false;
     else {
-        _players.emplace_back(Server::Player(newMember, false));
-        _cond_var.notify_one();
+        _players.emplace_back(Server::Player(ip, false));
         return true;
     }
+}
+
+void Server::Hub::removeMember(const std::string &ip)
+{
+    _players.remove_if([&] (Player &p) { return(p.ip == ip); });
 }
 
 bool Server::Hub::isFull()
@@ -55,8 +69,10 @@ bool Server::Hub::isFull()
 void Server::Hub::setPlayerReady(const std::string &ip, bool state)
 {
     for (auto &i : _players)
-        if (i.ip == ip)
+        if (i.ip == ip) {
+            _cond_var.notify_one();
             i.isReady = state;
+        }
 }
 
 void Server::Hub::sendToAllPlayer(void *msg, const std::size_t size)

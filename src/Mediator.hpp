@@ -69,6 +69,7 @@ namespace Server {
             void createHub(std::string ip);
             /// \brief Launch Boost librairire
             void launchBoost();
+            /// \return return number of the assigned hub
             /// \brief assign a hub to the current ip. If no hub is available, it create a thread with the new hub inside.
             int assignHub(std::string ip);
 

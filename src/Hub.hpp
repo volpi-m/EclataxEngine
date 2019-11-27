@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include <vector>
+#include <list>
 #include <string>
 #include <boost/asio.hpp>
 
@@ -58,17 +58,21 @@ namespace Server {
             /// \brief get the number of the hub
             int id() const { return _id; };
 
-            /// \brief add an ip to the hub
-            bool addMember(const std::string &newMember);
+            /// \param ip : ip of the removed member
+            /// \brief remove a player from the hub
+            void removeMember(const std::string &ip);
+            /// \param ip : ip of the new member
+            /// \brief add a player to the hub
+            bool addMember(const std::string &ip);
             /// \brief check if the hub is full
             bool isFull();
-
             /// \brief start a hub
             void start();
-
             /// \param udp : udp object
             /// \brief call back method call when an udp message is received
             void processUdpMessage(Server::UdpNetwork *udp);
+            /// \brief check if all player is ready
+            bool allIsReady();
 
         private:
             /*! Game engine */
@@ -80,7 +84,7 @@ namespace Server {
             /*! port of the hub */
             unsigned short _port;
             /*! All ip of members */
-            std::vector<Server::Player> _players;
+            std::list<Server::Player> _players;
 
             std::mutex _mutex;
             std::condition_variable _cond_var;
