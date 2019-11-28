@@ -50,14 +50,11 @@ namespace Server
         /// \param ip : ip address of the current client connected to this instance of Connection
         /// \brief Save the ip of the remote client in the instance of Connection, called in Server when the connection occurs
         void setIP(const std::string &ip);
-
         /// \brief server's startup function. Called when a client is connected to bind writing and
         /// reading functions to their respectives callback
         void start();
-
         /// \brief Bind the read action with a callback, must be called by the callback to read again on network
         void read();
-
         /// \param data : data to be written on network with network code
         /// \param size : size of the string to be written on network
         /// \brief Write a packet on network, use the structure defined in Voip.hpp to send data
@@ -67,6 +64,8 @@ namespace Server
         std::array<char, BUFFER_SIZE> buffer() const { return _buf; };
         /// \brief get the ip
         std::string ip() const { return _ip; };
+        /// \brief return state of connection
+        bool state() const { return _connected; };
 
     private:
         /// \param io : boost's io_context used by every I/O object in boost::asio
@@ -99,6 +98,8 @@ namespace Server
         std::string _ip;
         /*! Call Back function */
         std::function<void(Server::TcpConnection *)> _callBack;
+        /*! State of connection in tcp */
+        bool _connected;        
     };
 }
 

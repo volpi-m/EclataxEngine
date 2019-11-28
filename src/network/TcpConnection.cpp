@@ -13,7 +13,7 @@
 
 Server::TcpConnection::TcpConnection(boost::asio::io_context &io, 
     std::function<void(Server::TcpConnection *)> fct)
-    : _socket(io), _callBack(fct)
+    : _socket(io), _callBack(fct), _connected(true)
 {}
 
 Server::TcpConnection::~TcpConnection() {}
@@ -70,6 +70,8 @@ void Server::TcpConnection::disconnect(const boost::system::error_code &error)
         log->generateDebugMessage(Debug::type::ERROR, "Error: " + error.message());
         std::cerr << "Error: " << error.message() << std::endl;
     }
+    _connected = false;
+    _callBack(this);
     _socket.close();
 }
 

@@ -39,11 +39,9 @@ namespace Server {
             int hubNumber();
             /// \brief method for starting the Mediator
             void start();
+            /// \param socket pointer to the received socket
             /// \brief treat all Tcp message received
             void processTcpMessage(Server::TcpConnection *socket);
-
-
-            void askHub(Server::TcpConnection *socket, Network::headerTcp *packet);
 
         private:
             /*! Boost contexte */
@@ -65,13 +63,23 @@ namespace Server {
 
             // std::unordered_map<int, std::function<void(Mediator *, const std::string &ip)>> _actions;
 
+            /// \param ip ip of the hub creator
             /// \brief method for creating a new hub
             void createHub(std::string ip);
             /// \brief Launch Boost librairire
             void launchBoost();
+            /// \param ip ip of the asking client
             /// \return return number of the assigned hub
             /// \brief assign a hub to the current ip. If no hub is available, it create a thread with the new hub inside.
             int assignHub(std::string ip);
+            /// \param socket pointer to the received socket
+            /// \param packet packet send by client
+            /// \brief method call when client ask a hub
+            void askHub(Server::TcpConnection *socket, Network::headerTcp *packet);
+            /// \param socket pointer to the received socket
+            /// \param packet packet send by client
+            /// \brief method call when client is ready
+            void setPlayerReady(Server::TcpConnection *socket, Network::headerTcp *packet);
 
     };
 }

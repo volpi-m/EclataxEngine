@@ -73,6 +73,13 @@ namespace Server {
             void processUdpMessage(Server::UdpNetwork *udp);
             /// \brief check if all player is ready
             bool allIsReady();
+            /// \brief check if ip is a player in the hub
+            bool isInHub(const std::string &ip);
+            /// \param ip : ip of the player
+            /// \param state : state of the player
+            /// \brief method for starting a game
+            void setPlayerReady(const std::string &ip, bool state);
+
 
         private:
             /*! Game engine */
@@ -86,16 +93,14 @@ namespace Server {
             /*! All ip of members */
             std::list<Server::Player> _players;
 
+            /*! mutex for hub thread */
             std::mutex _mutex;
+            /*! condittion variable for hub thread */
             std::condition_variable _cond_var;
 
 
             /// \brief method for starting a game
             void startGame(); // to implement
-            /// \param ip : ip of the player
-            /// \param state : state of the player
-            /// \brief method for starting a game
-            void setPlayerReady(const std::string &ip, bool state);
             /// \param msg : message to send
             /// \param size : size of the message
             /// \brief method for send message to all player of the hub
