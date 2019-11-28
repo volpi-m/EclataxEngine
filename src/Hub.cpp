@@ -107,7 +107,7 @@ void Server::Hub::startGame()
     float z = 10;
     float y = 10;
 
-    while (_engine.SceneMachine()->run() != false) {
+    while (_engine.SceneMachine()->run() != false && !_players.empty()) {
 
         // THE FOLLOWING IS AN EXAMPLE
         struct Network::headerUdp *data = new Network::headerUdp();
@@ -138,5 +138,6 @@ void Server::Hub::startGame()
 void Server::Hub::processUdpMessage(Server::UdpNetwork *udp)
 {
     std::cout << "treat a message" << std::endl;
-    Network::headerUdp *h = static_cast<Network::headerUdp *>((void *)udp->buffer().data());
+    (void)udp;
+    // Network::headerUdp *h = static_cast<Network::headerUdp *>((void *)udp->buffer().data());
 }

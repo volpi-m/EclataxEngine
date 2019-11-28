@@ -27,7 +27,7 @@ void Client::ClientMediator::run()
 void Client::ClientMediator::connectionProcedure()
 {
     askForHub();
-    // playerIsReady();
+    playerIsReady();
 }
 
 void Client::ClientMediator::askForHub()
@@ -50,7 +50,7 @@ void Client::ClientMediator::playerIsReady()
 {
     Network::headerTcp *header = sendEmptyTcpHeader(Network::CLIENT_IS_READY);
 
-    std::cout << "player is ready : " << header << std::endl;
+    std::cout << "player is ready : " << header->code << std::endl;
 }
 
 Network::headerTcp *Client::ClientMediator::sendEmptyTcpHeader(std::size_t code)
@@ -68,7 +68,7 @@ Network::headerTcp *Client::ClientMediator::sendEmptyTcpHeader(std::size_t code)
 
     // Getting the response from the server
     char *response = _tcp.receive();
-    while (!response)
+    while (!response && code != Network::CLIENT_IS_READY)
         response = _tcp.receive();
 
     Network::headerTcp *header = static_cast<Network::headerTcp *>((void *)response);
