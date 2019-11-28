@@ -88,7 +88,7 @@ namespace Network
         /*! Hub number in which the specific client is */
         int hubNbr;
         /*! Data to be sent over TCP protocol */
-        char data[TCP_BUF_SIZE];
+        char data[TCP_BUF_SIZE] = {0};
     };
 
     /// \struct headerUdp
@@ -112,6 +112,6 @@ namespace Network
         /*! z coordinates of the entity */
         float z;
         /*! texture to use */
-        char *texture;
+        char texture[UDP_BUF_SIZE - (sizeof(unsigned long long) + sizeof(float) * 3)] = {0};
     };
 }

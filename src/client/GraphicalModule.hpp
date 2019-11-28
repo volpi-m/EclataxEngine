@@ -59,6 +59,8 @@ namespace Client
         /// \param packet : a pointer to the packet
         void parsePackets(void *packet);
 
+        std::size_t trackEvent() const;
+
     private:
         /// \brief detect events and threat them
         void processEvents();
@@ -81,5 +83,11 @@ namespace Client
         std::unordered_map<std::size_t, std::pair<std::string, sf::Texture>> _textures;
         /*! closed window attribute */
         bool _closed;
+        /*! List of event with a small description */
+        std::vector< std::pair<sf::Keyboard::Key, std::string> > _evtList;
+        /*! Number used to store pressed buttons or not (bitwise operations) */
+        std::size_t _trackEvent;
+        /*! List of bitmask to set a specific bit to one or zero on _trackEvent */
+        std::array<std::size_t, sizeof(size_t) * 8> _bitmaskList;
     };
 }

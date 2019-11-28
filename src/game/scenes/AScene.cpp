@@ -7,13 +7,13 @@
 
 #include "AScene.hpp"
 
-Scenes::AScene::AScene(const std::string &name, std::shared_ptr<Module::EntityComponentSystem> &ECS) : _name(name), _ECS(ECS), _pop(true), _swap(false) {}
+Scenes::AScene::AScene(const std::string &name, std::shared_ptr<Module::EntityComponentSystem> &ECS) : _name(name), _ECS(ECS), _pop(false), _swap(false) {}
 
-Scenes::AScene::AScene(const char *name, std::shared_ptr<Module::EntityComponentSystem> &ECS) : _name(name), _ECS(ECS), _pop(true), _swap(false) {}
+Scenes::AScene::AScene(const char *name, std::shared_ptr<Module::EntityComponentSystem> &ECS) : _name(name), _ECS(ECS), _pop(false), _swap(false) {}
 
-Scenes::AScene::AScene(const std::string &name) : _name(name), _pop(true), _swap(false) {}
+Scenes::AScene::AScene(const std::string &name) : _name(name), _pop(false), _swap(false) {}
 
-Scenes::AScene::AScene(const char *name) : _name(name), _pop(true), _swap(false) {}
+Scenes::AScene::AScene(const char *name) : _name(name), _pop(false), _swap(false) {}
 
 std::string Scenes::AScene::name() const
 {

@@ -11,22 +11,14 @@
 
 #include "EntityClient.hpp"
 
-Client::Entity::Entity(sf::IntRect &rect) : _deleted(false), _visible(true)
+Client::Entity::Entity(sf::Texture &texture) : _deleted(false), _visible(true), _textureIdx(0)
 {
-    if (!loadEmptyTexture(rect)) {
-        auto log = Debug::Logger::getInstance();
-
-        log->generateDebugMessage(Debug::WARNING, "The texture couldn't be loaded", "Client::Entity::Entity");
-    }
+    _sprite.setTexture(texture);
 }
 
-Client::Entity::Entity(const std::string &filepath, sf::IntRect &rect) : _deleted(false), _visible(true)
+Client::Entity::Entity(sf::Texture &texture, std::size_t textureIdx) : _deleted(false), _visible(true), _textureIdx(textureIdx)
 {
-    if (!loadTexture(filepath, rect)) {
-        auto log = Debug::Logger::getInstance();
-
-        log->generateDebugMessage(Debug::WARNING, "The texture couldn't be created", "Client::Entity::Entity");
-    }
+    _sprite.setTexture(texture);
 }
 
 bool Client::Entity::isVisible() const
@@ -39,29 +31,28 @@ bool Client::Entity::deleted() const
     return _deleted;
 }
 
-bool Client::Entity::loadTexture(const std::string &filepath, sf::IntRect &rect)
-{
-    // Loading the texture
-    if (!_texture.loadFromFile(filepath, rect))
-        return false;
-
-    // Attach the texture to our sprite
-    _sprite.setTexture(_texture);
-    return true;
-}
-
-bool Client::Entity::loadEmptyTexture(sf::IntRect &rect)
-{
-    // Loading the texture
-    if (!_texture.create(rect.width, rect.height))
-        return false;
-
-    // Attach the texture to our sprite
-    _sprite.setTexture(_texture);
-    return true;
-}
-
 sf::Sprite &Client::Entity::sprite()
 {
     return _sprite;
+}
+
+std::size_t Client::Entity::textureIdx()
+{
+    return _textureIdx;
+}
+
+void Client::Entity::setTextureIdx(std::size_t textureIdx, sf::Texture &texture)
+{
+    // Checking if the entity already as set the texture passed as parameter
+    if (textureIdx == _textureIdx)
+        return;
+
+    // If not, set the texture
+    _sprite.setTexture(texture);
+    _textureIdx = textureIdx;    
+}
+
+void Client::Entity::setPosition(float x, float y, [[maybe_unused]] float z)
+{
+    _sprite.setPosition(sf::Vector2f(x, y));
 }

@@ -100,26 +100,34 @@ void Server::Hub::startGame()
     auto scene = std::shared_ptr<Scenes::IScene>(new Scenes::SplashScene("Splash scene", _engine.ECS()));
 
     _engine.SceneMachine()->push(scene);
-    while(_engine.SceneMachine()->run() != false) {
 
+    // Entity parameters
+    std::size_t id = 0;
+    float x = 10;
+    float z = 10;
+    float y = 10;
+
+    while (_engine.SceneMachine()->run() != false) {
+
+        // THE FOLLOWING IS AN EXAMPLE
         struct Network::headerUdp *data = new Network::headerUdp();
         Network::Entity *entity = new Network::Entity;
 
-        entity->id = 0;
-        entity->x = 0;
-        entity->y = 0;
-        entity->z = 0;
-        entity->texture = new char[1024];
-        std::memset(entity->texture, 0, 1024);
+        // Filling the structure
+        entity->id = id;
+        entity->x = x += 0.01;
+        entity->y = y += 0.01;
+        entity->z = z += 0.01;
         std::memcpy(entity->texture, "ressources/r-typesheet1.gif", 27);
         data->code = Network::SERVER_TICK;
-        data->hubNbr = _id;
 
-        std::memcpy(data->data, entity->texture, 1024);
+        // Sending the packet to all players
+        std::memcpy(data->data, (void *)entity, Network::UDP_BUF_SIZE);
         for (auto &it : _players)
-            _udp.write(it.ip, (void *) data, sizeof(Network::headerUdp));
+            _udp.write(it.ip, (void *)data, sizeof(int) + Network::UDP_BUF_SIZE);
 
-        std::this_thread::sleep_for(std::chrono::seconds(10));
+        // Waiting before sending another packet
+        // std::this_thread::sleep_for(std::chrono::seconds(1));
 
         // get everything to be send
         // update event stack

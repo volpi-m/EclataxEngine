@@ -16,6 +16,8 @@
 #include <cstring>
 #include "ConfReader.hpp"
 #include "Rfc.hpp"
+#include "ConfigFileException.hpp"
+#include "TcpSocketException.hpp"
 
 namespace Client
 {
