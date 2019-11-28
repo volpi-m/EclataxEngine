@@ -178,6 +178,9 @@ Informational                                                  [Page 3]
 RFC -42             Instruction to R-Type Developper      November 2019
 
 
+        206: Client require events it will need to use to the
+        server. (TCP)
+
         301: Client send a debug message to server. This message
         SHOULD be printed on server's console (TCP/UDP)
 
@@ -209,20 +212,17 @@ RFC -42             Instruction to R-Type Developper      November 2019
         will start in a few seconds. Next Packet Client will
         receive will probably be 402. (TCP)
 
+        406: Server send an id and a string corresponding to an
+        event that can be processed by the client. (TCP)
+
         501: Server send a debug message to client. Thi message
         SHOULD be printed on client's console. (TCP/UDP)
 
         502: Server error. Send an error message to the client.
         The message SHOULD be printed on client's console. (TCP/UDP)
 
-
-
-
-
-
-
-
-
+        If someone ever read this, please come to me and tell me
+        my middle name, which is 'Stephane'.
 
 
 
@@ -265,22 +265,22 @@ RFC -42             Instruction to R-Type Developper      November 2019
 
     3a. Client event sending
 
+        Client will send events in a special UDP structure, here
+        is an example of what the client event can look like
 
+        struct UDP {
+            int code;
+            int hubNbr;
+            char data[UDP_BUF_SIZE];
+        }
 
+        Here 'data' will be a std::size_t where each bit will be
+        either 0 or 1 and will be interpreted as an input
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+        Server will receive the number and by doing some tricky
+        operations with bitwise operators it'll be easy to get which
+        key has been pressed by the dumb player playing your dumb
+        game.
 
 
 
@@ -324,6 +324,7 @@ Netcode:
     203: client not ready
     204: request sprites
     205: client tick
+    206: require key
 
 3xx: client error
     301: Client debug
@@ -335,6 +336,7 @@ Netcode:
     403: New player in hub
     404: New ennemy information
     405: Game is starting
+    406: Send key
 
 5xx: server error
     501: Server debug
