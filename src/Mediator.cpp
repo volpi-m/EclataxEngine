@@ -18,6 +18,7 @@ Server::Mediator::Mediator() : _tcp (_ioContext,
     // _actions[Network::ASK_FOR_HUB] = &Server::Mediator::askHub;
     _actions[Network::ASK_FOR_HUB] = std::bind(&Server::Mediator::askHub, this, std::placeholders::_1, std::placeholders::_2);
     _actions[Network::CLIENT_IS_READY] = std::bind(&Server::Mediator::setPlayerReady, this, std::placeholders::_1, std::placeholders::_2);
+    _actions[Network::CLIENT_IS_NOT_READY] = std::bind(&Server::Mediator::setPlayerNotReady, this, std::placeholders::_1, std::placeholders::_2);
 }
 
 Server::Mediator::~Mediator()
@@ -97,5 +98,10 @@ void Server::Mediator::askHub(Server::TcpConnection *socket, [[maybe_unused]] Ne
 
 void Server::Mediator::setPlayerReady(Server::TcpConnection *socket, Network::headerTcp *packet)
 {
-    _hubs[packet->hubNbr].get()->setPlayerReady(socket->ip(), static_cast<bool>(packet->data));
+    _hubs[packet->hubNbr].get()->setPlayerReady(socket->ip(), true);
+}
+
+void Server::Mediator::setPlayerNotReady(Server::TcpConnection *socket, Network::headerTcp *packet)
+{
+    _hubs[packet->hubNbr].get()->setPlayerReady(socket->ip(), false);
 }
