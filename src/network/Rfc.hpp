@@ -85,6 +85,8 @@ namespace Network
     struct headerTcp {
         /*! Protocol code cf. above to see all available codes */
         int code;
+        /*! Hub number in which the specific client is */
+        int hubNbr;
         /*! Data to be sent over TCP protocol */
         char data[TCP_BUF_SIZE];
     };
@@ -94,8 +96,6 @@ namespace Network
     struct headerUdp {
         /*! Protocol code, cf. above to see all available codes */
         int code;
-        /*! Hub number in which the specific client is */
-        int hubNbr;
         /*! Data to be sent over UDP protocol */
         char data[UDP_BUF_SIZE] = {0};
     };

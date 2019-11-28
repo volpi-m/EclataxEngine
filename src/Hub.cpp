@@ -67,6 +67,15 @@ bool Server::Hub::isFull()
         return false;
 }
 
+bool Server::Hub::isInHub(const std::string &ip)
+{
+    for (auto &i : _players) {
+        if (i.ip == ip)
+            return true;
+    }
+    return false;
+}
+
 void Server::Hub::setPlayerReady(const std::string &ip, bool state)
 {
     for (auto &i : _players)
