@@ -19,12 +19,16 @@ Client::ClientMediator::~ClientMediator() {}
 
 void Client::ClientMediator::run()
 {
-    struct Network::headerTcp *data = new Network::headerTcp();
+    /*struct Network::headerTcp *data = new Network::headerTcp();
 
     data->code = Network::ASK_FOR_HUB;
     std::memset(data->data, 0, 1024);
 
-    _tcp.send((void *) data, sizeof(Network::headerTcp));
+    try {
+        _tcp.send((void *) data, sizeof(Network::headerTcp));
+    } catch (std::exception &e) {
+        throw e;
+    }
 
     using namespace std::chrono_literals;
     std::this_thread::sleep_for(1s);
@@ -34,11 +38,8 @@ void Client::ClientMediator::run()
     int b;
     std::memcpy(&b, s->data, sizeof(int));
     if (a)
-        std::cout << s->code << " " << b << std::endl;
+        std::cout << s->code << " " << b << std::endl;*/
 
-    // while (!_graph.run()) {
-    //     char *a = static_cast<char *>(_tcp.receive());
-    //     if (a)
-    //         std::cout.write(a, std::strlen(a));
-    // }
+    while (!_graph.run()) {
+    }
 }

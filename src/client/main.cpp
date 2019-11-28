@@ -16,7 +16,7 @@ int main()
     try {
         Client::ClientMediator m;
         m.run();
-    } catch (Debug::MissingFileException &e) {
+    } catch (Debug::Exception &e) {
         e.debugErrorMessage();
     }
     return 0;
