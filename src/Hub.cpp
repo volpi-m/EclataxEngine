@@ -24,14 +24,15 @@ Server::Hub::~Hub()
 
 void Server::Hub::start()
 {
-    Debug::Logger *l = Debug::Logger::getInstance(".log");
+    Debug::Logger *l = Debug::Logger::getInstance();
     std::string msg("hub number ");
+
     l->generateDebugMessage(Debug::type::INFO , msg + std::to_string(_id) + " is running !" , "hub starter");
     std::unique_lock<std::mutex> lock(_mutex);
-    while(allIsReady()) {
+    while (allIsReady())
         _cond_var.wait(lock);
-    }
     l->generateDebugMessage(Debug::type::INFO , "Here we go !!!!" , "hub starter");
+    startGame();
 }
 
 bool Server::Hub::allIsReady()
@@ -91,6 +92,26 @@ void Server::Hub::startGame()
 
     _engine.SceneMachine()->push(scene);
     while(_engine.SceneMachine()->run() != false) {
+
+        struct Network::headerUdp *data = new Network::headerUdp();
+        Network::Entity *entity = new Network::Entity;
+
+        entity->id = 0;
+        entity->x = 0;
+        entity->y = 0;
+        entity->z = 0;
+        entity->texture = new char[1024];
+        std::memset(entity->texture, 0, 1024);
+        std::memcpy(entity->texture, "ressources/r-typesheet1.gif", 27);
+        data->code = Network::SERVER_TICK;
+        data->hubNbr = _id;
+
+        std::memcpy(data->data, entity->texture, 1024);
+        for (auto &it : _players)
+            _udp.write(it.ip, (void *) data, sizeof(Network::headerUdp));
+
+        std::this_thread::sleep_for(std::chrono::seconds(10));
+
         // get everything to be send
         // update event stack
         // send event to scene

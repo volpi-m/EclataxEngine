@@ -97,7 +97,21 @@ namespace Network
         /*! Hub number in which the specific client is */
         int hubNbr;
         /*! Data to be sent over UDP protocol */
-        char data[UDP_BUF_SIZE];
+        char data[UDP_BUF_SIZE] = {0};
     };
 
+    /// \struct Entity
+    /// \brief Entity data structure used when communicating with UDP protocol to get entity status
+    struct Entity {
+        /*! id of the entity */
+        unsigned long long id;
+        /*! x coordinates of the entity */
+        float x;
+        /*! y coordinates of the entity */
+        float y;
+        /*! z coordinates of the entity */
+        float z;
+        /*! texture to use */
+        char *texture;
+    };
 }
