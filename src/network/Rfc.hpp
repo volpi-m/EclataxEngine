@@ -111,7 +111,15 @@ namespace Network
         float y;
         /*! z coordinates of the entity */
         float z;
+        /*! top value of the entity */
+        float top;
+        /*! left value of the entity */
+        float left;
+        /*! width of the texxture of the entity */
+        float width;
+        /*! height of the texxture of the entity */
+        float height;
         /*! texture to use */
-        char texture[UDP_BUF_SIZE - (sizeof(unsigned long long) + sizeof(float) * 3)] = {0};
+        char texture[UDP_BUF_SIZE - (sizeof(unsigned long long) + sizeof(float) * 7)] = {0};
     };
 }

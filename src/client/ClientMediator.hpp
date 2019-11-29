@@ -28,7 +28,7 @@ namespace Client
     {
     public:
         /// \brief Constructor
-        ClientMediator() = default;
+        ClientMediator() : _hub(0) {};
 
         /// \brief Destructor
         ~ClientMediator() = default;
@@ -57,6 +57,8 @@ namespace Client
         Client::TcpConnection _tcp;
         /*! GraphicalModule instance, create entity and draw */
         Client::GraphicalModule _graph;
+        /*! the hub the client is currently in (0 is none) */
+        std::size_t _hub;
     };
 }
 
