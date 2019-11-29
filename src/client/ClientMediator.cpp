@@ -15,12 +15,16 @@ void Client::ClientMediator::run()
 {
     // Connect to the server
     connectionProcedure();
+    const sf::RenderWindow &w = _graph.window();
 
     // If the client has been connected, we can start to render
-    while (!_graph.run()) {
+    while (w.isOpen()) {
         void *packet = _udp.receive();
         if (packet)
             _graph.parsePackets(packet);
+        _graph.processEvents();
+        sendEvents();
+        _graph.display();
     }
 }
 
@@ -80,4 +84,9 @@ Network::headerTcp *Client::ClientMediator::sendEmptyTcpHeader(std::size_t code)
 
     Network::headerTcp *header = static_cast<Network::headerTcp *>((void *)response);
     return header;
+}
+
+void Client::ClientMediator::sendEvents()
+{
+
 }

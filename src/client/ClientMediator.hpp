@@ -51,6 +51,10 @@ namespace Client
         /// \return a pointer to a tcp header
         Network::headerTcp *sendEmptyTcpHeader(std::size_t code);
 
+        
+
+        void sendEvents();
+
         /*! UdpConnection instance, send and receive data from server during a game */
         Client::UdpConnection _udp;
         /*! TcpConnection instance, send and receive data from server before and after a game */

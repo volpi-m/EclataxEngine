@@ -32,7 +32,7 @@ Client::GraphicalModule::GraphicalModule()
     _evtList.push_back({sf::Keyboard::Key::Num5, "5"});
 }
 
-sf::RenderWindow &Client::GraphicalModule::window()
+const sf::RenderWindow &Client::GraphicalModule::window() const
 {
     return _window;
 }

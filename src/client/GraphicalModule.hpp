@@ -31,7 +31,7 @@ namespace Client
 
         /// \brief get the render window
         /// \return a reference to the render window
-        sf::RenderWindow &window();
+        const sf::RenderWindow &window() const;
 
         /// \brief create a new entity and store it
         /// \param id : the id of the new entity
@@ -61,17 +61,17 @@ namespace Client
 
         std::size_t trackEvent() const;
 
-    private:
         /// \brief detect events and threat them
         void processEvents();
 
+        /// \brief display all entiites on the window
+        void display();
+
+    private:
         /// \brief get an entity from a packet
         /// \param packetHeader : the packet
         /// \return a pointer to a new entity
         Network::Entity *getEntityParams(Network::headerUdp *packetHeader);
-
-        /// \brief display all entiites on the window
-        void display();
 
         /*! window attribute */
         sf::RenderWindow _window;
