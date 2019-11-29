@@ -122,6 +122,8 @@ namespace Server {
             /// \param packet : packet send
             /// \brief method call when a player encounter a probleme
             void playerError(Server::UdpNetwork *socket, Network::headerUdp *packet);
+            /// \brief method call for sending entities for all player
+            void sendEntity(Network::Entity &e);
 
 
             //event : unsigned char

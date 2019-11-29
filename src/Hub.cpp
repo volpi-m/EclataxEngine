@@ -119,43 +119,20 @@ void Server::Hub::startGame()
 
     _engine.SceneMachine()->push(scene);
 
-    // Entity parameters
-    std::size_t id = 0;
-    float x = 10;
-    float z = 10;
-    float y = 10;
-    float left = 0;
-
     while (_engine.SceneMachine()->run() != false && !_players.empty()) {
-
-        // THE FOLLOWING IS AN EXAMPLE
-        struct Network::headerUdp *data = new Network::headerUdp();
-        Network::Entity *entity = new Network::Entity;
-
-        // Filling the structure
-        entity->id = id;
-        entity->x = x += 1;
-        entity->y = y += 1;
-        entity->z = z += 1;
-        entity->top = 0;
-        entity->left = left += 30;
-        if (left >= 12 * 30)
-            left = 0;
-        entity->width = 30;
-        entity->height = 32;
-        std::memcpy(entity->texture, "ressources/r-typesheet1.gif", 27);
-        data->code = Network::SERVER_TICK;
-
-        // Sending the packet to all players
-        std::memcpy(data->data, (void *)entity, Network::UDP_BUF_SIZE);
-        sendToAllPlayer(data, sizeof(int) + Network::UDP_BUF_SIZE);
-
-        // Waiting before sending another packet
-         std::this_thread::sleep_for(std::chrono::milliseconds(50));
-
-        // get everything to be send
+        std::stack<Network::Entity> &entities = _engine.SceneMachine()->getCurrentSceneEntityStack();
+        while (!entities.empty()) {
+            sendEntity(entities.top());
+            entities.pop();
+        }
         // send event to scene
+
+        // _engine.SceneMachine()->updateEvent(_event);
+
         // update event stack
+        while(!_event.empty()) {
+            _event.pop();
+        }
     }
     std::cout << "Game is finish in hub " << _id << std::endl;
 }
@@ -180,4 +157,12 @@ void Server::Hub::playerError(Server::UdpNetwork *socket, Network::headerUdp *pa
     Debug::Logger *l = Debug::Logger::getInstance(".log");
     l->generateDebugMessage(Debug::type::ERROR , "Error with the player" + ip + "\nError detail: " + packet->data, "Server::Hub::playerError");
     removeMember(ip);
+}
+
+void Server::Hub::sendEntity(Network::Entity &e)
+{
+    Network::headerUdp data = Network::headerUdp();
+    data.code = Network::SERVER_TICK;
+    std::memcpy(&data.data, &e, Network::UDP_BUF_SIZE);
+    sendToAllPlayer(&data, sizeof(data));
 }
