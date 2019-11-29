@@ -24,14 +24,15 @@ Server::Hub::~Hub()
 
 void Server::Hub::start()
 {
-    Debug::Logger *l = Debug::Logger::getInstance(".log");
+    Debug::Logger *l = Debug::Logger::getInstance();
     std::string msg("hub number ");
+
     l->generateDebugMessage(Debug::type::INFO , msg + std::to_string(_id) + " is running !" , "hub starter");
     std::unique_lock<std::mutex> lock(_mutex);
-    while(allIsReady()) {
+    while (allIsReady())
         _cond_var.wait(lock);
-    }
     l->generateDebugMessage(Debug::type::INFO , "Here we go !!!!" , "hub starter");
+    startGame();
 }
 
 bool Server::Hub::allIsReady()
@@ -99,7 +100,34 @@ void Server::Hub::startGame()
     auto scene = std::shared_ptr<Scenes::IScene>(new Scenes::SplashScene("Splash scene", _engine.ECS()));
 
     _engine.SceneMachine()->push(scene);
-    while(_engine.SceneMachine()->run() != false) {
+
+    // Entity parameters
+    std::size_t id = 0;
+    float x = 10;
+    float z = 10;
+    float y = 10;
+
+    while (_engine.SceneMachine()->run() != false && !_players.empty()) {
+
+        // THE FOLLOWING IS AN EXAMPLE
+        struct Network::headerUdp *data = new Network::headerUdp();
+        Network::Entity *entity = new Network::Entity;
+
+        // Filling the structure
+        entity->id = id;
+        entity->x = x += 0.01;
+        entity->y = y += 0.01;
+        entity->z = z += 0.01;
+        std::memcpy(entity->texture, "ressources/r-typesheet1.gif", 27);
+        data->code = Network::SERVER_TICK;
+
+        // Sending the packet to all players
+        std::memcpy(data->data, (void *)entity, Network::UDP_BUF_SIZE);
+        sendToAllPlayer(data, sizeof(int) + Network::UDP_BUF_SIZE);
+
+        // Waiting before sending another packet
+        // std::this_thread::sleep_for(std::chrono::seconds(1));
+
         // get everything to be send
         // update event stack
         // send event to scene
@@ -109,5 +137,6 @@ void Server::Hub::startGame()
 void Server::Hub::processUdpMessage(Server::UdpNetwork *udp)
 {
     std::cout << "treat a message" << std::endl;
-    Network::headerUdp *h = static_cast<Network::headerUdp *>((void *)udp->buffer().data());
+    (void)udp;
+    // Network::headerUdp *h = static_cast<Network::headerUdp *>((void *)udp->buffer().data());
 }

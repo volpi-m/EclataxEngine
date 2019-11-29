@@ -12,10 +12,12 @@
 #pragma once
 
 #include <memory>
+#include <cstring>
 #include <unordered_map>
 #include <SFML/Graphics.hpp>
 
 #include "EntityClient.hpp"
+#include "Rfc.hpp"
 
 namespace Client
 {
@@ -33,28 +35,40 @@ namespace Client
 
         /// \brief create a new entity and store it
         /// \param id : the id of the new entity
-        /// \param rect : scale of the new entity
-        void createEntity(unsigned long long id, sf::IntRect &rect);
+        void createEntity(std::size_t id);
 
         /// \brief create a new entity and store it
         /// \param id : the id of the new entity
-        /// \param filepath : the filepath to the texture
-        /// \param rect : scale of the new entity
-        void createEntity(unsigned long long id, const std::string &filepath, sf::IntRect &rect);
+        /// \param txtId : the id to the texture
+        void createEntity(std::size_t id, std::size_t txtId);
 
         /// \brief create multiple new entities and store them
         /// \param id : ids of the new entities
-        void createMultipleEntities(std::vector<unsigned long long> &ids);
+        void createMultipleEntities(std::vector<std::size_t> &ids);
+
+        /// \brief adds a texture to the client
+        /// \param filepath : filepath to the teture
+        /// \return an index to the texture
+        std::size_t addTexture(const std::string &filepath);
 
         /// \brief run the graphical client
         /// \return a bool that is true is the client is closed, false otherwise
         bool run();
+
+        /// \brief parse an udp packet
+        /// \param packet : a pointer to the packet
+        void parsePackets(void *packet);
 
         std::size_t trackEvent() const;
 
     private:
         /// \brief detect events and threat them
         void processEvents();
+
+        /// \brief get an entity from a packet
+        /// \param packetHeader : the packet
+        /// \return a pointer to a new entity
+        Network::Entity *getEntityParams(Network::headerUdp *packetHeader);
 
         /// \brief display all entiites on the window
         void display();
@@ -64,7 +78,9 @@ namespace Client
         /*! events attribute */
         sf::Event _events;
         /*! entities stocked attribute */
-        std::unordered_map<unsigned long long, Entity> _entities;
+        std::unordered_map<std::size_t, std::shared_ptr<Client::Entity>> _entities;
+        /*! entities stocked attribute */
+        std::unordered_map<std::size_t, std::pair<std::string, sf::Texture>> _textures;
         /*! closed window attribute */
         bool _closed;
         /*! List of event with a small description */
