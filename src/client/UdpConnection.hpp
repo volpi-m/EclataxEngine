@@ -21,6 +21,7 @@
 #include <SFML/Network.hpp>
 #include <SFML/System.hpp>
 #include "MissingFileException.hpp"
+#include "ConfigFileException.hpp"
 #include "ConfReader.hpp"
 #include "Rfc.hpp"
 

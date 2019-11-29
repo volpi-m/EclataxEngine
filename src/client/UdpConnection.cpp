@@ -19,7 +19,8 @@ Client::UdpConnection::UdpConnection()
 
     // Throw an exception if one of the value is not present
     if (!ip.has_value())
-        throw std::exception();
+        throw Debug::ConfigFileException("server_ip not present in config file", "UdpConnection Ctor");
+    _servIP = ip.value();
 
     // Bind udp socket to a specified port and set the socket non blocking
     _socket.setBlocking(false);
@@ -50,5 +51,6 @@ void *Client::UdpConnection::receive()
 
 void Client::UdpConnection::bind(unsigned short port)
 {
+    std::cout << _servIP << std::endl;
     _socket.bind(port);
 }
