@@ -17,6 +17,7 @@
 #include <thread>
 
 #include "IScene.hpp"
+#include "Rfc.hpp"
 
 /// \namespace Scenes
 /// \brief Used for the all Scenes subsclasses
@@ -71,6 +72,11 @@ namespace Module {
 
             /// \brief starts the machine
             bool run();
+
+            /// \brief get the entity stack to send to clients
+            /// \return a reference to the stack
+            std::stack<Network::Entity> &getCurrentSceneEntityStack();
+
         private:
             /*! the stack of scenes */
             std::stack<std::shared_ptr<Scenes::IScene>> _scenes;

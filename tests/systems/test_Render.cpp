@@ -32,8 +32,9 @@ TEST(RenderSystemTests, update)
 TEST(RenderSystemTests, getTexture)
 {
     Module::EntityComponentSystem ECS;
+    Game::Rect rect(0, 0, 32, 32);
     std::shared_ptr<ECS::IComponent> componentDefault(new ECS::Component::Sprite);
-    std::shared_ptr<ECS::IComponent> component(new ECS::Component::Sprite("New texture!"));
+    std::shared_ptr<ECS::IComponent> component(new ECS::Component::Sprite("New texture!", rect));
     ECS::System::RenderSystem system;
 
     // Creating two entities
@@ -56,7 +57,8 @@ TEST(RenderSystemTests, getTexture)
 TEST(RenderSystemTests, setTexture)
 {
     Module::EntityComponentSystem ECS;
-    std::shared_ptr<ECS::IComponent> component(new ECS::Component::Sprite("New texture!"));
+    Game::Rect rect(0, 0, 32, 32);
+    std::shared_ptr<ECS::IComponent> component(new ECS::Component::Sprite("New texture!", rect));
     ECS::System::RenderSystem system;
 
     // Creating an entity
@@ -75,8 +77,9 @@ TEST(RenderSystemTests, setTexture)
 
 TEST(RenderSystemTests, setLoaded)
 {
+    Game::Rect rect(0, 0, 32, 32);
     Module::EntityComponentSystem ECS;
-    std::shared_ptr<ECS::IComponent> component(new ECS::Component::Sprite("New texture!"));
+    std::shared_ptr<ECS::IComponent> component(new ECS::Component::Sprite("New texture!", rect));
     ECS::System::RenderSystem system;
 
     // Creating an entity

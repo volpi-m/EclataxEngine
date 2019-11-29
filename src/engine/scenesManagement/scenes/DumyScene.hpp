@@ -15,7 +15,9 @@
 #include <memory>
 #include <tuple>
 
+#include "Animation2DComponent.hpp"
 #include "TransformComponent.hpp"
+#include "SpriteComponent.hpp"
 #include "MovementSystem.hpp"
 #include "SpawnerSystem.hpp"
 #include "IASystem.hpp"
@@ -85,7 +87,16 @@ namespace Scenes {
             /// \param ECS : The entity compponent system to pass to the scene
             /// \brief set an instance of the ECS inside the scene object
             void setECSInstance(std::shared_ptr<Module::EntityComponentSystem> &ECS) override;
+
+            /// \brief getting the entity stack of the scene
+            /// \return a stack of entities that will be sent to the client
+            std::stack<Network::Entity> &entityStack() override;
+
         private:
+            /// \param entity : The entity that will be pushed onto the stack
+            /// \brief push an entity to the stack of the scene
+            void pushEntityStack(std::shared_ptr<ECS::Entity> &entity) override;
+
             /*! name of the scene */
             std::string _name;
             /*! ECS instance */
@@ -96,5 +107,7 @@ namespace Scenes {
             bool _pop;
             /*! swap characteristic */
             bool _swap;
+            /*! stack of entity */
+            std::stack<Network::Entity> _stack;
     };
 }

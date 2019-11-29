@@ -203,6 +203,7 @@ TEST(EntityFactoryTests, createCopyedComponents)
 {
     // Creating all components available
     ECS::EntityFactory factory;
+    Game::Rect rect(0, 0, 32, 32);
     std::shared_ptr<ECS::Entity> entity(new ECS::Entity("dummy entity"));
     std::shared_ptr<ECS::IComponent> acceleration(new ECS::Component::Acceleration(5));
     std::shared_ptr<ECS::IComponent> audio(new ECS::Component::Audio("test_file", true));
@@ -214,7 +215,7 @@ TEST(EntityFactoryTests, createCopyedComponents)
     std::shared_ptr<ECS::IComponent> script(new ECS::Component::Script(&dummyScript));
     std::shared_ptr<ECS::IComponent> spwaner(new ECS::Component::Spawner(std::chrono::seconds(4), dummySpawner));
     std::shared_ptr<ECS::IComponent> speed(new ECS::Component::Speed(20.5f));
-    std::shared_ptr<ECS::IComponent> sprite(new ECS::Component::Sprite("Texture_file.jpg"));
+    std::shared_ptr<ECS::IComponent> sprite(new ECS::Component::Sprite("Texture_file.jpg", rect));
     std::shared_ptr<ECS::IComponent> text(new ECS::Component::Text("Text to display"));
     std::shared_ptr<ECS::IComponent> transform(new ECS::Component::Transform(10, 42, 84));
 
@@ -299,6 +300,10 @@ TEST(EntityFactoryTests, createCopyedComponents)
     ASSERT_EQ(spawnerC->seconds, std::chrono::seconds(4));
     ASSERT_EQ(speedC->speed, 20);
     ASSERT_EQ(spriteC->loaded, false);
+    ASSERT_EQ(spriteC->rect.height, 32);
+    ASSERT_EQ(spriteC->rect.width, 32);
+    ASSERT_EQ(spriteC->rect.top, 0);
+    ASSERT_EQ(spriteC->rect.left, 0);
     ASSERT_STREQ(spriteC->texture.c_str(), "Texture_file.jpg");
     ASSERT_STREQ(textC->text.c_str(), "Text to display");
     ASSERT_EQ(transformC->x, 10);

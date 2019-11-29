@@ -88,3 +88,8 @@ bool Module::SceneMachine::run()
         pop(_scenes.top()->name());
     return _scenes.size() ? true : false;
 }
+
+std::stack<Network::Entity> &Module::SceneMachine::getCurrentSceneEntityStack()
+{
+    return _scenes.top()->entityStack();
+}
