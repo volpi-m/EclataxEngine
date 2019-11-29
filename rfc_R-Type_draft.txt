@@ -1,4 +1,4 @@
-59 118 177 236 295
+59 118 177 236 295 354
 
 
 
@@ -22,11 +22,11 @@ Table of Contents
     2.  Network Protocol . . . . . . . . . . . . . . . . 2
     2a. Client network codes . . . . . . . . . . . . . . 3
     2b. Server network codes . . . . . . . . . . . . . . 4
-    3.  Client gameloop
-    3a. Client event sending
-    4.  Server gameloop
-    4a. Server event sending
-
+    3.  Client gameloop  . . . . . . . . . . . . . . . . 5
+    3a. Client event sending . . . . . . . . . . . . . . 5
+    4.  Server gameloop  . . . . . . . . . . . . . . . . 6
+    4a. Server event sending . . . . . . . . . . . . . . 
+    5.  Configuration file . . . . . . . . . . . . . . . 
 
 
 
@@ -249,19 +249,19 @@ RFC -42             Instruction to R-Type Developper      November 2019
         render_world()
     }
 
-    - read_network() receive udp packets from server and process it
+    - read_network(): receive udp packets from server and process it
 
-    - read_events() reads keyboard/joysticks/mouse events and stores
+    - read_events(): reads keyboard/joysticks/mouse events and stores
         them, waiting to be send.
         Events MUST be stored as a map of keys and their
         corresponding state (true or false).
 
-    - send_events() send events to the server
+    - send_events(): send events to the server
 
-    - update_positions() use data processed in read_network() and
+    - update_positions(): use data processed in read_network() and
         update position of all entites in the game
 
-    - render_world() render all newly updated entities on screen
+    - render_world(): render all newly updated entities on screen
 
     3a. Client event sending
 
@@ -293,7 +293,65 @@ Informational                                                  [Page 5]
                 Matteo V. Lucas T. Arthur L. Paulin F.
 
 =======================================================================
+RFC -42             Instruction to R-Type Developper      November 2019
 
+
+4.  Server Gameloop
+
+    Here I'm talking about the gameloop inside a hub, which means
+    there are multiple loop like this one running at the same time
+    on server.
+
+    Server's gameloop look like this:
+
+    while (true) {
+        read_events()
+        send_entity()
+        event_to_scene()
+        clear_event_queue()
+    }
+
+    - read_events(): receive events from client by UDP socket.
+
+    - send_entity(): send all entity and their associated attributes
+    via UDP socket.
+
+    - event_to_scene(): transfer the queue of event to the current
+    scene. The scene will handle all events and update the game
+    according to them.
+
+    - clear_event_queue(): 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Informational                                                  [Page 6]
+
+                Matteo V. Lucas T. Arthur L. Paulin F.
+
+=======================================================================
 
 Netcode:
     Tick every 16 ms (~60 t/s)
