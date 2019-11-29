@@ -29,7 +29,7 @@ void Server::Hub::start()
 
     l->generateDebugMessage(Debug::type::INFO , msg + std::to_string(_id) + " is running !" , "hub starter");
     std::unique_lock<std::mutex> lock(_mutex);
-    while (allIsReady())
+    while (!allIsReady())
         _cond_var.wait(lock);
     l->generateDebugMessage(Debug::type::INFO , "Here we go !!!!" , "hub starter");
     startGame();
@@ -106,6 +106,7 @@ void Server::Hub::startGame()
     float x = 10;
     float z = 10;
     float y = 10;
+    float left = 0;
 
     while (_engine.SceneMachine()->run() != false && !_players.empty()) {
 
@@ -118,6 +119,10 @@ void Server::Hub::startGame()
         entity->x = x += 0.01;
         entity->y = y += 0.01;
         entity->z = z += 0.01;
+        entity->top = 0;
+        entity->left = left += 32;
+        entity->width = 32;
+        entity->height = 32;
         std::memcpy(entity->texture, "ressources/r-typesheet1.gif", 27);
         data->code = Network::SERVER_TICK;
 
