@@ -91,8 +91,9 @@ void Server::Mediator::processTcpMessage(Server::TcpConnection *socket)
         }
     } else {
         for (auto &i : _hubs) {
-            if (i.get()->isInHub(socket->ip()))
+            if (i.get()->isInHub(socket->ip())) {
                 i.get()->removeMember(socket->ip());
+            }
         }
     }
 }
@@ -123,7 +124,7 @@ void Server::Mediator::setPlayerNotReady(Server::TcpConnection *socket, Network:
     _hubs[packet->hubNbr - 1].get()->setPlayerReady(socket->ip(), false);
 }
 
-void Server::Mediator::sendEvent(Server::TcpConnection *socket, Network::headerTcp *packet)
+void Server::Mediator::sendSprite(Server::TcpConnection *socket, Network::headerTcp *packet)
 {
     std::cout << "Player ask sprite ... please send him :'(" << std::endl;
 }
