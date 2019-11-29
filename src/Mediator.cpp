@@ -86,14 +86,18 @@ void Server::Mediator::processTcpMessage(Server::TcpConnection *socket)
 
 void Server::Mediator::askHub(Server::TcpConnection *socket, [[maybe_unused]] Network::headerTcp *packet)
 {
-    std::cout << "Message from : " << socket->ip() << std::endl;
     Network::headerTcp *toSend = new Network::headerTcp;
+
+    // Assigning code and hub number
     toSend->code = Network::SERVER_CLIENT_IS_IN_HUB;
-    std::array<int, 2>data;
-    data[1] = assignHub(socket->ip());
-    data[0] = _hubs.back().get()->port();
-    std::memcpy(toSend->data, &data, sizeof(data));
-    socket->write(static_cast<void *>(toSend), sizeof(toSend));
+    toSend->hubNbr = assignHub(socket->ip());
+
+    // Copying the port in the data field
+    int port = _hubs.back().get()->port();
+    std::memcpy(toSend->data, &port, sizeof(int));
+
+    // Sending the packet to the client
+    socket->write(static_cast<void *>(toSend), sizeof(Network::headerTcp));
 }
 
 void Server::Mediator::setPlayerReady(Server::TcpConnection *socket, Network::headerTcp *packet)

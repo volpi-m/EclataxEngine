@@ -20,12 +20,12 @@ Client::TcpConnection::TcpConnection()
 
     // Throw exception if no port nor ip has been found
     if (!ip.has_value() && !port.has_value())
-        throw std::exception();
+        throw Debug::ConfigFileException("Missing value in config file", "TcpConnection Ctor");
 
     // Connect socket to server and throw if connection is impossible
     sf::Socket::Status status = _socket.connect(ip.value(), std::stoi(port.value()));
     if (status != sf::Socket::Done)
-        throw std::exception();
+        throw Debug::TcpSocketException("Can't connect socket to server", "TcpConection Ctor");
 
     _socket.setBlocking(false);
 }
@@ -35,7 +35,11 @@ Client::TcpConnection::~TcpConnection() {}
 void Client::TcpConnection::send(const void *data, const std::size_t size)
 {
     std::memcpy(_buf, data, size);
-    while (_socket.send(_buf, size, _sent) != sf::Socket::Done);
+    try {
+        while (_socket.send(_buf, size, _sent) != sf::Socket::Done);
+    } catch (std::exception &e) {
+        throw e;
+    }
     _sent = 0;
 }
 

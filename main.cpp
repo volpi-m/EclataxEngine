@@ -24,7 +24,10 @@ int main()
     // Game::GameEngine engine;
     // auto scene = std::shared_ptr<Scenes::IScene>(new Scenes::DumyScene("Dummy scene", engine.ECS()));
 
-    // Debug::Breakpoint("Fuck off", "yes");
     // engine.SceneMachine()->push(scene);
     // while (engine.SceneMachine()->run());
+
+    // Server::UdpNetwork network();
+
+    // network.write("127.0.0.1", , sizeof());
 }

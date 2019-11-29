@@ -9,6 +9,7 @@
 
 #include <list>
 #include <string>
+#include <cstring>
 #include <boost/asio.hpp>
 
 #include "Logger.hpp"
@@ -97,7 +98,7 @@ namespace Server {
             /*! All ip of members */
             std::list<Server::Player> _players;
             /*! queue of all event get in the hub */
-            std::queue<unsigned char> _event;
+            std::queue<size_t> _event;
             /*! Map of all actions when you received a udp message from client */
             std::unordered_map<int, std::function<void(Server::UdpNetwork *socket, Network::headerUdp *packet)>> _actions;
 
@@ -107,6 +108,9 @@ namespace Server {
             /// \param size : size of the message
             /// \brief method for send message to all player of the hub
             void sendToAllPlayer(void *msg, const std::size_t size);
+            /// \param event : event to add on stack event
+            /// \brief method for save an event comming from 
+            void addEvent(Server::UdpNetwork *socket, Network::headerUdp *packet);
 
 
             //event : unsigned char

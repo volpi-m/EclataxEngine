@@ -25,13 +25,14 @@ namespace Client {
         public:
             /// \brief constructor
             /// Create an entity with an empty texture
-            /// \param rect : Size of the empty texture
-            Entity(sf::IntRect &rect);
+            /// \param texture : the empty texture of the entity
+            Entity(sf::Texture &texture);
 
             /// \brief constructor
             /// Create an entity with an empty texture
-            /// \param rect : scale of the empty texture
-            Entity(const std::string &filepath, sf::IntRect &rect);
+            /// \param texture : the texture of the entity
+            /// \param textureIdx : id of the texture
+            Entity(sf::Texture &texture, std::size_t textureIdx);
 
             /// \brief destructor
             /// Destroy the Entity class
@@ -45,18 +46,24 @@ namespace Client {
             /// \brief Check if the entity is deleted
             bool deleted() const;
 
-            /// \return return a bool set to true if the operation is a success, false otherwise
-            /// \param filepath : filepath to the texture
-            /// \param rect : scale of the texture
-            bool loadTexture(const std::string &filepath, sf::IntRect &rect);
-
-            /// \return return a bool set to true if the operation is a success, false otherwise
-            /// \param rect : scale of the texture
-            bool loadEmptyTexture(sf::IntRect &rect);
-
             /// \brief return the sprite of the current entity
             /// \return the sprite of the entity
             sf::Sprite &sprite();
+
+            /// \brief return the texture index of the current entity
+            /// \return the texture index of the entity
+            std::size_t textureIdx();
+
+            /// \brief set the texture of the entity
+            /// \param textureIdx : the new texture index of the entity
+            /// \param texture : the new texture
+            void setTextureIdx(std::size_t textureIdx, sf::Texture &texture);
+
+            /// \brief set the position of the entity
+            /// \param x : x coordinates
+            /// \param y : y coordinates
+            /// \param z : z coordinates
+            void setPosition(float x, float y, float z);
 
         private:
 
@@ -66,7 +73,9 @@ namespace Client {
             bool _visible;
             /*! the sprite*/
             sf::Sprite _sprite;
-            /*! the texture*/
-            sf::Texture _texture;
+            /*! the texture id */
+            std::size_t _textureIdx;
+            /*! the rect of the texture */
+            sf::IntRect _rect;
     };
 }

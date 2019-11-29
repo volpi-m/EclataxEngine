@@ -27,6 +27,8 @@ find_package(Boost 1.67 REQUIRED)
 set(LIB
     lib/src/Exception/Exception.cpp
     lib/src/Exception/MissingFileException.cpp
+    lib/src/Exception/ConfigFileException.cpp
+    lib/src/Exception/TcpSocketException.cpp
     lib/src/Log/Logger.cpp
     lib/src/Benchmarking/Breakpoint.cpp
 )

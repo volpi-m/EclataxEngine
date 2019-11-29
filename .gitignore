@@ -56,3 +56,4 @@ conaninfo.txt
 conanbuildinfo.txt
 *.lock
 doc/
+.log
