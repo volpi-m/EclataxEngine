@@ -64,6 +64,7 @@ set(SRC_SERVER
     src/engine/ecs/systems/RenderSystem.cpp
     src/engine/ecs/systems/SpawnerSystem.cpp
     src/engine/ecs/systems/MovementSystem.cpp
+    src/engine/ecs/systems/AnimationSystem.cpp
     src/engine/ecs/systems/CollisionSystem.cpp
     src/engine/ecs/systems/HealthManipulatorSystem.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Mediator.cpp
@@ -158,6 +159,7 @@ set (SRC_TEST
     tests/component/test_damage.cpp
     tests/component/test_health.cpp
     tests/component/test_Spawner.cpp
+    tests/component/test_Animation.cpp
     tests/component/test_Particules.cpp
     tests/component/test_Acceleration.cpp
     tests/component/test_collisionBox.cpp
