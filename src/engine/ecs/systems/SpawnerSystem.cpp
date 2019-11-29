@@ -16,14 +16,11 @@ void ECS::System::SpawnerSystem::update(std::unordered_map<unsigned long long, s
             auto component = static_cast<ECS::Component::Spawner *>(entity.second->component(Component::Flags::spawner).get());
             std::chrono::high_resolution_clock::time_point t = std::chrono::high_resolution_clock::now();
 
-            std::cout << "difference : " << (std::chrono::duration_cast<std::chrono::microseconds>(t - component->timeSinceLastSpawn)).count() << std::endl;
-            std::cout << component->seconds.count() << std::endl;
-            // creating a new instance if timer is atteined 
+            // creating a new instance if timer is reached
             if (component->createBlueprint && std::chrono::duration_cast<std::chrono::seconds>(t - component->timeSinceLastSpawn) >= component->seconds) {
 
                 // Reseting time
                 component->timeSinceLastSpawn = t;
-                std::cout << "SPAWNING ! !! !!! " << std::endl;
                 // Creating a new child
                 auto child = component->createBlueprint(entity.second);
                 unsigned long long newId = 0;
