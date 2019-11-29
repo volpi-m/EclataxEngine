@@ -35,12 +35,20 @@ void Client::ClientMediator::askForHub()
     // sending a packet
     Network::headerTcp *header = sendEmptyTcpHeader(Network::ASK_FOR_HUB);
 
-    // Casting the packet into the appropiate structure
-    int b;
-    std::memcpy(&b, header->data, sizeof(int));
+    // Casting the port into an int
+    int port;
+    std::memcpy(&port, header->data, sizeof(int));
 
     // Displaying the code
-    std::cout << header->code << " code -> " << b << std::endl;
+    {
+        Debug::Logger *log = Debug::Logger::getInstance();
+        std::string format = "The client is currently connected to the hub n°";
+
+        log->generateDebugMessage(Debug::INFO, format + std::to_string(header->hubNbr), "Client::ClientMediator::askForHub");
+    }
+
+    // Assigning the hub to the current client
+    _hub = header->hubNbr;
 
      // Freeing ressources
     delete[] header;
@@ -48,9 +56,7 @@ void Client::ClientMediator::askForHub()
 
 void Client::ClientMediator::playerIsReady()
 {
-    Network::headerTcp *header = sendEmptyTcpHeader(Network::CLIENT_IS_READY);
-
-    std::cout << "player is ready : " << header->code << std::endl;
+     sendEmptyTcpHeader(Network::CLIENT_IS_READY);
 }
 
 Network::headerTcp *Client::ClientMediator::sendEmptyTcpHeader(std::size_t code)
@@ -60,6 +66,7 @@ Network::headerTcp *Client::ClientMediator::sendEmptyTcpHeader(std::size_t code)
 
     // Filling the tcp header
     data->code = code;
+    data->hubNbr = _hub;
     std::memset(data->data, 0, 1024);
 
     // Sending the packet

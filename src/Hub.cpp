@@ -16,6 +16,7 @@ Server::Hub::Hub(int newId, const std::string &creator, boost::asio::io_context 
     std::string msg("create hub with : ");
     l->generateDebugMessage(Debug::type::INFO , msg + creator, "hub constructor");
     addMember(creator);
+    _actions[Network::CLIENT_REQUEST_SPRITE] = std::bind(&Server::Hub::addEvent, this, std::placeholders::_1, std::placeholders::_2);
 }
 
 Server::Hub::~Hub()
@@ -29,7 +30,7 @@ void Server::Hub::start()
 
     l->generateDebugMessage(Debug::type::INFO , msg + std::to_string(_id) + " is running !" , "hub starter");
     std::unique_lock<std::mutex> lock(_mutex);
-    while (allIsReady())
+    while (!allIsReady())
         _cond_var.wait(lock);
     l->generateDebugMessage(Debug::type::INFO , "Here we go !!!!" , "hub starter");
     startGame();
@@ -69,6 +70,7 @@ bool Server::Hub::isFull()
 
 bool Server::Hub::isInHub(const std::string &ip)
 {
+    std::lock_guard<std::mutex> lock(_mutex);
     for (auto &i : _players) {
         if (i.ip == ip)
             return true;
@@ -78,6 +80,7 @@ bool Server::Hub::isInHub(const std::string &ip)
 
 void Server::Hub::setPlayerReady(const std::string &ip, bool state)
 {
+    std::lock_guard<std::mutex> lock(_mutex);
     for (auto &i : _players)
         if (i.ip == ip) {
             _cond_var.notify_one();
@@ -106,6 +109,7 @@ void Server::Hub::startGame()
     float x = 10;
     float z = 10;
     float y = 10;
+    float left = 0;
 
     while (_engine.SceneMachine()->run() != false && !_players.empty()) {
 
@@ -118,6 +122,10 @@ void Server::Hub::startGame()
         entity->x = x += 0.01;
         entity->y = y += 0.01;
         entity->z = z += 0.01;
+        entity->top = 0;
+        entity->left = left += 32;
+        entity->width = 32;
+        entity->height = 32;
         std::memcpy(entity->texture, "ressources/r-typesheet1.gif", 27);
         data->code = Network::SERVER_TICK;
 
@@ -129,14 +137,22 @@ void Server::Hub::startGame()
         // std::this_thread::sleep_for(std::chrono::seconds(1));
 
         // get everything to be send
-        // update event stack
         // send event to scene
+        // update event stack
     }
 }
 
-void Server::Hub::processUdpMessage(Server::UdpNetwork *udp)
+void Server::Hub::processUdpMessage(Server::UdpNetwork *socket)
 {
+    std::lock_guard<std::mutex> lock(_mutex);
     std::cout << "treat a message" << std::endl;
-    (void)udp;
-    // Network::headerUdp *h = static_cast<Network::headerUdp *>((void *)udp->buffer().data());
+    Network::headerUdp *h = static_cast<Network::headerUdp *>((void *)socket->buffer().data());
+    _actions[h->code](socket, h);
+}
+
+void Server::Hub::addEvent([[maybe_unused]]Server::UdpNetwork *socket, Network::headerUdp *packet)
+{
+    size_t event;
+    std::memcpy(&event, packet->data, sizeof(size_t));
+    _event.push(event);
 }
