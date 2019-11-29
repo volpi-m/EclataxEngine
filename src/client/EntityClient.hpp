@@ -65,6 +65,13 @@ namespace Client {
             /// \param z : z coordinates
             void setPosition(float x, float y, float z);
 
+            /// \brief set the position of the entity
+            /// \param top : top position of the rectangle
+            /// \param left : left position of the rectangle
+            /// \param width : width position of the rectangle
+            /// \param heigth : heigth position of the rectangle
+            void setTextureRect(float top, float left, float width, float heigth);
+
         private:
 
             /*! has the entity been deleted */
