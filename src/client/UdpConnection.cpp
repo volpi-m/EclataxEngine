@@ -16,14 +16,12 @@ Client::UdpConnection::UdpConnection()
 {
     // Retrieve server's ip and port from configuration file
     std::optional<std::string> ip = _conf.conf("server_ip");
-    std::optional<std::string> port = _conf.conf("udp_port");
 
     // Throw an exception if one of the value is not present
-    if (!ip.has_value() && !port.has_value())
+    if (!ip.has_value())
         throw std::exception();
 
     // Bind udp socket to a specified port and set the socket non blocking
-    _socket.bind(std::stoi(port.value()));
     _socket.setBlocking(false);
 }
 
@@ -48,4 +46,9 @@ void *Client::UdpConnection::receive()
         return b;
     }
     return nullptr;
+}
+
+void Client::UdpConnection::bind(unsigned short port)
+{
+    _socket.bind(port);
 }

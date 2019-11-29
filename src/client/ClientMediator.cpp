@@ -39,8 +39,9 @@ void Client::ClientMediator::askForHub()
     Network::headerTcp *header = sendEmptyTcpHeader(Network::ASK_FOR_HUB);
 
     // Casting the port into an int
-    int port;
-    std::memcpy(&port, header->data, sizeof(int));
+    std::memcpy(&_port, header->data, sizeof(int));
+    std::cout << _port << std::endl;
+    _udp.bind(_port);
 
     // Displaying the code
     {
@@ -91,7 +92,13 @@ Network::headerTcp *Client::ClientMediator::sendEmptyTcpHeader(std::size_t code)
 
 void Client::ClientMediator::sendEvents()
 {
+    struct Network::headerUdp *data = new Network::headerUdp();
+    std::size_t evtTracker = _graph.trackEvent();
 
+    data->code = Network::CLIENT_TICK;
+    std::memcpy(data->data, &evtTracker, sizeof(std::size_t));
+
+    _udp.send(data, _port, sizeof(Network::headerUdp));
 }
 
 void Client::ClientMediator::readNetwork()

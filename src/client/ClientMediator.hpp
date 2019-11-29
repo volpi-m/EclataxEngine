@@ -66,6 +66,8 @@ namespace Client
         Client::GraphicalModule _graph;
         /*! the hub the client is currently in (0 is none) */
         std::size_t _hub;
+        /*! Hub port to send message */
+        unsigned short _port;
     };
 }
 

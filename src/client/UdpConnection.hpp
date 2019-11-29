@@ -49,6 +49,10 @@ namespace Client
         /// \return Return a pointer to what server send
         void *receive();
 
+        /// \brief bind client to hub's port
+        /// \param port : hub's port
+        void bind(unsigned short);
+
     private:
         /*! Configuration file parser */
         Client::ConfReader _conf;
