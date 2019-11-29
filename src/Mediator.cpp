@@ -25,6 +25,12 @@ Server::Mediator::~Mediator()
 {
     _ioContext.stop();
     _boostThread.join();
+    for (auto &i : _hubs) {
+        i.get()->stop();
+    }
+    for (auto &i : _threads) {
+        i.join();
+    }
 }
 
 void Server::Mediator::launchBoost()
@@ -34,9 +40,8 @@ void Server::Mediator::launchBoost()
 
 void Server::Mediator::start()
 {
-    std::string input;
-    
-    while (_isRunning) {
+    std::string input("input");
+    while (_isRunning && !input.empty()) {
         std::cout << "$> ";
         std::getline(std::cin, input);
         if (input == "shutdown" || input == "quit")
@@ -44,9 +49,9 @@ void Server::Mediator::start()
         else if (input == "hubs") {
             std::cout << "Debuging hubs : " << std::endl;
             for (auto &i : _hubs) {
-                std::cout << "Hub n" << i.get()->id() << std::endl;
+                std::cout << "Hub n " << i.get()->id() << std::endl;
                 std::cout << "Port: " << i.get()->port() << std::endl;
-                std::cout << "Number of player" << i.get()->size() << std::endl;
+                std::cout << "Number of player: " << i.get()->size() << std::endl;
             }
         }
     }
@@ -67,7 +72,7 @@ int Server::Mediator::hubNumber()
 int Server::Mediator::assignHub(std::string ip)
 {
     for (auto &i : _hubs) {
-        if (!(*i).isFull()) {
+        if ((*i).isOpen()) {
             (*i).addMember(ip);
             return ((*i).id());
         }
@@ -116,4 +121,9 @@ void Server::Mediator::setPlayerReady(Server::TcpConnection *socket, Network::he
 void Server::Mediator::setPlayerNotReady(Server::TcpConnection *socket, Network::headerTcp *packet)
 {
     _hubs[packet->hubNbr - 1].get()->setPlayerReady(socket->ip(), false);
+}
+
+void Server::Mediator::sendEvent(Server::TcpConnection *socket, Network::headerTcp *packet)
+{
+    std::cout << "Player ask sprite ... please send him :'(" << std::endl;
 }

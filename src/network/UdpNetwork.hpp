@@ -42,7 +42,12 @@ namespace Server
             /// Do nothing special
             ~UdpNetwork();
 
+            /// \brief return port of socket
             int port() const { return _socket.local_endpoint().port(); };
+            /// \brief return port of the sender socket
+            int remotePort() const { return _socket.remote_endpoint().port(); };
+            /// \brief return ip of the sender socket
+            std::string remoteIp() const { return _socket.remote_endpoint().address().to_string(); };
 
             /// \brief get the buffer content
             std::array<char, BUFFER_SIZE> buffer() const { return _buf; };

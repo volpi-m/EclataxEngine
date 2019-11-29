@@ -7,7 +7,7 @@
 
 #include "Hub.hpp"
 
-Server::Hub::Hub(int newId, const std::string &creator, boost::asio::io_context &ioContext) : 
+Server::Hub::Hub(int newId, const std::string &creator, boost::asio::io_context &ioContext) : _isPlaying(false),
     _udp(ioContext, std::bind(&Server::Hub::processUdpMessage, this, std::placeholders::_1)),
     _id(newId), _port(_udp.port())
 {
@@ -47,25 +47,25 @@ bool Server::Hub::allIsReady()
 
 bool Server::Hub::addMember(const std::string &ip)
 {
-    if (isFull())
-        return false;
-    else {
+    if (isOpen()) {
         _players.emplace_back(Server::Player(ip, false));
         return true;
-    }
+    } else
+        return false;
 }
 
 void Server::Hub::removeMember(const std::string &ip)
 {
+    std::unique_lock<std::mutex> lock(_mutex);
     _players.remove_if([&] (Player &p) { return(p.ip == ip); });
 }
 
-bool Server::Hub::isFull()
+bool Server::Hub::isOpen()
 {
-    if (_players.size() >= HUBLIMIT)
-        return true;
-    else
+    if (_players.size() < HUBLIMIT || _isPlaying)
         return false;
+    else
+        return true;
 }
 
 bool Server::Hub::isInHub(const std::string &ip)
@@ -93,8 +93,20 @@ void Server::Hub::sendToAllPlayer(void *msg, const std::size_t size)
     }
 }
 
+void Server::Hub::stop()
+{
+    Network::headerUdp data;
+    data.code = Network::CLIENT_ERROR;
+    char msg[20] = "Server was stopped";
+    std::memcpy(data.data, &msg, sizeof(msg));
+    sendToAllPlayer(&data, sizeof(data));
+    std::unique_lock<std::mutex> lock(_mutex);
+    _players.clear();
+}
+
 void Server::Hub::startGame()
 {
+    _isPlaying = true;
     Debug::Logger *l = Debug::Logger::getInstance(".log");
     std::string msg("Hub number ");
     l->generateDebugMessage(Debug::type::INFO , "Starting the game", msg + std::to_string(_id));
@@ -140,6 +152,7 @@ void Server::Hub::startGame()
         // send event to scene
         // update event stack
     }
+    std::cout << "Game is finish in hub " << _id << std::endl;
 }
 
 void Server::Hub::processUdpMessage(Server::UdpNetwork *socket)
@@ -154,4 +167,12 @@ void Server::Hub::addEvent([[maybe_unused]]Server::UdpNetwork *socket, Network::
     size_t event;
     std::memcpy(&event, packet->data, sizeof(size_t));
     _event.push(event);
+}
+
+void Server::Hub::playerError(Server::UdpNetwork *socket, Network::headerUdp *packet)
+{
+    std::string ip = socket->remoteIp();
+    Debug::Logger *l = Debug::Logger::getInstance(".log");
+    l->generateDebugMessage(Debug::type::ERROR , "Error with the player" + ip + "\nError detail: " + packet->data);
+    removeMember(ip);
 }

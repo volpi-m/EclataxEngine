@@ -82,5 +82,9 @@ namespace Server {
             /// \param packet packet send by client
             /// \brief method call when client is ready
             void setPlayerNotReady(Server::TcpConnection *socket, Network::headerTcp *packet);
+            /// \param socket pointer to the received socket
+            /// \param packet packet send by client
+            /// \brief method call when client ask for event list
+            void sendEvent(Server::TcpConnection *socket, Network::headerTcp *packet);
     };
 }
