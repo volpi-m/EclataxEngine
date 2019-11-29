@@ -94,8 +94,8 @@ void Server::Mediator::askHub(Server::TcpConnection *socket, [[maybe_unused]] Ne
     toSend->hubNbr = assignHub(socket->ip());
 
     // Copying the port in the data field
-    int data = _hubs.back().get()->port();
-    std::memcpy(toSend->data, &data, sizeof(int));
+    int port = _hubs.back().get()->port();
+    std::memcpy(toSend->data, &port, sizeof(int));
 
     // Sending the packet to the client
     socket->write(static_cast<void *>(toSend), sizeof(Network::headerTcp));

@@ -9,6 +9,7 @@
 
 #include <list>
 #include <string>
+#include <cstring>
 #include <boost/asio.hpp>
 
 #include "Logger.hpp"
@@ -82,6 +83,10 @@ namespace Server {
 
 
         private:
+            /*! mutex for hub thread */
+            std::mutex _mutex;
+            /*! condittion variable for hub thread */
+            std::condition_variable _cond_var;
             /*! Game engine */
             Game::GameEngine _engine;
             /*! Object for handling udp dialogue */
@@ -92,12 +97,10 @@ namespace Server {
             unsigned short _port;
             /*! All ip of members */
             std::list<Server::Player> _players;
-
-            /*! mutex for hub thread */
-            std::mutex _mutex;
-            /*! condittion variable for hub thread */
-            std::condition_variable _cond_var;
-
+            /*! queue of all event get in the hub */
+            std::queue<size_t> _event;
+            /*! Map of all actions when you received a udp message from client */
+            std::unordered_map<int, std::function<void(Server::UdpNetwork *socket, Network::headerUdp *packet)>> _actions;
 
             /// \brief method for starting a game
             void startGame(); // to implement
@@ -105,5 +108,12 @@ namespace Server {
             /// \param size : size of the message
             /// \brief method for send message to all player of the hub
             void sendToAllPlayer(void *msg, const std::size_t size);
+            /// \param event : event to add on stack event
+            /// \brief method for save an event comming from 
+            void addEvent(Server::UdpNetwork *socket, Network::headerUdp *packet);
+
+
+            //event : unsigned char
+            //request : tableau avec la description de chaque event (la position est l'id)
     };
 }

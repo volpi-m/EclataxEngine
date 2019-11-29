@@ -16,6 +16,7 @@ Server::Hub::Hub(int newId, const std::string &creator, boost::asio::io_context 
     std::string msg("create hub with : ");
     l->generateDebugMessage(Debug::type::INFO , msg + creator, "hub constructor");
     addMember(creator);
+    _actions[Network::CLIENT_REQUEST_SPRITE] = std::bind(&Server::Hub::addEvent, this, std::placeholders::_1, std::placeholders::_2);
 }
 
 Server::Hub::~Hub()
@@ -134,14 +135,21 @@ void Server::Hub::startGame()
         // std::this_thread::sleep_for(std::chrono::seconds(1));
 
         // get everything to be send
-        // update event stack
         // send event to scene
+        // update event stack
     }
 }
 
-void Server::Hub::processUdpMessage(Server::UdpNetwork *udp)
+void Server::Hub::processUdpMessage(Server::UdpNetwork *socket)
 {
     std::cout << "treat a message" << std::endl;
-    (void)udp;
-    // Network::headerUdp *h = static_cast<Network::headerUdp *>((void *)udp->buffer().data());
+    Network::headerUdp *h = static_cast<Network::headerUdp *>((void *)socket->buffer().data());
+    _actions[h->code](socket, h);
+}
+
+void Server::Hub::addEvent([[maybe_unused]]Server::UdpNetwork *socket, Network::headerUdp *packet)
+{
+    size_t event;
+    std::memcpy(&event, packet->data, sizeof(size_t));
+    _event.push(event);
 }
