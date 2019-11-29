@@ -51,14 +51,12 @@ namespace Client
         /// \return an index to the texture
         std::size_t addTexture(const std::string &filepath);
 
-        /// \brief run the graphical client
-        /// \return a bool that is true is the client is closed, false otherwise
-        bool run();
-
         /// \brief parse an udp packet
         /// \param packet : a pointer to the packet
         void parsePackets(void *packet);
 
+        /// \brief return trackEvent
+        /// \return the number containing a true/false for each byte
         std::size_t trackEvent() const;
 
         /// \brief detect events and threat them
@@ -81,8 +79,6 @@ namespace Client
         std::unordered_map<std::size_t, std::shared_ptr<Client::Entity>> _entities;
         /*! entities stocked attribute */
         std::unordered_map<std::size_t, std::pair<std::string, sf::Texture>> _textures;
-        /*! closed window attribute */
-        bool _closed;
         /*! List of event with a small description */
         std::vector< std::pair<sf::Keyboard::Key, std::string> > _evtList;
         /*! Number used to store pressed buttons or not (bitwise operations) */

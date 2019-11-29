@@ -17,11 +17,10 @@ void Client::ClientMediator::run()
     connectionProcedure();
     const sf::RenderWindow &w = _graph.window();
 
-    // If the client has been connected, we can start to render
+    // If the client has been connected, we can start to loop
+    // cf. RFC to understand the gameloop
     while (w.isOpen()) {
-        void *packet = _udp.receive();
-        if (packet)
-            _graph.parsePackets(packet);
+        readNetwork();
         _graph.processEvents();
         sendEvents();
         _graph.display();
@@ -93,4 +92,11 @@ Network::headerTcp *Client::ClientMediator::sendEmptyTcpHeader(std::size_t code)
 void Client::ClientMediator::sendEvents()
 {
 
+}
+
+void Client::ClientMediator::readNetwork()
+{
+    void *packet = _udp.receive();
+    if (packet)
+        _graph.parsePackets(packet);
 }

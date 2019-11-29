@@ -12,9 +12,10 @@
 #include "GraphicalModule.hpp"
 
 Client::GraphicalModule::GraphicalModule()
-    : _window(sf::RenderWindow(sf::VideoMode(1920, 1080), "SFML works!")), _closed(false),
+    : _window(sf::RenderWindow(sf::VideoMode(1920, 1080), "SFML works!")),
     _trackEvent(0), _bitmaskList({1, 2, 4, 8, 16, 32, 64, 128})
 {
+    _window.setFramerateLimit(60);
     sf::Texture artefact;
 
     // Creating an artefact texture
@@ -81,17 +82,6 @@ std::size_t Client::GraphicalModule::addTexture(const std::string &filepath)
     return _textures.size();
 }
 
-bool Client::GraphicalModule::run()
-{
-    if (_window.isOpen()) {
-
-        // Process events and display them
-        processEvents();
-        display();
-    }
-    return _closed;
-}
-
 void Client::GraphicalModule::parsePackets(void *packet)
 {
     Network::headerUdp *packetHeader = static_cast<Network::headerUdp *>(packet);
@@ -146,7 +136,6 @@ void Client::GraphicalModule::processEvents()
         // The window has been closed
         if (_events.type == sf::Event::Closed) {
             _window.close();
-            _closed = true;
         }
         for (uint i = 0; i < _evtList.size(); i++)
             if (sf::Keyboard::isKeyPressed(_evtList[i].first)) {

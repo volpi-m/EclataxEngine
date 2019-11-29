@@ -13,6 +13,7 @@
 #ifndef CLIENTMEDIATOR_HPP_
 #define CLIENTMEDIATOR_HPP_
 
+#include <chrono>
 #include "Exception.hpp"
 #include "UdpConnection.hpp"
 #include "TcpConnection.hpp"
@@ -51,9 +52,11 @@ namespace Client
         /// \return a pointer to a tcp header
         Network::headerTcp *sendEmptyTcpHeader(std::size_t code);
 
-        
-
+        /// \brief send event handled by sfml to server on UDP network
         void sendEvents();
+
+        /// \brief read UDP packet from the network, to be handled by processEvent
+        void readNetwork();
 
         /*! UdpConnection instance, send and receive data from server during a game */
         Client::UdpConnection _udp;
