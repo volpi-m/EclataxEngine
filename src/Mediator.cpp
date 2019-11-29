@@ -14,8 +14,6 @@ Server::Mediator::Mediator() : _tcp (_ioContext,
     Debug::Logger *l = Debug::Logger::getInstance();
     l->generateDebugMessage(Debug::type::INFO , "Create Mediator", "Mediator ctor");
     _boostThread = std::thread(&Server::Mediator::launchBoost, this);
-
-    // _actions[Network::ASK_FOR_HUB] = &Server::Mediator::askHub;
     _actions[Network::ASK_FOR_HUB] = std::bind(&Server::Mediator::askHub, this, std::placeholders::_1, std::placeholders::_2);
     _actions[Network::CLIENT_IS_READY] = std::bind(&Server::Mediator::setPlayerReady, this, std::placeholders::_1, std::placeholders::_2);
     _actions[Network::CLIENT_IS_NOT_READY] = std::bind(&Server::Mediator::setPlayerNotReady, this, std::placeholders::_1, std::placeholders::_2);
@@ -124,7 +122,12 @@ void Server::Mediator::setPlayerNotReady(Server::TcpConnection *socket, Network:
     _hubs[packet->hubNbr - 1].get()->setPlayerReady(socket->ip(), false);
 }
 
-void Server::Mediator::sendSprite(Server::TcpConnection *socket, Network::headerTcp *packet)
+void Server::Mediator::sendSprite([[maybe_unused]]Server::TcpConnection *socket, [[maybe_unused]]Network::headerTcp *packet)
 {
     std::cout << "Player ask sprite ... please send him :'(" << std::endl;
+}
+
+void Server::Mediator::sendEvent([[maybe_unused]]Server::TcpConnection *socket, [[maybe_unused]]Network::headerTcp *packet)
+{
+    std::cout << "Asking for event" << std::endl;    
 }

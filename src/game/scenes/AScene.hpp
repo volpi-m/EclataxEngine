@@ -11,6 +11,9 @@
 
 #pragma once
 
+#include "Animation2DComponent.hpp"
+#include "TransformComponent.hpp"
+#include "SpriteComponent.hpp"
 #include "IScene.hpp"
 #include "Logger.hpp"
 
@@ -77,7 +80,13 @@ namespace Scenes {
             /// \brief remove all the entities of the scene
             virtual void remove() override = 0;
 
+            /// \brief getting the entity stack of the scene
+            /// \return a stack of entities that will be sent to the client
+            std::stack<Network::Entity> &entityStack() override;
 
+            /// \param entity : The entity that will be pushed onto the stack
+            /// \brief push an entity to the stack of the scene
+            void pushEntityStack(std::shared_ptr<ECS::Entity> &entity) override;
         
             // virtual void getElementsToDisplay() = 0;
             // virtual void manageEvent() = 0;
@@ -91,6 +100,8 @@ namespace Scenes {
             bool _pop;
             /*! swap characteristic */
             bool _swap;
+            /*! stack of entity */
+            std::stack<Network::Entity> _stack;
     };
 
 }

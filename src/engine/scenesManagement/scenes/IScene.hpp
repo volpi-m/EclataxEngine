@@ -5,9 +5,13 @@
 ** IScene class interface
 */
 
-#include "ECS.hpp"
-
 #pragma once
+
+#include <stack>
+#include <cstring>
+
+#include "ECS.hpp"
+#include "Rfc.hpp"
 
 /// \namespace Scenes
 /// \brief Used for all scenes components
@@ -55,5 +59,13 @@ namespace Scenes {
             /// \param ECS : The entity compponent system to pass to the scene
             /// \brief set an instance of the ECS inside the scene object
             virtual void setECSInstance(std::shared_ptr<Module::EntityComponentSystem> &ECS) = 0;
+
+            /// \brief getting the entity stack of the scene
+            /// \return a stack of entities that will be sent to the client
+            virtual std::stack<Network::Entity> &entityStack() = 0;
+
+            /// \param entity : The entity that will be pushed onto the stack
+            /// \brief push an entity to the stack of the scene
+            virtual void pushEntityStack(std::shared_ptr<ECS::Entity> &entity) = 0;
     };
 }

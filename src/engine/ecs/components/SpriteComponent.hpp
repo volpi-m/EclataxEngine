@@ -14,6 +14,7 @@
 #include <string>
 
 #include "IComponent.hpp"
+#include "CollisionBox2DComponent.hpp"
 
 /// \namespace ECS
 /// \brief Used for the all entity component system subclasses
@@ -27,13 +28,15 @@ namespace ECS {
         struct Sprite : public IComponent {
 
             /// \brief constructor
-            Sprite() : texture(""), loaded(false) {}
+            Sprite() : texture(""), rect(Game::Rect()), loaded(false) {}
 
             /// \brief constructor
-            Sprite(const std::string &_texture) : texture(_texture), loaded(false) {}
+            Sprite(const std::string &_texture, const Game::Rect &_rect) : texture(_texture), rect(_rect.top, _rect.left, _rect.width, _rect.height), loaded(false) {}
 
             /*! texture file attribute */
             std::string texture;
+            /*! rect of the texture attribute */
+            Game::Rect rect;
             /*! is loaded attribute */
             bool loaded;
         };

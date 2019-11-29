@@ -117,3 +117,31 @@ void Scenes::DumyScene::setECSInstance(std::shared_ptr<Module::EntityComponentSy
 {
     _ECS = ECS;
 }
+
+std::stack<Network::Entity> &Scenes::DumyScene::entityStack()
+{
+    return _stack;
+}
+
+void Scenes::DumyScene::pushEntityStack(std::shared_ptr<ECS::Entity> &entity)
+{
+    if (entity->hasComponent(ECS::Component::Flags::animation2D) && entity->hasComponent(ECS::Component::Flags::sprite)) {
+
+        _stack.emplace(Network::Entity());
+
+        // Getting the animation component 
+        auto componentAnimation = static_cast<ECS::Component::Animation2D *>(entity->component(ECS::Component::Flags::animation2D).get());
+        auto componentSprite = static_cast<ECS::Component::Sprite *>(entity->component(ECS::Component::Flags::sprite).get());
+        auto componentTransform = static_cast<ECS::Component::Transform *>(entity->component(ECS::Component::Flags::transform).get());
+
+        // Compying parameters of the compnent into the network entity
+        _stack.top().top = componentAnimation->rect.top;
+        _stack.top().left = componentAnimation->rect.left;
+        _stack.top().width = componentAnimation->rect.width;
+        _stack.top().height = componentAnimation->rect.height;
+        std::memcpy(_stack.top().texture, "ressources/r-typesheet1.gif", 27);
+        _stack.top().x = componentTransform->x;
+        _stack.top().y = componentTransform->y;
+        _stack.top().z = componentTransform->z;
+    }
+}

@@ -64,7 +64,6 @@ namespace ECS {
 
             std::shared_ptr<Entity> createEntity(ECS::Entity &entity, ECS::flagType types);
 
-
         private:
             /*! list of entity blueprints */
             std::unordered_map<std::string, Entity> _blueprints;
@@ -199,7 +198,7 @@ namespace ECS {
                 [](const std::shared_ptr<IComponent> &component)->std::shared_ptr<IComponent>
                 {
                     auto toCopy = static_cast<Component::Sprite *>(component.get());
-                    std::shared_ptr<IComponent> sprite(new Component::Sprite(toCopy->texture));
+                    std::shared_ptr<IComponent> sprite(new Component::Sprite(toCopy->texture, toCopy->rect));
 
                     return sprite;
                 },
