@@ -41,12 +41,19 @@ void Server::Mediator::start()
         std::getline(std::cin, input);
         if (input == "shutdown" || input == "quit")
             _isRunning = false;
+        else if (input == "hubs") {
+            std::cout << "Debuging hubs : " << std::endl;
+            for (auto &i : _hubs) {
+                std::cout << "Hub n" << i.get()->id() << std::endl;
+                std::cout << "Port: " << i.get()->port() << std::endl;
+                std::cout << "Number of player" << i.get()->size() << std::endl;
+            }
+        }
     }
 }
 
 void Server::Mediator::createHub(std::string ip)
 {
-    // Need to initialize a thread
     _mut.lock();
     _hubs.emplace_back(std::make_unique<Server::Hub>(_hubs.size() + 1, ip, _ioContext));
     _mut.unlock();
@@ -103,12 +110,10 @@ void Server::Mediator::askHub(Server::TcpConnection *socket, [[maybe_unused]] Ne
 
 void Server::Mediator::setPlayerReady(Server::TcpConnection *socket, Network::headerTcp *packet)
 {
-    std::cout <<"setting player ready" << std::endl;
-    _hubs[packet->hubNbr].get()->setPlayerReady(socket->ip(), true);
-    std::cout << "Player has been set ready" << std::endl;
+    _hubs[packet->hubNbr - 1].get()->setPlayerReady(socket->ip(), true);
 }
 
 void Server::Mediator::setPlayerNotReady(Server::TcpConnection *socket, Network::headerTcp *packet)
 {
-    _hubs[packet->hubNbr].get()->setPlayerReady(socket->ip(), false);
+    _hubs[packet->hubNbr - 1].get()->setPlayerReady(socket->ip(), false);
 }

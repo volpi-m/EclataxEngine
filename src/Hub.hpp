@@ -58,6 +58,8 @@ namespace Server {
             int port() const { return _port; };
             /// \brief get the number of the hub
             int id() const { return _id; };
+            /// \brief get the number of player in the hub
+            int size() const { return _players.size(); };
 
             /// \param ip : ip of the removed member
             /// \brief remove a player from the hub
