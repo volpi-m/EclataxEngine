@@ -58,10 +58,8 @@ namespace Server {
             std::vector<std::unique_ptr<Server::Hub>> _hubs;
             /*! state of the server */
             bool _isRunning;
-
+            /*! Map of all actions when you received a tcp message from client */
             std::unordered_map<int, std::function<void(Server::TcpConnection *socket, Network::headerTcp *packet)>> _actions;
-
-            // std::unordered_map<int, std::function<void(Mediator *, const std::string &ip)>> _actions;
 
             /// \param ip ip of the hub creator
             /// \brief method for creating a new hub
