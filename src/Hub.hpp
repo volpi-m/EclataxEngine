@@ -58,6 +58,8 @@ namespace Server {
             int port() const { return _port; };
             /// \brief get the number of the hub
             int id() const { return _id; };
+            /// \brief get the number of player in the hub
+            int size() const { return _players.size(); };
 
             /// \param ip : ip of the removed member
             /// \brief remove a player from the hub
@@ -65,10 +67,13 @@ namespace Server {
             /// \param ip : ip of the new member
             /// \brief add a player to the hub
             bool addMember(const std::string &ip);
-            /// \brief check if the hub is full
-            bool isFull();
+            /// \brief check if the hub is open or not
+            bool isOpen();
             /// \brief start a hub
             void start();
+            /// \brief stop a hub
+            /// \it is only use when the server is shutdown
+            void stop();
             /// \param udp : udp object
             /// \brief call back method call when an udp message is received
             void processUdpMessage(Server::UdpNetwork *udp);
@@ -83,6 +88,7 @@ namespace Server {
 
 
         private:
+            bool _isPlaying;
             /*! mutex for hub thread */
             std::mutex _mutex;
             /*! condittion variable for hub thread */
@@ -108,9 +114,14 @@ namespace Server {
             /// \param size : size of the message
             /// \brief method for send message to all player of the hub
             void sendToAllPlayer(void *msg, const std::size_t size);
-            /// \param event : event to add on stack event
+            /// \param socket : socket udp
+            /// \param packet : packet send
             /// \brief method for save an event comming from 
             void addEvent(Server::UdpNetwork *socket, Network::headerUdp *packet);
+            /// \param socket : socket udp
+            /// \param packet : packet send
+            /// \brief method call when a player encounter a probleme
+            void playerError(Server::UdpNetwork *socket, Network::headerUdp *packet);
 
 
             //event : unsigned char

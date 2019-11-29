@@ -32,9 +32,7 @@ void Server::UdpNetwork::handleRead([[maybe_unused]] const std::size_t size)
 }
 
 void Server::UdpNetwork::handleWrite([[maybe_unused]] const std::size_t size)
-{
-    std::cout << "Packet sent to IP" << std::endl;
-}
+{ }
 
 void Server::UdpNetwork::write(const std::string &ip, const void *data, const std::size_t size)
 {
