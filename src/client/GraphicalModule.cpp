@@ -101,10 +101,17 @@ void Client::GraphicalModule::parsePackets(void *packet)
     if (packetHeader->code == Network::SERVER_TICK)
         entity = getEntityParams(packetHeader);
     if (entity) {
+
+        // Creating the entity and eventualy the texture
         std::size_t id = addTexture((char *)entity->texture);
         createEntity(entity->id, id);
-        std::cout << "top: " << entity->top << "left: " << entity->left << "width: " << entity->width << "height: " << entity->height << std::endl;
+
+        // Debug
+        std::cout << "top: " << entity->top << ", left: " << entity->left << ", width: " << entity->width << ", height: " << entity->height << std::endl;
+        
+        // Setting entity position and rectangle
         _entities[entity->id]->setPosition(entity->x, entity->y, entity->z);
+        _entities[entity->id]->setTextureRect(entity->top, entity->left, entity->width, entity->height);
     }
 }
 

@@ -70,7 +70,6 @@ bool Server::Hub::isFull()
 
 bool Server::Hub::isInHub(const std::string &ip)
 {
-    std::lock_guard<std::mutex> lock(_mutex);
     for (auto &i : _players) {
         if (i.ip == ip)
             return true;
@@ -80,7 +79,6 @@ bool Server::Hub::isInHub(const std::string &ip)
 
 void Server::Hub::setPlayerReady(const std::string &ip, bool state)
 {
-    std::lock_guard<std::mutex> lock(_mutex);
     for (auto &i : _players)
         if (i.ip == ip) {
             _cond_var.notify_one();
@@ -119,12 +117,14 @@ void Server::Hub::startGame()
 
         // Filling the structure
         entity->id = id;
-        entity->x = x += 0.01;
-        entity->y = y += 0.01;
-        entity->z = z += 0.01;
+        entity->x = x += 1;
+        entity->y = y += 1;
+        entity->z = z += 1;
         entity->top = 0;
-        entity->left = left += 32;
-        entity->width = 32;
+        entity->left = left += 30;
+        if (left >= 12 * 30)
+            left = 0;
+        entity->width = 30;
         entity->height = 32;
         std::memcpy(entity->texture, "ressources/r-typesheet1.gif", 27);
         data->code = Network::SERVER_TICK;
@@ -134,7 +134,7 @@ void Server::Hub::startGame()
         sendToAllPlayer(data, sizeof(int) + Network::UDP_BUF_SIZE);
 
         // Waiting before sending another packet
-        // std::this_thread::sleep_for(std::chrono::seconds(1));
+         std::this_thread::sleep_for(std::chrono::milliseconds(50));
 
         // get everything to be send
         // send event to scene
@@ -144,7 +144,6 @@ void Server::Hub::startGame()
 
 void Server::Hub::processUdpMessage(Server::UdpNetwork *socket)
 {
-    std::lock_guard<std::mutex> lock(_mutex);
     std::cout << "treat a message" << std::endl;
     Network::headerUdp *h = static_cast<Network::headerUdp *>((void *)socket->buffer().data());
     _actions[h->code](socket, h);

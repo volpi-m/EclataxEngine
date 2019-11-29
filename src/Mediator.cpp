@@ -103,12 +103,10 @@ void Server::Mediator::askHub(Server::TcpConnection *socket, [[maybe_unused]] Ne
 
 void Server::Mediator::setPlayerReady(Server::TcpConnection *socket, Network::headerTcp *packet)
 {
-    std::cout <<"setting player ready" << std::endl;
-    _hubs[packet->hubNbr].get()->setPlayerReady(socket->ip(), true);
-    std::cout << "Player has been set ready" << std::endl;
+    _hubs[packet->hubNbr - 1].get()->setPlayerReady(socket->ip(), true);
 }
 
 void Server::Mediator::setPlayerNotReady(Server::TcpConnection *socket, Network::headerTcp *packet)
 {
-    _hubs[packet->hubNbr].get()->setPlayerReady(socket->ip(), false);
+    _hubs[packet->hubNbr - 1].get()->setPlayerReady(socket->ip(), false);
 }

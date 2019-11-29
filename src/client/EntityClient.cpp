@@ -56,3 +56,8 @@ void Client::Entity::setPosition(float x, float y, [[maybe_unused]] float z)
 {
     _sprite.setPosition(sf::Vector2f(x, y));
 }
+
+void Client::Entity::setTextureRect(float top, float left, float width, float heigth)
+{
+    _sprite.setTextureRect(sf::IntRect(left, top, width, heigth));
+}
