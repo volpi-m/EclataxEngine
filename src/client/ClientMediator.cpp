@@ -57,6 +57,10 @@ void Client::ClientMediator::askForHub()
 void Client::ClientMediator::playerIsReady()
 {
      sendEmptyTcpHeader(Network::CLIENT_IS_READY);
+
+    // Client is ready
+    Debug::Logger *log = Debug::Logger::getInstance();
+    log->generateDebugMessage(Debug::INFO, "The client is ready.", "Client::ClientMediator::playerIsReady");
 }
 
 Network::headerTcp *Client::ClientMediator::sendEmptyTcpHeader(std::size_t code)
