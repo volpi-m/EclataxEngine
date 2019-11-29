@@ -25,15 +25,29 @@ Server::Hub::~Hub()
 
 void Server::Hub::start()
 {
-    Debug::Logger *l = Debug::Logger::getInstance();
+    Debug::Logger *l = Debug::Logger::getInstance(".log");
     std::string msg("hub number ");
 
-    l->generateDebugMessage(Debug::type::INFO , msg + std::to_string(_id) + " is running !" , "hub starter");
+    l->generateDebugMessage(Debug::type::INFO , msg + std::to_string(_id) + " is running !" , "Server::Hub::start()");
     std::unique_lock<std::mutex> lock(_mutex);
-    while (!allIsReady())
+    while (!allIsReady()) {
         _cond_var.wait(lock);
-    l->generateDebugMessage(Debug::type::INFO , "Here we go !!!!" , "hub starter");
+    }
+    lock.unlock();
     startGame();
+}
+
+void Server::Hub::stop()
+{
+    Debug::Logger *l = Debug::Logger::getInstance();
+    l->generateDebugMessage(Debug::type::INFO , "Calling stop function in a hub", "Server::Hub::stop()");
+    Network::headerUdp data;
+    data.code = Network::CLIENT_ERROR;
+    char msg[20] = "Server was stopped";
+    std::memcpy(data.data, &msg, sizeof(msg));
+    sendToAllPlayer(&data, sizeof(data));
+    std::unique_lock<std::mutex> lock(_mutex);
+    _players.clear();
 }
 
 bool Server::Hub::allIsReady()
@@ -48,6 +62,7 @@ bool Server::Hub::allIsReady()
 bool Server::Hub::addMember(const std::string &ip)
 {
     if (isOpen()) {
+        std::unique_lock<std::mutex> lock(_mutex);
         _players.emplace_back(Server::Player(ip, false));
         return true;
     } else
@@ -62,7 +77,8 @@ void Server::Hub::removeMember(const std::string &ip)
 
 bool Server::Hub::isOpen()
 {
-    if (_players.size() < HUBLIMIT || _isPlaying)
+    std::unique_lock<std::mutex> lock(_mutex);
+    if (_players.size() >= HUBLIMIT || _isPlaying)
         return false;
     else
         return true;
@@ -91,17 +107,6 @@ void Server::Hub::sendToAllPlayer(void *msg, const std::size_t size)
     for (auto &i : _players) {
         _udp.write(i.ip, msg, size);
     }
-}
-
-void Server::Hub::stop()
-{
-    Network::headerUdp data;
-    data.code = Network::CLIENT_ERROR;
-    char msg[20] = "Server was stopped";
-    std::memcpy(data.data, &msg, sizeof(msg));
-    sendToAllPlayer(&data, sizeof(data));
-    std::unique_lock<std::mutex> lock(_mutex);
-    _players.clear();
 }
 
 void Server::Hub::startGame()
@@ -173,6 +178,6 @@ void Server::Hub::playerError(Server::UdpNetwork *socket, Network::headerUdp *pa
 {
     std::string ip = socket->remoteIp();
     Debug::Logger *l = Debug::Logger::getInstance(".log");
-    l->generateDebugMessage(Debug::type::ERROR , "Error with the player" + ip + "\nError detail: " + packet->data);
+    l->generateDebugMessage(Debug::type::ERROR , "Error with the player" + ip + "\nError detail: " + packet->data, "Server::Hub::playerError");
     removeMember(ip);
 }

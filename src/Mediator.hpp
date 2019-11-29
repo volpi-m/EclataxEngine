@@ -84,7 +84,7 @@ namespace Server {
             void setPlayerNotReady(Server::TcpConnection *socket, Network::headerTcp *packet);
             /// \param socket pointer to the received socket
             /// \param packet packet send by client
-            /// \brief method call when client ask for event list
-            void sendEvent(Server::TcpConnection *socket, Network::headerTcp *packet);
+            /// \brief method call when client ask for sprite list
+            void sendSprite(Server::TcpConnection *socket, Network::headerTcp *packet);
     };
 }
