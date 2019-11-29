@@ -32,7 +32,8 @@ namespace ECS {
                                   damage = 2048,
                                   life = 4096,
                                   speed = 8192,
-                                  text = 16384
+                                  text = 16384,
+                                  animation2D = 32768
             } flags;
         }
     }
