@@ -16,6 +16,7 @@ Server::Hub::Hub(int newId, const std::string &creator, boost::asio::io_context 
     std::string msg("create hub with : ");
     l->generateDebugMessage(Debug::type::INFO , msg + creator, "hub constructor");
     addMember(creator);
+    _actions[Network::CLIENT_REQUEST_SPRITE] = std::bind(&Server::Hub::addEvent, this, std::placeholders::_1, std::placeholders::_2);
 }
 
 Server::Hub::~Hub()
