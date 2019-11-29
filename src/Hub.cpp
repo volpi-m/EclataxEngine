@@ -123,8 +123,7 @@ void Server::Hub::startGame()
 
         // Sending the packet to all players
         std::memcpy(data->data, (void *)entity, Network::UDP_BUF_SIZE);
-        for (auto &it : _players)
-            _udp.write(it.ip, (void *)data, sizeof(int) + Network::UDP_BUF_SIZE);
+        sendToAllPlayer(data, sizeof(int) + Network::UDP_BUF_SIZE);
 
         // Waiting before sending another packet
         // std::this_thread::sleep_for(std::chrono::seconds(1));
