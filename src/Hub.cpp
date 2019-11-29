@@ -70,6 +70,7 @@ bool Server::Hub::isFull()
 
 bool Server::Hub::isInHub(const std::string &ip)
 {
+    std::lock_guard<std::mutex> lock(_mutex);
     for (auto &i : _players) {
         if (i.ip == ip)
             return true;
@@ -79,6 +80,7 @@ bool Server::Hub::isInHub(const std::string &ip)
 
 void Server::Hub::setPlayerReady(const std::string &ip, bool state)
 {
+    std::lock_guard<std::mutex> lock(_mutex);
     for (auto &i : _players)
         if (i.ip == ip) {
             _cond_var.notify_one();
@@ -142,6 +144,7 @@ void Server::Hub::startGame()
 
 void Server::Hub::processUdpMessage(Server::UdpNetwork *socket)
 {
+    std::lock_guard<std::mutex> lock(_mutex);
     std::cout << "treat a message" << std::endl;
     Network::headerUdp *h = static_cast<Network::headerUdp *>((void *)socket->buffer().data());
     _actions[h->code](socket, h);
