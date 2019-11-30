@@ -67,5 +67,7 @@ namespace Scenes {
             /// \param entity : The entity that will be pushed onto the stack
             /// \brief push an entity to the stack of the scene
             virtual void pushEntityStack(std::shared_ptr<ECS::Entity> &entity) = 0;
+
+            virtual void handleEvent(std::queue<std::pair<int, size_t>>& ) = 0;
     };
 }

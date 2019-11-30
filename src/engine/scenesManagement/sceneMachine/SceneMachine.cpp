@@ -93,3 +93,15 @@ std::stack<Network::Entity> &Module::SceneMachine::getCurrentSceneEntityStack()
 {
     return _scenes.top()->entityStack();
 }
+
+void Module::SceneMachine::sendEventsToCurrentScene(std::queue<std::pair<int, size_t>> &events)
+{
+    _scenes.top()->handleEvent(events);
+}
+
+void Module::SceneMachine::clear()
+{
+    while (!_scenes.empty()) {
+        _scenes.pop();
+    }
+}

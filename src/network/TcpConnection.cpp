@@ -41,11 +41,7 @@ void Server::TcpConnection::start()
 
 void Server::TcpConnection::handleWrite(const boost::system::error_code &error, [[maybe_unused]] const size_t b)
 {
-    if (!error) {
-        Debug::Logger *log = Debug::Logger::getInstance(".log");
-        log->generateDebugMessage(Debug::type::INFO, "Packet sent to " + _ip, "TcpConnection::handleWrite");
-    }
-    else
+    if (error)
         disconnect(error);
 }
 

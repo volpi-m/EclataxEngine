@@ -17,6 +17,7 @@
 #include <functional>
 #include <boost/bind.hpp>
 #include <boost/asio.hpp>
+#include <optional>
 
 #include "macro.hpp"
 #include "Rfc.hpp"
@@ -45,9 +46,10 @@ namespace Server
             /// \brief return port of socket
             int port() const { return _socket.local_endpoint().port(); };
             /// \brief return port of the sender socket
-            int remotePort() const { return _socket.remote_endpoint().port(); };
+            int remotePort() const { return _endpoint.port(); };
             /// \brief return ip of the sender socket
-            std::string remoteIp() const { return _socket.remote_endpoint().address().to_string(); };
+            std::string remoteIp() const { return _endpoint.address().to_string(); };
+            // std::optional<std::string> remoteIp() const { return _remoteIp ? _remoteIp : {}; };
 
             /// \brief get the buffer content
             std::array<char, BUFFER_SIZE> buffer() const { return _buf; };
@@ -70,6 +72,8 @@ namespace Server
             /// \brief callback for any sent packet
             /// \param size : size of the packet sent
             void handleWrite(const std::size_t);
+
+            std::string _remoteIp;
 
             /*! Socket used to receive data from udp */
             udp::socket _socket;

@@ -77,6 +77,14 @@ namespace Module {
             /// \return a reference to the stack
             std::stack<Network::Entity> &getCurrentSceneEntityStack();
 
+            /// \param event : queue of current events
+            /// \brief transfert events from hub to scene
+            void sendEventsToCurrentScene(std::queue<std::pair<int, size_t>> &events);
+
+            /// \brief clear all scene in th stack
+            void clear();
+
+
         private:
             /*! the stack of scenes */
             std::stack<std::shared_ptr<Scenes::IScene>> _scenes;

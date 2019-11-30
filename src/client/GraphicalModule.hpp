@@ -17,6 +17,7 @@
 #include <SFML/Graphics.hpp>
 
 #include "EntityClient.hpp"
+#include "menu.hpp"
 #include "Rfc.hpp"
 
 namespace Client
@@ -65,6 +66,10 @@ namespace Client
         /// \brief display all entities on the window
         void display();
 
+        /// \brief get the menu
+        /// \return a reference to the menu
+        Menu &menu();
+
     private:
         /// \brief get an entity from a packet
         /// \param packetHeader : the packet
@@ -85,5 +90,7 @@ namespace Client
         std::size_t _trackEvent;
         /*! List of bitmask to set a specific bit to one or zero on _trackEvent */
         std::array<std::size_t, sizeof(size_t) * 8> _bitmaskList;
+        /*! Menu interface */
+        Menu _menu;
     };
 }

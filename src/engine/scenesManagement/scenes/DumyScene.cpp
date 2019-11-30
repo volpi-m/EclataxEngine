@@ -145,3 +145,8 @@ void Scenes::DumyScene::pushEntityStack(std::shared_ptr<ECS::Entity> &entity)
         _stack.top().z = componentTransform->z;
     }
 }
+
+void Scenes::DumyScene::handleEvent([[maybe_unused]]std::queue<std::pair<int, size_t>> &events)
+{
+    std::cout << "I'm handling event (lol it's not true)" << std::endl;
+}
