@@ -93,3 +93,8 @@ std::stack<Network::Entity> &Module::SceneMachine::getCurrentSceneEntityStack()
 {
     return _scenes.top()->entityStack();
 }
+
+void Module::SceneMachine::sendEventsToCurrentScene(std::queue<std::pair<int, size_t>> &events)
+{
+    _scenes.top()->handleEvent(events);
+}

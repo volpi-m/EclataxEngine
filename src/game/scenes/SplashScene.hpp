@@ -59,6 +59,10 @@ namespace Scenes {
             /// \brief remove all the entities of the scene
             void remove() override;
 
+            /// \brief handle events
+            void handleEvent(std::queue<std::pair<int, size_t>> &events);
+
+
         private:
             /*! scene entities */
             std::vector<unsigned long long> _ids;

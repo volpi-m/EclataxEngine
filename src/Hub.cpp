@@ -131,7 +131,7 @@ void Server::Hub::startGame()
             entities.pop();
         }        
         // send event to scene
-        // _engine.SceneMachine()->updateEvent(_event);
+        _engine.SceneMachine()-> sendEventsToCurrentScene(_event);
 
         // update event stack
         while(!_event.empty()) {

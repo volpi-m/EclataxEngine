@@ -60,12 +60,13 @@ void Scenes::AScene::pushEntityStack(std::shared_ptr<ECS::Entity> &entity)
         auto componentAnimation = static_cast<ECS::Component::Animation2D *>(entity->component(ECS::Component::Flags::animation2D).get());
         // auto componentSprite = static_cast<ECS::Component::Sprite *>(entity->component(ECS::Component::Flags::sprite).get());
         auto componentTransform = static_cast<ECS::Component::Transform *>(entity->component(ECS::Component::Flags::transform).get());
+        auto componentSprite = static_cast<ECS::Component::Sprite *>(entity->component(ECS::Component::Flags::sprite).get());
 
         // Compying parameters of the compnent into the network entity
-        _stack.top().top = componentAnimation->rect.top;
-        _stack.top().left = componentAnimation->rect.left;
-        _stack.top().width = componentAnimation->rect.width;
-        _stack.top().height = componentAnimation->rect.height;
+        _stack.top().top = componentSprite->rect.top;
+        _stack.top().left = componentSprite->rect.left;
+        _stack.top().width = componentSprite->rect.width;
+        _stack.top().height = componentSprite->rect.height;
         std::memcpy(_stack.top().texture, "ressources/r-typesheet1.gif", 27);
         _stack.top().x = componentTransform->x;
         _stack.top().y = componentTransform->y;

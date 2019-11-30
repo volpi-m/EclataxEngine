@@ -92,6 +92,9 @@ namespace Scenes {
             /// \return a stack of entities that will be sent to the client
             std::stack<Network::Entity> &entityStack() override;
 
+            /// \brief handle events
+            void handleEvent(std::queue<std::pair<int, size_t>> &events);
+
         private:
             /// \param entity : The entity that will be pushed onto the stack
             /// \brief push an entity to the stack of the scene
