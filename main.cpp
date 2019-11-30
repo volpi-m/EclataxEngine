@@ -19,8 +19,15 @@
 /// \brief main function
 int main()
 {
-    Server::Mediator m;
-    m.start();
+    try
+    {
+        Server::Mediator m;
+        m.start();
+    }
+    catch(const Debug::Exception& e)
+    {
+        e.debugErrorMessage();
+    }
     // Game::GameEngine engine;
     // auto scene = std::shared_ptr<Scenes::IScene>(new Scenes::DumyScene("Dummy scene", engine.ECS()));
 

@@ -211,5 +211,8 @@ target_link_libraries(unit_tests PUBLIC
 )
 
 ADD_CUSTOM_COMMAND(TARGET r-type_client POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/ressources/ $<TARGET_FILE_DIR:r-type_client>/ressources/
+    COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/ressources/ $<TARGET_FILE_DIR:r-type_client>/../ressources/
+)
+ADD_CUSTOM_COMMAND(TARGET r-type_server POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/ressources/ $<TARGET_FILE_DIR:r-type_server>/../ressources/
 )
