@@ -146,7 +146,7 @@ void Scenes::DumyScene::pushEntityStack(std::shared_ptr<ECS::Entity> &entity)
     }
 }
 
-void Scenes::DumyScene::handleEvent(std::queue<std::pair<int, size_t>> &events)
+void Scenes::DumyScene::handleEvent([[maybe_unused]]std::queue<std::pair<int, size_t>> &events)
 {
     std::cout << "I'm handling event (lol it's not true)" << std::endl;
 }

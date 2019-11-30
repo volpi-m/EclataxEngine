@@ -89,6 +89,9 @@ namespace Server {
 
 
         private:
+            /*! if the hub as to be stopped */
+            bool _stoped;
+            /*! if a game is launch in hub */
             bool _isPlaying;
             /*! mutex for hub thread */
             std::mutex _mutex;
@@ -110,7 +113,7 @@ namespace Server {
             std::unordered_map<int, std::function<void(Server::UdpNetwork *socket, Network::headerUdp *packet)>> _actions;
 
             /// \brief method for starting a game
-            void startGame(); // to implement
+            void startGame();
             /// \param msg : message to send
             /// \param size : size of the message
             /// \brief method for send message to all player of the hub

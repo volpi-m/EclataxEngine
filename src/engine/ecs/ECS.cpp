@@ -149,3 +149,9 @@ void Module::EntityComponentSystem::init()
 {
     _initialised = true;
 }
+
+void Module::EntityComponentSystem::clear()
+{
+    _entities.clear();
+    _systems.clear();
+}

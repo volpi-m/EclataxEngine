@@ -7,7 +7,7 @@
 
 #include "Hub.hpp"
 
-Server::Hub::Hub(int newId, const std::string &creator, boost::asio::io_context &ioContext) : _isPlaying(false),
+Server::Hub::Hub(int newId, const std::string &creator, boost::asio::io_context &ioContext) : _stoped(false), _isPlaying(false),
     _udp(ioContext, std::bind(&Server::Hub::processUdpMessage, this, std::placeholders::_1)),
     _id(newId), _port(_udp.port())
 {
@@ -30,15 +30,18 @@ void Server::Hub::start()
 
     l->generateDebugMessage(Debug::type::INFO , msg + std::to_string(_id) + " is running !" , "Server::Hub::start()");
     std::unique_lock<std::mutex> lock(_mutex);
-    while (!allIsReady()) {
+    while (!allIsReady() && !_stoped) {
         _cond_var.wait(lock);
     }
     lock.unlock();
-    startGame();
+    if (!_players.empty())
+        startGame();
 }
 
 void Server::Hub::stop()
 {
+    _stoped = true;
+    _cond_var.notify_one();
     Network::headerUdp data;
     data.code = Network::CLIENT_ERROR;
     char msg[20] = "Server was stopped";
@@ -54,7 +57,10 @@ bool Server::Hub::allIsReady()
         if (i.isReady == false)
             return false;
     }
-    return true;
+    if (_players.size() != 0)
+        return true;
+    else
+        return false;
 }
 
 bool Server::Hub::addMember(const std::string &ip)
@@ -74,6 +80,7 @@ void Server::Hub::removeMember(const std::string &ip)
         if (_players[i].ip == ip)
             _players.erase(_players.begin() + i);
     }
+    _cond_var.notify_one();
     // _players.remove_if([&] (Player &p) { return(p.ip == ip); });
 }
 

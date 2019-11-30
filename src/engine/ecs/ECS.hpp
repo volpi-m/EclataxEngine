@@ -112,6 +112,10 @@ namespace Module {
         /// \brief check if the ECS instance is initialised
         bool isInitialised() override;
 
+        /// \brief clear all elements in ecs
+        void clear();
+
+
         // NOT YET IMPLEMENTED
         void update();
         unsigned long long createChildEntity(unsigned long long id, const std::string &tag = "");
