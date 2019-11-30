@@ -51,17 +51,18 @@ void Game::ShipBeam::IA(std::shared_ptr<ECS::Entity> &entity)
 ECS::Entity *Game::Ship::createEntity()
 {
     ECS::Entity *newEntity = new ECS::Entity("Enemy Ship");
-    Game::Rect rect(0, 0, 32, 32);
+    Game::Rect rect(0, 0, 34, 34);
 
     std::shared_ptr<ECS::IComponent> audio(new ECS::Component::Audio("ship.mp3", false));
     std::shared_ptr<ECS::IComponent> damage(new ECS::Component::Damage(1));
     std::shared_ptr<ECS::IComponent> health(new ECS::Component::Health(1));
     std::shared_ptr<ECS::IComponent> script(new ECS::Component::Script(&Ship::IA));
-    std::shared_ptr<ECS::IComponent> sprite(new ECS::Component::Sprite("ship.png", rect));
-    std::shared_ptr<ECS::IComponent> speed(new ECS::Component::Speed(0.01));
-    std::shared_ptr<ECS::IComponent> transform(new ECS::Component::Transform(960, 0, 0));
+    std::shared_ptr<ECS::IComponent> sprite(new ECS::Component::Sprite("ressources/ship.gif", rect));
+    std::shared_ptr<ECS::IComponent> speed(new ECS::Component::Speed(2));
+    std::shared_ptr<ECS::IComponent> transform(new ECS::Component::Transform(1920, 600, 0));
     std::shared_ptr<ECS::IComponent> collision(new ECS::Component::CollisionBox2D(0, 0, 50, 50));
     std::shared_ptr<ECS::IComponent> spawner(new ECS::Component::Spawner(std::chrono::seconds(2), &ShipBeam::createEntity));
+    std::shared_ptr<ECS::IComponent> animation(new ECS::Component::Animation2D(std::chrono::milliseconds(100), rect, 266, 34));
 
     newEntity->addComponent(ECS::Component::Flags::audio, audio);
     newEntity->addComponent(ECS::Component::Flags::damage, damage);
@@ -72,6 +73,7 @@ ECS::Entity *Game::Ship::createEntity()
     newEntity->addComponent(ECS::Component::Flags::transform, transform);
     newEntity->addComponent(ECS::Component::Flags::collisionBox2D, collision);
     newEntity->addComponent(ECS::Component::Flags::spawner, spawner);
+    newEntity->addComponent(ECS::Component::Flags::animation2D, animation);
     return newEntity;
 }
 
@@ -81,8 +83,9 @@ void Game::Ship::IA(std::shared_ptr<ECS::Entity> &entity)
     const float freq = 60;
     auto speed = static_cast<ECS::Component::Speed *>(entity->component(ECS::Component::Flags::speed).get());
     auto transform = static_cast<ECS::Component::Transform *>(entity->component(ECS::Component::Flags::transform).get());
+    static const float startPoint = transform->y;
 
-    transform->y = std::sin(transform->x / freq) * amp;
+    transform->y = std::sin(transform->x / freq) * amp + startPoint;
     transform->x -= speed->speed;
 
     // USE THE SCRIPT TO SEE IF THE CHILDREN ENTITIES (BULLETS) NEEDS TO BE DELETED

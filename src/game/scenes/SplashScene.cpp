@@ -26,12 +26,12 @@ Scenes::IScene *Scenes::SplashScene::run()
     auto movementSystem = static_cast<ECS::System::MovementSystem *>(_ECS->system(ECS::System::Flags::Movement).get());
 
     std::cout << std::get<0>(movementSystem->transform(sps)) << std::endl;
-    if (std::get<0>(movementSystem->transform(sps)) < 1920) {
-        movementSystem->move(sps, 10, 0, 0);
+    if (std::get<0>(movementSystem->transform(sps)) > 0) {
+        _ECS->update();
         pushEntityStack(sps);
         return nullptr;
     } else {
-        movementSystem->setTransform(sps, 0, 0, 0);
+        movementSystem->setTransform(sps, 1920, 0, 0);
         return nullptr;
     }
 }
@@ -48,16 +48,16 @@ void Scenes::SplashScene::remove()
 
 void Scenes::SplashScene::initComponents()
 {
-    std::shared_ptr<ECS::IComponent> transform(new ECS::Component::Transform());
-    std::shared_ptr<ECS::IComponent> sprite(new ECS::Component::Sprite("ressources/r-typesheet1.gif", Game::Rect(0, 32, 32, 32)));
-    std::unique_ptr<ECS::ISystem> system(new ECS::System::MovementSystem);
+    std::unique_ptr<ECS::ISystem> systemIA(new ECS::System::IASystem);
+    std::unique_ptr<ECS::ISystem> systemAnimation(new ECS::System::AnimationSystem);
+    std::unique_ptr<ECS::ISystem> systemMovement(new ECS::System::MovementSystem);
 
-    _ids.push_back(_ECS->createEntity("Spaceship"));
+    _ids.push_back(_ECS->createEntityFromLibrary("build/lib/libship.so"));
     _ids.push_back(_ECS->createEntity("Background"));
 
-    _ECS->addComponentToEntity(_ids.front(), ECS::Component::Flags::transform, transform);
-    _ECS->addComponentToEntity(_ids.front(), ECS::Component::Flags::sprite, sprite);
-    _ECS->addSystem(ECS::System::Flags::Movement, system);
+    _ECS->addSystem(ECS::System::Flags::IA, systemIA);
+    _ECS->addSystem(ECS::System::Flags::Animation, systemAnimation);
+    _ECS->addSystem(ECS::System::Flags::Movement, systemMovement);
 }
 
 void Scenes::SplashScene::handleEvent(std::queue<std::pair<int, size_t>> &events)

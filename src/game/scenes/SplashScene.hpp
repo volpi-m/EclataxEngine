@@ -17,6 +17,8 @@
 #include "AScene.hpp"
 #include "TransformComponent.hpp"
 #include "MovementSystem.hpp"
+#include "AnimationSystem.hpp"
+#include "IASystem.hpp"
 
 /// \namespace Scenes
 /// \brief Used for all scenes
