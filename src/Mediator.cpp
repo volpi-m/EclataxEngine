@@ -18,6 +18,8 @@ Server::Mediator::Mediator() : _reader(CONF_FILE_PATH), _tcp (_ioContext,
     _actions[Network::ASK_FOR_HUB] = std::bind(&Server::Mediator::askHub, this, std::placeholders::_1, std::placeholders::_2);
     _actions[Network::CLIENT_IS_READY] = std::bind(&Server::Mediator::setPlayerReady, this, std::placeholders::_1, std::placeholders::_2);
     _actions[Network::CLIENT_IS_NOT_READY] = std::bind(&Server::Mediator::setPlayerNotReady, this, std::placeholders::_1, std::placeholders::_2);
+    _actions[Network::CLIENT_REQUIRE_KEY] = std::bind(&Server::Mediator::sendEvent, this, std::placeholders::_1, std::placeholders::_2);
+    _actions[Network::CLIENT_REQUEST_SPRITE] = std::bind(&Server::Mediator::sendSprite, this, std::placeholders::_1, std::placeholders::_2);
 }
 
 Server::Mediator::~Mediator()
@@ -121,6 +123,7 @@ void Server::Mediator::askHub(Server::TcpConnection *socket, [[maybe_unused]] Ne
 
     // Sending the packet to the client
     socket->write(static_cast<void *>(toSend), sizeof(Network::headerTcp));
+    delete toSend;
 }
 
 void Server::Mediator::setPlayerReady(Server::TcpConnection *socket, Network::headerTcp *packet)
@@ -138,18 +141,24 @@ void Server::Mediator::sendSprite([[maybe_unused]]Server::TcpConnection *socket,
     std::cout << "Player ask sprite ... please send him :'(" << std::endl;
 }
 
-void Server::Mediator::sendEvent([[maybe_unused]]Server::TcpConnection *socket, [[maybe_unused]]Network::headerTcp *packet)
+void Server::Mediator::sendEvent(Server::TcpConnection *socket, [[maybe_unused]]Network::headerTcp *packet)
 {
     std::cout << "Asking for event" << std::endl;
     for (auto &i : _eventTemplate) {
-        Network::headerTcp *toSend = new Network::headerTcp;
+        Network::headerTcp *toSend = new Network::headerTcp();
         toSend->code = Network::SERVER_SEND_KEYS;
-        std::memcpy(toSend->data, &i, sizeof(i));
-        socket->write(static_cast<void *>(toSend), sizeof(Network::headerTcp));
+        toSend->hubNbr = -1;
+        std::cout << i.second.c_str() << std::endl;
+        std::memcpy(toSend->data, i.second.c_str(), sizeof(std::strlen(i.second.c_str())));
+        // socket->write(static_cast<void *>(toSend), sizeof(*toSend));
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        std::cout << toSend->data << std::endl;
         delete toSend;
     }
+    std::cout << "finish Asking for event" << std::endl;
     Network::headerTcp *toSend = new Network::headerTcp;
     toSend->code = Network::SERVER_END_OF_EVENT;
-    socket->write(static_cast<void *>(toSend), sizeof(Network::headerTcp));
+    socket->write(static_cast<void *>(toSend), sizeof(*toSend));
     delete toSend;
+    std::cout << "End !" << std::endl;
 }

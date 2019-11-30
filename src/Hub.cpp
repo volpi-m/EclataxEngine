@@ -25,7 +25,7 @@ Server::Hub::~Hub()
 
 void Server::Hub::start()
 {
-    Debug::Logger *l = Debug::Logger::getInstance(".log");
+    Debug::Logger *l = Debug::Logger::getInstance();
     std::string msg("hub number ");
 
     l->generateDebugMessage(Debug::type::INFO , msg + std::to_string(_id) + " is running !" , "Server::Hub::start()");
@@ -34,7 +34,7 @@ void Server::Hub::start()
         _cond_var.wait(lock);
     }
     lock.unlock();
-    if (!_players.empty())
+    if (!_players.empty() && !_stoped)
         startGame();
 }
 
@@ -49,6 +49,46 @@ void Server::Hub::stop()
     sendToAllPlayer(&data, sizeof(data));
     std::unique_lock<std::mutex> lock(_mutex);
     _players.clear();
+}
+
+void Server::Hub::startGame()
+{
+    _isPlaying = true;
+    Debug::Logger *l = Debug::Logger::getInstance(".log");
+    std::string msg("Hub number ");
+    l->generateDebugMessage(Debug::type::INFO , "Starting the game", msg + std::to_string(_id));
+    auto scene = std::shared_ptr<Scenes::IScene>(new Scenes::SplashScene("Splash scene", _engine.ECS()));
+
+    _engine.SceneMachine()->push(scene);
+
+    while (_engine.SceneMachine()->run() != false && !_players.empty() && !_stoped) {
+
+        // Calculatin time of execution
+        std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
+
+        // send entites
+        std::stack<Network::Entity> &entities = _engine.SceneMachine()->getCurrentSceneEntityStack();
+        while (!entities.empty()) {
+            sendEntity(entities.top());
+            entities.pop();
+        }
+        // send event to scene
+        _engine.SceneMachine()->sendEventsToCurrentScene(_event);
+
+        // update event stack
+        while(!_event.empty())
+            _event.pop();
+
+        // Sleeping before starting the next frame
+        std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
+        std::this_thread::sleep_for(std::chrono::milliseconds(16 - std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count()));
+    }
+    _isPlaying = false;
+    l->generateDebugMessage(Debug::type::INFO , "Ending the game", msg + std::to_string(_id));
+    _engine.ECS()->clear();
+    _engine.SceneMachine()->clear();
+    if (_players.empty() && !_stoped)
+        start();
 }
 
 bool Server::Hub::allIsReady()
@@ -106,8 +146,8 @@ void Server::Hub::setPlayerReady(const std::string &ip, bool state)
 {
     for (auto &i : _players)
         if (i.ip == ip) {
-            _cond_var.notify_one();
             i.isReady = state;
+            _cond_var.notify_one();
         }
 }
 
@@ -115,44 +155,6 @@ void Server::Hub::sendToAllPlayer(void *msg, const std::size_t size)
 {
     for (auto &i : _players)
         _udp.write(i.ip, msg, size);
-}
-
-void Server::Hub::startGame()
-{
-    _isPlaying = true;
-    Debug::Logger *l = Debug::Logger::getInstance(".log");
-    std::string msg("Hub number ");
-    l->generateDebugMessage(Debug::type::INFO , "Starting the game", msg + std::to_string(_id));
-    auto scene = std::shared_ptr<Scenes::IScene>(new Scenes::SplashScene("Splash scene", _engine.ECS()));
-
-    _engine.SceneMachine()->push(scene);
-
-    while (_engine.SceneMachine()->run() != false && !_players.empty()) {
-
-        // Calculatin time of execution
-        std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
-
-        // send entites
-        std::stack<Network::Entity> &entities = _engine.SceneMachine()->getCurrentSceneEntityStack();
-        while (!entities.empty()) {
-            std::cout << "sending entity n°" << entities.top().id << std::endl; 
-            sendEntity(entities.top());
-            entities.pop();
-        }
-        std::cout << "OUT" << std::endl;
-        // send event to scene
-        _engine.SceneMachine()->sendEventsToCurrentScene(_event);
-
-        // update event stack
-        while(!_event.empty())
-            _event.pop();
-
-        // Sleeping before starting the next frame
-        std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
-        std::this_thread::sleep_for(std::chrono::milliseconds(16 - std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count()));
-    }
-    _isPlaying = false;
-    l->generateDebugMessage(Debug::type::INFO , "Ending the game", msg + std::to_string(_id));
 }
 
 void Server::Hub::processUdpMessage(Server::UdpNetwork *socket)
