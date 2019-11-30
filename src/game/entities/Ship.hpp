@@ -20,6 +20,7 @@
 #include "TransformComponent.hpp"
 #include "Animation2DComponent.hpp"
 #include "CollisionBox2DComponent.hpp"
+#include "LifeSpanComponent.hpp"
 
 namespace Game {
 

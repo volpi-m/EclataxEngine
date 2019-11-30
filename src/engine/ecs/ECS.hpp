@@ -115,9 +115,17 @@ namespace Module {
         /// \brief clear all elements in ecs
         void clear();
 
-
-        // NOT YET IMPLEMENTED
+        /// \brief update all systems
         void update();
+
+        /// \brief get all ids from the ecs
+        /// \return a vector of ids
+        std::vector<unsigned long long> ids();
+
+        /// \brief looks for entities that are deleted
+        void clearEntities();
+
+        // Not implemented
         unsigned long long createChildEntity(unsigned long long id, const std::string &tag = "");
     private:
         /*! Module initialisation method */

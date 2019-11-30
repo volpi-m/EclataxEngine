@@ -157,6 +157,7 @@ void Server::Hub::sendToAllPlayer(void *msg, const std::size_t size)
         _udp.write(i.ip, msg, size);
 }
 
+
 void Server::Hub::processUdpMessage(Server::UdpNetwork *socket)
 {
     Network::headerUdp *h = static_cast<Network::headerUdp *>((void *)socket->buffer().data());
@@ -183,6 +184,7 @@ void Server::Hub::playerError(Server::UdpNetwork *socket, Network::headerUdp *pa
 {
     std::string ip = socket->remoteIp();
     Debug::Logger *l = Debug::Logger::getInstance(".log");
+
     l->generateDebugMessage(Debug::type::ERROR , "Error with the player" + ip + "\nError detail: " + packet->data, "Server::Hub::playerError");
     removeMember(ip);
 }
@@ -190,6 +192,7 @@ void Server::Hub::playerError(Server::UdpNetwork *socket, Network::headerUdp *pa
 void Server::Hub::sendEntity(Network::Entity &e)
 {
     Network::headerUdp data = Network::headerUdp();
+
     data.code = Network::SERVER_TICK;
     std::memcpy(&data.data, &e, Network::UDP_BUF_SIZE);
     sendToAllPlayer(&data, sizeof(data));

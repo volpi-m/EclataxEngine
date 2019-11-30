@@ -144,6 +144,32 @@ void Module::EntityComponentSystem::update()
         system.second->update(_entities);
 }
 
+void Module::EntityComponentSystem::clearEntities()
+{
+    std::vector<unsigned long long> ids;
+
+    // Searching for deleted entities
+    for (auto &entity : _entities)
+        if (entity.second->deleted())
+            ids.push_back(entity.first);
+
+    // Deleting all entities that are marked as deleted
+    for (auto &key : ids)
+        _entities.erase(key);
+}
+
+std::vector<unsigned long long> Module::EntityComponentSystem::ids()
+{
+    std::vector<unsigned long long> ids;
+
+    for (auto &entity : _entities)
+        ids.push_back(entity.first);
+    
+    // Sorting ids
+    std::sort(ids.begin(), ids.end()); 
+    return ids;
+}
+
 void Module::EntityComponentSystem::init()
 {
     _initialised = true;

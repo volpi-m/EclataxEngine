@@ -29,6 +29,7 @@ std::shared_ptr<ECS::Entity> Game::ShipBeam::createEntity(std::shared_ptr<ECS::E
     std::shared_ptr<ECS::IComponent> transform(new ECS::Component::Transform(parentTransform->x, parentTransform->y, parentTransform->z));
     std::shared_ptr<ECS::IComponent> collision(new ECS::Component::CollisionBox2D(0, 0, 20, 20));
     std::shared_ptr<ECS::IComponent> animation(new ECS::Component::Animation2D(std::chrono::milliseconds(50), rect, 533, 32));
+    std::shared_ptr<ECS::IComponent> lifeSpan(new ECS::Component::LifeSpan(std::chrono::seconds(5)));
 
 
     newEntity->addComponent(ECS::Component::Flags::audio, audio);
@@ -40,6 +41,7 @@ std::shared_ptr<ECS::Entity> Game::ShipBeam::createEntity(std::shared_ptr<ECS::E
     newEntity->addComponent(ECS::Component::Flags::transform, transform);
     newEntity->addComponent(ECS::Component::Flags::collisionBox2D, collision);
     newEntity->addComponent(ECS::Component::Flags::animation2D, animation);
+    newEntity->addComponent(ECS::Component::Flags::lifeSpan, lifeSpan);
     return newEntity;
 }
 
