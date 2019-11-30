@@ -13,16 +13,21 @@
 
 Client::GraphicalModule::GraphicalModule()
     : _window(sf::RenderWindow(sf::VideoMode::getDesktopMode(), "EclataxEngine Client")),
-    _trackEvent(0), _menu(Client::Menu(_window))
+    _trackEvent(0), _menu(Client::Menu(_window, _view))
 {
     _window.setFramerateLimit(60);
     sf::Texture artefact;
+    auto size = sf::VideoMode::getDesktopMode();
 
     // Creating an artefact texture
     artefact.create(50, 50);
     _textures.emplace(0, std::make_pair("artefact", artefact));
 
     generateBitmaskList();
+
+    _view.setCenter((float)size.width / 2, (float)size.height / 2);
+    _view.setSize((sf::Vector2f) {(float)size.width, (float)size.height});
+    _window.setView(_view);
 }
 
 const sf::RenderWindow &Client::GraphicalModule::window() const
