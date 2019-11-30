@@ -135,9 +135,11 @@ void Server::Hub::startGame()
         // send entites
         std::stack<Network::Entity> &entities = _engine.SceneMachine()->getCurrentSceneEntityStack();
         while (!entities.empty()) {
+            std::cout << "sending entity n°" << entities.top().id << std::endl; 
             sendEntity(entities.top());
             entities.pop();
-        }        
+        }
+        std::cout << "OUT" << std::endl;
         // send event to scene
         _engine.SceneMachine()->sendEventsToCurrentScene(_event);
 

@@ -142,7 +142,6 @@ void Module::EntityComponentSystem::update()
     // std::async ?
     for (auto &system : _systems)
         system.second->update(_entities);
-    std::cout << "The ecs posses " << _entities.size() << " entity(ies)" << std::endl;
 }
 
 void Module::EntityComponentSystem::init()
