@@ -62,12 +62,12 @@ void Server::Hub::startGame()
     _engine.SceneMachine()->push(scene);
 
     while (_engine.SceneMachine()->run() != false && !_players.empty() && !_stoped) {
-
         // Calculatin time of execution
         std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
 
         // send entites
         std::stack<Network::Entity> &entities = _engine.SceneMachine()->getCurrentSceneEntityStack();
+        std::cout << entities.size() << std::endl;
         while (!entities.empty()) {
             sendEntity(entities.top());
             entities.pop();
@@ -87,7 +87,7 @@ void Server::Hub::startGame()
     l->generateDebugMessage(Debug::type::INFO , "Ending the game", msg + std::to_string(_id));
     _engine.ECS()->clear();
     _engine.SceneMachine()->clear();
-    if (_players.empty() && !_stoped)
+    if (!_stoped)
         start();
 }
 

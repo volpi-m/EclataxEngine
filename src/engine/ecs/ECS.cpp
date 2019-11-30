@@ -153,4 +153,5 @@ void Module::EntityComponentSystem::clear()
 {
     _entities.clear();
     _systems.clear();
+    _newId = 0;
 }
