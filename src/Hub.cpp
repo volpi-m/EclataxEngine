@@ -127,9 +127,11 @@ void Server::Hub::startGame()
 
     _engine.SceneMachine()->push(scene);
 
-    std::unique_lock<std::mutex> lock(_mutex);
-    lock.unlock();
     while (_engine.SceneMachine()->run() != false && !_players.empty()) {
+
+        // Calculatin time of execution
+        std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
+
         // send entites
         std::stack<Network::Entity> &entities = _engine.SceneMachine()->getCurrentSceneEntityStack();
         while (!entities.empty()) {
@@ -140,10 +142,12 @@ void Server::Hub::startGame()
         _engine.SceneMachine()->sendEventsToCurrentScene(_event);
 
         // update event stack
-        while(!_event.empty()) {
+        while(!_event.empty())
             _event.pop();
-        }
-        // std::this_thread::sleep_for(std::chrono::milliseconds(30));
+
+        // Sleeping before starting the next frame
+        std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
+        std::this_thread::sleep_for(std::chrono::milliseconds(16 - std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count()));
     }
     _isPlaying = false;
     l->generateDebugMessage(Debug::type::INFO , "Ending the game", msg + std::to_string(_id));

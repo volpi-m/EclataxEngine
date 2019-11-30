@@ -27,11 +27,13 @@ Scenes::IScene *Scenes::SplashScene::run()
 
     std::cout << std::get<0>(movementSystem->transform(sps)) << std::endl;
     if (std::get<0>(movementSystem->transform(sps)) < 1920) {
-        movementSystem->move(sps, 2, 0, 0);
+        movementSystem->move(sps, 10, 0, 0);
         pushEntityStack(sps);
         return nullptr;
-    } else
+    } else {
+        movementSystem->setTransform(sps, 0, 0, 0);
         return nullptr;
+    }
 }
 
 void Scenes::SplashScene::setVisible(bool state)
