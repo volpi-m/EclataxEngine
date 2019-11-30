@@ -7,16 +7,18 @@
 
 #include "Mediator.hpp"
 
-Server::Mediator::Mediator() : _tcp (_ioContext, 
+Server::Mediator::Mediator() : _reader(CONF_FILE_PATH), _tcp (_ioContext, 
     std::function<void(Server::TcpConnection *)>(std::bind(&Server::Mediator::processTcpMessage, this, std::placeholders::_1))), 
     _isRunning(true)
 {
     Debug::Logger *l = Debug::Logger::getInstance();
     l->generateDebugMessage(Debug::type::INFO , "Create Mediator", "Mediator ctor");
     _boostThread = std::thread(&Server::Mediator::launchBoost, this);
+    readEventFile();
     _actions[Network::ASK_FOR_HUB] = std::bind(&Server::Mediator::askHub, this, std::placeholders::_1, std::placeholders::_2);
     _actions[Network::CLIENT_IS_READY] = std::bind(&Server::Mediator::setPlayerReady, this, std::placeholders::_1, std::placeholders::_2);
     _actions[Network::CLIENT_IS_NOT_READY] = std::bind(&Server::Mediator::setPlayerNotReady, this, std::placeholders::_1, std::placeholders::_2);
+    int value = 1;    
 }
 
 Server::Mediator::~Mediator()
@@ -34,6 +36,16 @@ Server::Mediator::~Mediator()
 void Server::Mediator::launchBoost()
 {
     _ioContext.run();
+}
+
+void Server::Mediator::readEventFile()
+{
+    int value = 1;
+    auto i = _reader.conf(std::to_string(value));
+    for (auto i = _reader.conf(std::to_string(value)); i.has_value(); i = _reader.conf(std::to_string(value))) {
+        _eventTemplate[value] = i.value();
+        value <<= 1;
+    }
 }
 
 void Server::Mediator::start()
@@ -129,5 +141,12 @@ void Server::Mediator::sendSprite([[maybe_unused]]Server::TcpConnection *socket,
 
 void Server::Mediator::sendEvent([[maybe_unused]]Server::TcpConnection *socket, [[maybe_unused]]Network::headerTcp *packet)
 {
-    std::cout << "Asking for event" << std::endl;    
+    std::cout << "Asking for event" << std::endl;
+    for (auto &i : _eventTemplate) {
+        Network::headerTcp *toSend = new Network::headerTcp;
+        toSend->code = Network::SERVER_SEND_KEYS;
+        std::memcpy(toSend->data, &i, sizeof(i));
+        socket->write(static_cast<void *>(toSend), sizeof(Network::headerTcp));
+    }
+    // Complete this function
 }
