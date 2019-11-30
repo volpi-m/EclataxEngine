@@ -18,7 +18,6 @@ Server::Mediator::Mediator() : _reader(CONF_FILE_PATH), _tcp (_ioContext,
     _actions[Network::ASK_FOR_HUB] = std::bind(&Server::Mediator::askHub, this, std::placeholders::_1, std::placeholders::_2);
     _actions[Network::CLIENT_IS_READY] = std::bind(&Server::Mediator::setPlayerReady, this, std::placeholders::_1, std::placeholders::_2);
     _actions[Network::CLIENT_IS_NOT_READY] = std::bind(&Server::Mediator::setPlayerNotReady, this, std::placeholders::_1, std::placeholders::_2);
-    int value = 1;    
 }
 
 Server::Mediator::~Mediator()
@@ -147,6 +146,10 @@ void Server::Mediator::sendEvent([[maybe_unused]]Server::TcpConnection *socket, 
         toSend->code = Network::SERVER_SEND_KEYS;
         std::memcpy(toSend->data, &i, sizeof(i));
         socket->write(static_cast<void *>(toSend), sizeof(Network::headerTcp));
+        delete toSend;
     }
-    // Complete this function
+    Network::headerTcp *toSend = new Network::headerTcp;
+    toSend->code = Network::SERVER_END_OF_EVENT;
+    socket->write(static_cast<void *>(toSend), sizeof(Network::headerTcp));
+    delete toSend;
 }
