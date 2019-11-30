@@ -201,7 +201,6 @@ target_link_libraries(r-type_client
 
 target_link_libraries(unit_tests PUBLIC
     CONAN_PKG::gtest
-    # ${GTEST_LIBRARIES}
     pthread
     CONAN_PKG::boost_system
     CONAN_PKG::boost_asio
