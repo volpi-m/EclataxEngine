@@ -72,10 +72,12 @@ void Scenes::SplashScene::handleEvent(std::queue<std::pair<int, size_t>> &events
     auto movementSystem = static_cast<ECS::System::MovementSystem *>(_ECS->system(ECS::System::Flags::Movement).get());
 
     while(!events.empty()) {
-        if ((events.front().second & 1) == 1) {
+        if ((events.front().second & Scenes::Event::UP) == Scenes::Event::UP) {
+            std::cout << "Player press Z" << std::endl;
             movementSystem->move(sps, 2, 0, 0);
         }
-        if ((events.front().second & 2) == 2) {
+        if ((events.front().second & Scenes::Event::DOWN) == Scenes::Event::DOWN) {
+            std::cout << "Player press S" << std::endl;
             movementSystem->move(sps, 2, 0, 0);
         }
         events.pop();
