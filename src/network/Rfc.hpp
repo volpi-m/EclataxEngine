@@ -31,6 +31,10 @@ namespace Network
     /// \brief rfc code when client send keyboards events to server
     constexpr auto const CLIENT_TICK = 205;
 
+    /// \def REQUIRE_KEYS
+    /// \brief rfc code when a client require all key used during the game
+    constexpr auto const CLIENT_REQUIRE_KEY = 206;
+
     /// \def CLIENT_DEBUG
     /// \brief rfc code use for debuging client
     constexpr auto const CLIENT_DEBUG = 301;
@@ -56,13 +60,26 @@ namespace Network
     /// \brief rfc code used by server when a new enemy (.so/.dll) has been added to the game
     constexpr auto const SERVER_NEW_ENNEMY_INFO = 404;
 
+    /// \def SERVER_GAME_STARTING
+    /// \brief rfc code used by server when a hub is full and the game will start
+    constexpr auto const SERVER_GAME_STARTING = 405;
+
+    /// \def SERVER_SEND_KEYS
+    /// \brief rfc code used by client to send event when they have been requested by client
+    constexpr auto const SERVER_SEND_KEYS = 406;
+
+    /// \def SERVER_END_OF_EVENT
+    /// \brief rfc code when server is done when sending events to client
+    constexpr auto const SERVER_END_OF_EVENT = 407;
+
     /// \def SERVER_DEBUG
     /// \brief rfc code use by server for printing debug in client
-    constexpr auto const SERVER_DEBUG = 406;
+    constexpr auto const SERVER_DEBUG = 501;
 
     /// \def SERVER_ERROR
     /// \brief rfc code use when server encountering an error
-    constexpr auto const SERVER_ERROR = 501;
+    constexpr auto const SERVER_ERROR = 502;
+
 
     /// \def TCP_CLIENT_PORT
     /// \brief port used by clients for listening server in tcp
@@ -72,6 +89,7 @@ namespace Network
     /// \brief port used by clients for listening server in udp
     constexpr auto const UDP_CLIENT_PORT = 4321;
 
+
     /// \def TCP_BUF_SIZE
     /// \brief Maximum size of a TCP buffer
     constexpr auto const TCP_BUF_SIZE = 1024;
@@ -79,6 +97,7 @@ namespace Network
     /// \def UDP_BUF_SIZE
     /// \brief Maximum size of a UDP buffer
     constexpr auto const UDP_BUF_SIZE = 1024;
+
 
     /// \struct headerTcp
     /// \brief data structure used when comminicating with TCP protocol
@@ -91,6 +110,7 @@ namespace Network
         char data[TCP_BUF_SIZE] = {0};
     };
 
+
     /// \struct headerUdp
     /// \brief data structure used when communicating with UDP protocol
     struct headerUdp {
@@ -99,6 +119,7 @@ namespace Network
         /*! Data to be sent over UDP protocol */
         char data[UDP_BUF_SIZE] = {0};
     };
+
 
     /// \struct Entity
     /// \brief Entity data structure used when communicating with UDP protocol to get entity status
