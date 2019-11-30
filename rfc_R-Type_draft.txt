@@ -27,7 +27,7 @@ Table of Contents
     4.  Server gameloop  . . . . . . . . . . . . . . . . 6
     4a. Server Entity sending  . . . . . . . . . . . . . 6
     5.  Configuration file . . . . . . . . . . . . . . . 
-
+    6.  Server prompt  . . . . . . . . . . . . . . . . . 
 
 
 
