@@ -13,7 +13,7 @@
 
 Client::GraphicalModule::GraphicalModule()
     : _window(sf::RenderWindow(sf::VideoMode::getDesktopMode(), "EclataxEngine Client")),
-    _trackEvent(0), _bitmaskList({1, 2, 4, 8, 16, 32, 64, 128}), _menu(Client::Menu(_window))
+    _trackEvent(0), _menu(Client::Menu(_window))
 {
     _window.setFramerateLimit(60);
     sf::Texture artefact;
@@ -22,15 +22,7 @@ Client::GraphicalModule::GraphicalModule()
     artefact.create(50, 50);
     _textures.emplace(0, std::make_pair("artefact", artefact));
 
-    // Pushing the event list
-    _evtList.push_back({sf::Keyboard::Key::Z, "Move Up"});
-    _evtList.push_back({sf::Keyboard::Key::S, "Move Down"});
-    _evtList.push_back({sf::Keyboard::Key::Q, "Move Left"});
-    _evtList.push_back({sf::Keyboard::Key::D, "Move Right"});
-    _evtList.push_back({sf::Keyboard::Key::Num1, "1"});
-    _evtList.push_back({sf::Keyboard::Key::Num2, "2"});
-    _evtList.push_back({sf::Keyboard::Key::Num3, "3"});
-    _evtList.push_back({sf::Keyboard::Key::Num5, "5"});
+    generateBitmaskList();
 }
 
 const sf::RenderWindow &Client::GraphicalModule::window() const
@@ -120,6 +112,12 @@ Network::Entity *Client::GraphicalModule::getEntityParams(Network::headerUdp *pa
     return packetEntity;
 }
 
+void Client::GraphicalModule::generateBitmaskList()
+{
+    for (std::size_t i = 0, n = 1; i < sizeof(size_t) * 8; i++, n = n << 1)
+        _bitmaskList[i] = n;
+}
+
 std::size_t Client::GraphicalModule::trackEvent() const
 {
     return _trackEvent;
@@ -158,4 +156,9 @@ void Client::GraphicalModule::display()
 Client::Menu &Client::GraphicalModule::menu()
 {
     return _menu;
+}
+
+void Client::GraphicalModule::addKey(const std::string &comment)
+{
+    _evtList.push_back({sf::Keyboard::Key::Unknown, comment});
 }
