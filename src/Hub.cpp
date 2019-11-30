@@ -7,7 +7,7 @@
 
 #include "Hub.hpp"
 
-Server::Hub::Hub(int newId, const std::string &creator, boost::asio::io_context &ioContext) : _isPlaying(false),
+Server::Hub::Hub(int newId, const std::string &creator, boost::asio::io_context &ioContext) : _stoped(false), _isPlaying(false),
     _udp(ioContext, std::bind(&Server::Hub::processUdpMessage, this, std::placeholders::_1)),
     _id(newId), _port(_udp.port())
 {
@@ -30,15 +30,53 @@ void Server::Hub::start()
 
     l->generateDebugMessage(Debug::type::INFO , msg + std::to_string(_id) + " is running !" , "Server::Hub::start()");
     std::unique_lock<std::mutex> lock(_mutex);
-    while (!allIsReady()) {
+    while (!allIsReady() && !_stoped) {
         _cond_var.wait(lock);
     }
     lock.unlock();
-    startGame();
+    if (!_players.empty())
+        startGame();
+}
+
+void Server::Hub::startGame()
+{
+    _isPlaying = true;
+    Debug::Logger *l = Debug::Logger::getInstance(".log");
+    std::string msg("Hub number ");
+    l->generateDebugMessage(Debug::type::INFO , "Starting the game", msg + std::to_string(_id));
+    auto scene = std::shared_ptr<Scenes::IScene>(new Scenes::SplashScene("Splash scene", _engine.ECS()));
+
+    _engine.SceneMachine()->push(scene);
+
+    std::unique_lock<std::mutex> lock(_mutex);
+    lock.unlock();
+    while (_engine.SceneMachine()->run() != false && !_players.empty() && !_stoped) {
+        // send entites
+        std::stack<Network::Entity> &entities = _engine.SceneMachine()->getCurrentSceneEntityStack();
+        while (!entities.empty()) {
+            sendEntity(entities.top());
+            entities.pop();
+        }        
+        // send event to scene
+        _engine.SceneMachine()-> sendEventsToCurrentScene(_event);
+
+        // update event stack
+        while(!_event.empty()) {
+            _event.pop();
+        }
+        // std::this_thread::sleep_for(std::chrono::milliseconds(30));
+    }
+    _isPlaying = false;
+    l->generateDebugMessage(Debug::type::INFO , "Ending the game", msg + std::to_string(_id));
+    _engine.ECS()->clear();
+    _engine.SceneMachine()->clear();
+    start();
 }
 
 void Server::Hub::stop()
 {
+    _stoped = true;
+    _cond_var.notify_one();
     Network::headerUdp data;
     data.code = Network::CLIENT_ERROR;
     char msg[20] = "Server was stopped";
@@ -54,7 +92,10 @@ bool Server::Hub::allIsReady()
         if (i.isReady == false)
             return false;
     }
-    return true;
+    if (_players.size() != 0)
+        return true;
+    else
+        return false;
 }
 
 bool Server::Hub::addMember(const std::string &ip)
@@ -74,6 +115,7 @@ void Server::Hub::removeMember(const std::string &ip)
         if (_players[i].ip == ip)
             _players.erase(_players.begin() + i);
     }
+    _cond_var.notify_one();
     // _players.remove_if([&] (Player &p) { return(p.ip == ip); });
 }
 
@@ -109,38 +151,6 @@ void Server::Hub::sendToAllPlayer(void *msg, const std::size_t size)
     for (auto &i : _players) {
         _udp.write(i.ip, msg, size);
     }
-}
-
-void Server::Hub::startGame()
-{
-    _isPlaying = true;
-    Debug::Logger *l = Debug::Logger::getInstance(".log");
-    std::string msg("Hub number ");
-    l->generateDebugMessage(Debug::type::INFO , "Starting the game", msg + std::to_string(_id));
-    auto scene = std::shared_ptr<Scenes::IScene>(new Scenes::SplashScene("Splash scene", _engine.ECS()));
-
-    _engine.SceneMachine()->push(scene);
-
-    std::unique_lock<std::mutex> lock(_mutex);
-    lock.unlock();
-    while (_engine.SceneMachine()->run() != false && !_players.empty()) {
-        // send entites
-        std::stack<Network::Entity> &entities = _engine.SceneMachine()->getCurrentSceneEntityStack();
-        while (!entities.empty()) {
-            sendEntity(entities.top());
-            entities.pop();
-        }        
-        // send event to scene
-        _engine.SceneMachine()-> sendEventsToCurrentScene(_event);
-
-        // update event stack
-        while(!_event.empty()) {
-            _event.pop();
-        }
-        // std::this_thread::sleep_for(std::chrono::milliseconds(30));
-    }
-    _isPlaying = false;
-    l->generateDebugMessage(Debug::type::INFO , "Ending the game", msg + std::to_string(_id));
 }
 
 void Server::Hub::processUdpMessage(Server::UdpNetwork *socket)

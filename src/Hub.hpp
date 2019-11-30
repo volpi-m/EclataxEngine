@@ -89,6 +89,9 @@ namespace Server {
 
 
         private:
+            /*! if the hub as to be stopped */
+            bool _stoped;
+            /*! if a game is launch in hub */
             bool _isPlaying;
             /*! mutex for hub thread */
             std::mutex _mutex;
