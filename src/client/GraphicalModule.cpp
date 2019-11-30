@@ -12,8 +12,8 @@
 #include "GraphicalModule.hpp"
 
 Client::GraphicalModule::GraphicalModule()
-    : _window(sf::RenderWindow(sf::VideoMode(1920, 1080), "SFML works!")),
-    _trackEvent(0), _bitmaskList({1, 2, 4, 8, 16, 32, 64, 128})
+    : _window(sf::RenderWindow(sf::VideoMode::getDesktopMode(), "EclataxEngine Client")),
+    _trackEvent(0), _bitmaskList({1, 2, 4, 8, 16, 32, 64, 128}), _menu(Client::Menu(_window))
 {
     _window.setFramerateLimit(60);
     sf::Texture artefact;
@@ -154,4 +154,9 @@ void Client::GraphicalModule::display()
     
     // Display all drawings
     _window.display();
+}
+
+Client::Menu &Client::GraphicalModule::menu()
+{
+    return _menu;
 }

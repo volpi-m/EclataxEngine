@@ -18,6 +18,7 @@
 #include "UdpConnection.hpp"
 #include "TcpConnection.hpp"
 #include "GraphicalModule.hpp"
+#include "Rfc.hpp"
 
 /// \namespace Client
 /// \brief Used for Client-related classes

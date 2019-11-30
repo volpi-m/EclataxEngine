@@ -106,9 +106,8 @@ void Server::Hub::setPlayerReady(const std::string &ip, bool state)
 
 void Server::Hub::sendToAllPlayer(void *msg, const std::size_t size)
 {
-    for (auto &i : _players) {
+    for (auto &i : _players)
         _udp.write(i.ip, msg, size);
-    }
 }
 
 void Server::Hub::startGame()
@@ -131,7 +130,7 @@ void Server::Hub::startGame()
             entities.pop();
         }        
         // send event to scene
-        _engine.SceneMachine()-> sendEventsToCurrentScene(_event);
+        _engine.SceneMachine()->sendEventsToCurrentScene(_event);
 
         // update event stack
         while(!_event.empty()) {

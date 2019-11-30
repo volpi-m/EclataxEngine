@@ -88,13 +88,15 @@ set (INCLUDE_GAME
 ## Client sources
 
 set (SRC_CLIENT
+    ${LIB}
     src/client/GraphicalModule.cpp
+    src/client/ClientMediator.cpp
     src/client/UdpConnection.cpp
     src/client/TcpConnection.cpp
     src/client/EntityClient.cpp
     src/client/ConfReader.cpp
     src/client/ConfWriter.cpp
-    src/client/ClientMediator.cpp
+    src/client/menu.cpp
 )
 
 ## Include headers to program

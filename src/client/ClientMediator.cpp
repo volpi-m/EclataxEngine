@@ -14,12 +14,17 @@
 void Client::ClientMediator::run()
 {
     // Connect to the server
-    connectionProcedure();
     const sf::RenderWindow &w = _graph.window();
 
     // If the client has been connected, we can start to loop
     // cf. RFC to understand the gameloop
     while (w.isOpen()) {
+
+        // Launching menu if the player isn't in a hub
+        if (!_hub && _graph.menu().run())
+            connectionProcedure();
+
+        // Reading packets and process entities to display
         readNetwork();
         _graph.processEvents();
         sendEvents();
@@ -41,7 +46,7 @@ void Client::ClientMediator::askForHub()
     // Casting the port into an int
     std::memcpy(&_port, header->data, sizeof(int));
     std::cout << _port << std::endl;
-    _udp.bind(_port);
+    _udp.bind(Network::UDP_CLIENT_PORT);
 
     // Displaying the code
     {
@@ -104,6 +109,7 @@ void Client::ClientMediator::sendEvents()
 void Client::ClientMediator::readNetwork()
 {
     void *packet = _udp.receive();
+
     if (packet)
         _graph.parsePackets(packet);
 }
