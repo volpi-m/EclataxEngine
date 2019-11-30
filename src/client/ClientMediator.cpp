@@ -52,8 +52,10 @@ void Client::ClientMediator::requireKeyMap()
         char *response = _tcp.receive();
         if (response) {
             std::memcpy(data, response, sizeof(Network::headerTcp));
-            if (data->code == Network::SERVER_SEND_KEYS);
-                //_graph.addKey();
+            std::string comment = data->data;
+            std::cout << comment << std::endl;
+            if (data->code == Network::SERVER_SEND_KEYS)
+                _graph.addKey(comment);
         }
     }
 }
