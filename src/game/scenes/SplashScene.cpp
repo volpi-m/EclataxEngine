@@ -52,7 +52,7 @@ void Scenes::SplashScene::initComponents()
     std::unique_ptr<ECS::ISystem> systemAnimation(new ECS::System::AnimationSystem);
     std::unique_ptr<ECS::ISystem> systemMovement(new ECS::System::MovementSystem);
 
-    _ids.push_back(_ECS->createEntityFromLibrary("build/lib/libship.so"));
+    _ids.push_back(_ECS->createEntityFromLibrary("lib/libship.so"));
     _ids.push_back(_ECS->createEntity("Background"));
 
     _ECS->addSystem(ECS::System::Flags::IA, systemIA);

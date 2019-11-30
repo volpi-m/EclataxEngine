@@ -121,7 +121,6 @@ void Client::ClientMediator::sendEvents()
 {
     struct Network::headerUdp *data = new Network::headerUdp();
     std::size_t evtTracker = _graph.trackEvent();
-    std::cout << evtTracker << std::endl;
 
     data->code = Network::CLIENT_TICK;
     std::memcpy(data->data, &evtTracker, sizeof(std::size_t));
