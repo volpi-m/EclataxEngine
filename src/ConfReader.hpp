@@ -19,7 +19,9 @@
 #include <iostream>
 #include "MissingFileException.hpp"
 
-namespace Client
+/// \namespace Common
+/// \brief Used for ressources common to server and client
+namespace Common
 {
     /// \class ConfReader
     /// \brief Read values from a configuration file and store it in a map

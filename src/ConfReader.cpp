@@ -8,7 +8,7 @@
 #include "ConfReader.hpp"
 #include "Logger.hpp"
 
-Client::ConfReader::ConfReader()
+Common::ConfReader::ConfReader()
 {
     try {
         readFile("ressources/.conf");
@@ -17,7 +17,7 @@ Client::ConfReader::ConfReader()
     }
 }
 
-Client::ConfReader::ConfReader(const std::string &file)
+Common::ConfReader::ConfReader(const std::string &file)
 {
     try {
         readFile(file);
@@ -26,22 +26,22 @@ Client::ConfReader::ConfReader(const std::string &file)
     }
 }
 
-Client::ConfReader::~ConfReader() {}
+Common::ConfReader::~ConfReader() {}
 
-std::optional<std::string> Client::ConfReader::conf(const std::string &key) const
+std::optional<std::string> Common::ConfReader::conf(const std::string &key) const
 {
     if (_conf.count(key) > 0)
         return _conf.at(key);
     return {};
 }
 
-void Client::ConfReader::readFile(const std::string &file)
+void Common::ConfReader::readFile(const std::string &file)
 {
     std::ifstream ifs(file);
 
     if (!ifs)
         throw Debug::MissingFileException("configuration file not found",
-            "Client::ConfReader::readFile");
+            "Common::ConfReader::readFile");
 
     // Reading the configuration file
     std::string line;
@@ -51,7 +51,7 @@ void Client::ConfReader::readFile(const std::string &file)
         if (pos == std::string::npos) {
             Debug::Logger *log = Debug::Logger::getInstance(Debug::STANDARD, Debug::Flags::fatal_off);
             log->generateDebugMessage(Debug::WARNING, "invalid line in configuration file",
-                "Client::ConfReader::readFile");
+                "Common::ConfReader::readFile");
             continue;
         }
 

@@ -7,14 +7,14 @@
 
 #include "ConfWriter.hpp"
 
-Client::ConfWriter::ConfWriter(std::unordered_map<std::string, std::string> &conf, const std::string &file)
+Common::ConfWriter::ConfWriter(std::unordered_map<std::string, std::string> &conf, const std::string &file)
 {
     writeFile(conf, file);
 }
 
-Client::ConfWriter::~ConfWriter() {}
+Common::ConfWriter::~ConfWriter() {}
 
-void Client::ConfWriter::writeFile(std::unordered_map<std::string, std::string> &conf, const std::string &file)
+void Common::ConfWriter::writeFile(std::unordered_map<std::string, std::string> &conf, const std::string &file)
 {
     std::ofstream ofs(file, std::ofstream::out | std::ofstream::app); 
 
@@ -23,7 +23,7 @@ void Client::ConfWriter::writeFile(std::unordered_map<std::string, std::string> 
         Debug::Logger *log = Debug::Logger::getInstance(Debug::STANDARD);
             
         log->generateDebugMessage(Debug::WARNING, "Could not open file",
-        "Client::ConfReader::writeFile");
+        "Common::ConfReader::writeFile");
         return;
     }
 

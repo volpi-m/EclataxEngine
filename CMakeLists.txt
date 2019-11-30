@@ -45,11 +45,13 @@ set(ENTITY_SHIP
 
 ## General sources
 set(SRC
-    src/engine/GameEngine.cpp
+    src/ConfReader.cpp
+    src/ConfWriter.cpp
 )
 
 ## Server sources
 set(SRC_SERVER
+    src/engine/GameEngine.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/network/TcpConnection.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/network/TcpNetwork.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/network/UdpNetwork.cpp
@@ -94,8 +96,6 @@ set (SRC_CLIENT
     src/client/UdpConnection.cpp
     src/client/TcpConnection.cpp
     src/client/EntityClient.cpp
-    src/client/ConfReader.cpp
-    src/client/ConfWriter.cpp
     src/client/menu.cpp
 )
 
@@ -134,9 +134,10 @@ add_executable(r-type_server
 
 ## Client executable
 add_executable(r-type_client
-  ${SRC_CLIENT}
-  ${LIB}
-  src/client/main.cpp
+    ${SRC}
+    ${SRC_CLIENT}
+    ${LIB}
+    src/client/main.cpp
 )
 
 set (SRC_TEST

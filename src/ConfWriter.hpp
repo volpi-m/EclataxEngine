@@ -18,7 +18,7 @@
 #include "MissingFileException.hpp"
 #include "Logger.hpp"
 
-namespace Client
+namespace Common
 {
     /// \class ConfWriter
     /// \brief Write a given configuration in a configuration file

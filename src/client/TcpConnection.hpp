@@ -44,7 +44,7 @@ namespace Client
 
     private:
         /*! Configuration file parser */
-        Client::ConfReader _conf;
+        Common::ConfReader _conf;
         /*! TCP Socket, used for client-server communication */
         sf::TcpSocket _socket;
         /*! Keep track of packet sending with non-blocking sfml */

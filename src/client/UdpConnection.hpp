@@ -56,7 +56,7 @@ namespace Client
 
     private:
         /*! Configuration file parser */
-        Client::ConfReader _conf;
+        Common::ConfReader _conf;
         /*! Server's IP, get from a config file */
         std::string _servIP;
         /*! Udp Socket, bound to a specific IP on server */
