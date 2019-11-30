@@ -126,14 +126,44 @@ void Server::Mediator::askHub(Server::TcpConnection *socket, [[maybe_unused]] Ne
     delete toSend;
 }
 
+// void Server::Mediator::sendEvent(Server::TcpConnection *socket, [[maybe_unused]]Network::headerTcp *packet)
+// {
+//     Network::headerTcp *toSend = new Network::headerTcp;
+//     toSend->code = Network::SERVER_END_OF_EVENT;
+//     toSend->hubNbr = 2;
+//     int port = 40321;
+//     std::memcpy(toSend->data, &port, sizeof(int));
+//     socket->write(static_cast<void *>(toSend), sizeof(Network::headerTcp));
+//     delete toSend;
+// }
+
+
 void Server::Mediator::setPlayerReady(Server::TcpConnection *socket, Network::headerTcp *packet)
 {
-    _hubs[packet->hubNbr - 1].get()->setPlayerReady(socket->ip(), true);
+    if (_hubs[packet->hubNbr - 1])
+        _hubs[packet->hubNbr - 1].get()->setPlayerReady(socket->ip(), true);
+    else {
+        Debug::Logger *l = Debug::Logger::getInstance();
+        l->generateDebugMessage(Debug::type::ERROR , "Invalid number of hub", "Server::Mediator::setPlayerReady");
+        Network::headerTcp *toSend = new Network::headerTcp;
+        toSend->code = Network::SERVER_END_OF_EVENT;
+        std::memcpy(toSend->data, &"Can't find the hub", 19);
+        socket->write(static_cast<void *>(toSend), sizeof(Network::headerTcp));
+    }
 }
 
 void Server::Mediator::setPlayerNotReady(Server::TcpConnection *socket, Network::headerTcp *packet)
 {
-    _hubs[packet->hubNbr - 1].get()->setPlayerReady(socket->ip(), false);
+    if (_hubs[packet->hubNbr - 1])
+        _hubs[packet->hubNbr - 1].get()->setPlayerReady(socket->ip(), false);
+    else {
+        Debug::Logger *l = Debug::Logger::getInstance();
+        l->generateDebugMessage(Debug::type::ERROR , "Invalid number of hub", "Server::Mediator::setPlayerReady");
+        Network::headerTcp *toSend = new Network::headerTcp;
+        toSend->code = Network::SERVER_END_OF_EVENT;
+        std::memcpy(toSend->data, &"Can't find the hub", 19);
+        socket->write(static_cast<void *>(toSend), sizeof(Network::headerTcp));
+    }
 }
 
 void Server::Mediator::sendSprite([[maybe_unused]]Server::TcpConnection *socket, [[maybe_unused]]Network::headerTcp *packet)
