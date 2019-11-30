@@ -23,6 +23,13 @@ Client::GraphicalModule::GraphicalModule()
     _textures.emplace(0, std::make_pair("artefact", artefact));
 
     generateBitmaskList();
+
+    _evtList.push_back({sf::Keyboard::Key::Z, "Move Up"});
+    _evtList.push_back({sf::Keyboard::Key::S, "Move Down"});
+    _evtList.push_back({sf::Keyboard::Key::Q, "Move Left"});
+    _evtList.push_back({sf::Keyboard::Key::D, "Move Right"});
+    _evtList.push_back({sf::Keyboard::Key::Enter, "Enter"});
+    _evtList.push_back({sf::Keyboard::Key::Space, "Space"});
 }
 
 const sf::RenderWindow &Client::GraphicalModule::window() const

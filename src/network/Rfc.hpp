@@ -31,7 +31,7 @@ namespace Network
     /// \brief rfc code when client send keyboards events to server
     constexpr auto const CLIENT_TICK = 205;
 
-    /// \def REQUIRE_KEYS
+    /// \def CLIENT_REQUIRE_KEYS
     /// \brief rfc code when a client require all key used during the game
     constexpr auto const CLIENT_REQUIRE_KEY = 206;
 
