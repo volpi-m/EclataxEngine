@@ -29,6 +29,7 @@ Scenes::IScene *Scenes::SplashScene::run()
         _ECS->update();
         for (unsigned long long id = 0; _ECS->hasEntity(id); ++id)
             pushEntityStack(_ECS->entity(id), id);
+        _ECS->clearEntities();
         return nullptr;
     } else {
         movementSystem->setTransform(sps, 1920, std::get<1>(movementSystem->transform(sps)), 0);
