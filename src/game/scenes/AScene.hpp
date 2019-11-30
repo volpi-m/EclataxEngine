@@ -86,7 +86,7 @@ namespace Scenes {
 
             /// \param entity : The entity that will be pushed onto the stack
             /// \brief push an entity to the stack of the scene
-            void pushEntityStack(std::shared_ptr<ECS::Entity> &entity) override;
+            void pushEntityStack(std::shared_ptr<ECS::Entity> &entity, std::size_t id) override;
 
             /// \param events : queue of all events.
             /// The first element of pair is the number of the player that did the event

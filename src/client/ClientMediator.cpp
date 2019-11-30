@@ -52,8 +52,10 @@ void Client::ClientMediator::requireKeyMap()
         char *response = _tcp.receive();
         if (response) {
             std::memcpy(data, response, sizeof(Network::headerTcp));
-            if (data->code == Network::SERVER_SEND_KEYS);
-                //_graph.addKey();
+            std::string comment = data->data;
+            std::cout << comment << std::endl;
+            if (data->code == Network::SERVER_SEND_KEYS)
+                _graph.addKey(comment);
         }
     }
 }
@@ -119,7 +121,6 @@ void Client::ClientMediator::sendEvents()
 {
     struct Network::headerUdp *data = new Network::headerUdp();
     std::size_t evtTracker = _graph.trackEvent();
-    std::cout << evtTracker << std::endl;
 
     data->code = Network::CLIENT_TICK;
     std::memcpy(data->data, &evtTracker, sizeof(std::size_t));
@@ -131,6 +132,8 @@ void Client::ClientMediator::readNetwork()
 {
     void *packet = _udp.receive();
 
-    if (packet)
+    while (packet) {
         _graph.parsePackets(packet);
+        packet = _udp.receive();
+    }
 }

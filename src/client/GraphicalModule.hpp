@@ -70,11 +70,17 @@ namespace Client
         /// \return a reference to the menu
         Menu &menu();
 
+        /// \brief add a key received from server to usable key on client
+        /// \param comment : hint about what the key is used for
+        void addKey(const std::string &);
+
     private:
         /// \brief get an entity from a packet
         /// \param packetHeader : the packet
         /// \return a pointer to a new entity
         Network::Entity *getEntityParams(Network::headerUdp *packetHeader);
+
+        void generateBitmaskList();
 
         /*! window attribute */
         sf::RenderWindow _window;

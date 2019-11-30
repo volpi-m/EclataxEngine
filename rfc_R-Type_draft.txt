@@ -25,7 +25,7 @@ Table of Contents
     3.  Client gameloop  . . . . . . . . . . . . . . . . 5
     3a. Client event sending . . . . . . . . . . . . . . 5
     4.  Server gameloop  . . . . . . . . . . . . . . . . 6
-    4a. Server event sending . . . . . . . . . . . . . . 
+    4a. Server Entity sending  . . . . . . . . . . . . . 6
     5.  Configuration file . . . . . . . . . . . . . . . 
 
 
@@ -215,7 +215,10 @@ RFC -42             Instruction to R-Type Developper      November 2019
         406: Server send an id and a string corresponding to an
         event that can be processed by the client. (TCP)
 
-        501: Server send a debug message to client. Thi message
+        407: End of events. Server has send all events that
+        the client need to handle during the game. (TCP)
+
+        501: Server send a debug message to client. This message
         SHOULD be printed on client's console. (TCP/UDP)
 
         502: Server error. Send an error message to the client.
@@ -223,9 +226,6 @@ RFC -42             Instruction to R-Type Developper      November 2019
 
         If someone ever read this, please come to me and tell me
         my middle name, which is 'Stephane'.
-
-
-
 
 
 
@@ -320,13 +320,12 @@ RFC -42             Instruction to R-Type Developper      November 2019
     scene. The scene will handle all events and update the game
     according to them.
 
-    - clear_event_queue(): 
+    - clear_event_queue(): clear the queue event of the hub.
+    Hub have a queue of event coming from different client so
+    chen all events have been send to the current scene, hub
+    need to clear them from the queue
 
-
-
-
-
-
+    4a. Server Entity sending
 
 
 
