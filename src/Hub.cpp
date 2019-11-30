@@ -11,12 +11,12 @@ Server::Hub::Hub(int newId, const std::string &creator, boost::asio::io_context 
     _udp(ioContext, std::bind(&Server::Hub::processUdpMessage, this, std::placeholders::_1)),
     _id(newId), _port(_udp.port())
 {
-    std::cout << "Entering the hub constructor" << std::endl;
-    Debug::Logger *l = Debug::Logger::getInstance(".log");
+    _actions[Network::CLIENT_TICK] = std::bind(&Server::Hub::addEvent, this, std::placeholders::_1, std::placeholders::_2);
+    _actions[Network::CLIENT_ERROR] = std::bind(&Server::Hub::playerError, this, std::placeholders::_1, std::placeholders::_2);
     std::string msg("create hub with : ");
+    Debug::Logger *l = Debug::Logger::getInstance(".log");
     l->generateDebugMessage(Debug::type::INFO , msg + creator, "hub constructor");
     addMember(creator);
-    _actions[Network::CLIENT_REQUEST_SPRITE] = std::bind(&Server::Hub::addEvent, this, std::placeholders::_1, std::placeholders::_2);
 }
 
 Server::Hub::~Hub()
@@ -39,8 +39,6 @@ void Server::Hub::start()
 
 void Server::Hub::stop()
 {
-    Debug::Logger *l = Debug::Logger::getInstance();
-    l->generateDebugMessage(Debug::type::INFO , "Calling stop function in a hub", "Server::Hub::stop()");
     Network::headerUdp data;
     data.code = Network::CLIENT_ERROR;
     char msg[20] = "Server was stopped";
@@ -72,7 +70,11 @@ bool Server::Hub::addMember(const std::string &ip)
 void Server::Hub::removeMember(const std::string &ip)
 {
     std::unique_lock<std::mutex> lock(_mutex);
-    _players.remove_if([&] (Player &p) { return(p.ip == ip); });
+    for (unsigned int i = 0; i < _players.size(); i++) {
+        if (_players[i].ip == ip)
+            _players.erase(_players.begin() + i);
+    }
+    // _players.remove_if([&] (Player &p) { return(p.ip == ip); });
 }
 
 bool Server::Hub::isOpen()
@@ -119,36 +121,48 @@ void Server::Hub::startGame()
 
     _engine.SceneMachine()->push(scene);
 
+    std::unique_lock<std::mutex> lock(_mutex);
+    lock.unlock();
     while (_engine.SceneMachine()->run() != false && !_players.empty()) {
+        // send entites
         std::stack<Network::Entity> &entities = _engine.SceneMachine()->getCurrentSceneEntityStack();
         while (!entities.empty()) {
             sendEntity(entities.top());
             entities.pop();
-        }
+        }        
         // send event to scene
-
         // _engine.SceneMachine()->updateEvent(_event);
 
         // update event stack
         while(!_event.empty()) {
             _event.pop();
         }
+        // std::this_thread::sleep_for(std::chrono::milliseconds(30));
     }
-    std::cout << "Game is finish in hub " << _id << std::endl;
+    _isPlaying = false;
+    l->generateDebugMessage(Debug::type::INFO , "Ending the game", msg + std::to_string(_id));
 }
 
 void Server::Hub::processUdpMessage(Server::UdpNetwork *socket)
 {
-    std::cout << "treat a message" << std::endl;
     Network::headerUdp *h = static_cast<Network::headerUdp *>((void *)socket->buffer().data());
     _actions[h->code](socket, h);
 }
 
-void Server::Hub::addEvent([[maybe_unused]]Server::UdpNetwork *socket, Network::headerUdp *packet)
+void Server::Hub::addEvent(Server::UdpNetwork *socket, Network::headerUdp *packet)
 {
-    size_t event;
-    std::memcpy(&event, packet->data, sizeof(size_t));
-    _event.push(event);
+    // need to find the position of socket->remoteIp()
+    int nb = -1;
+    for (unsigned int i = 0; i != _players.size(); i++) {
+        if (_players[i].ip == socket->remoteIp()) {
+            nb = i;
+        }
+    }
+    if (nb != -1) {
+        size_t event;
+        std::memcpy(&event, packet->data, sizeof(size_t));
+        _event.emplace(nb + 1, event);
+    }
 }
 
 void Server::Hub::playerError(Server::UdpNetwork *socket, Network::headerUdp *packet)

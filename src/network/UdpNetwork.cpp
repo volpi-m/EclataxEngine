@@ -20,7 +20,6 @@ void Server::UdpNetwork::startAccept()
     _socket.async_receive_from(boost::asio::buffer(_buf), _endpoint,
         boost::bind(&UdpNetwork::handleRead, this,
             boost::asio::placeholders::bytes_transferred));
-    std::cout << _socket.local_endpoint().port() << std::endl;
 }
 
 void Server::UdpNetwork::handleRead([[maybe_unused]] const std::size_t size)

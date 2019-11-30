@@ -11,6 +11,7 @@
 #include <string>
 #include <cstring>
 #include <boost/asio.hpp>
+#include <optional>
 
 #include "Logger.hpp"
 #include "GameEngine.hpp"
@@ -102,9 +103,9 @@ namespace Server {
             /*! port of the hub */
             unsigned short _port;
             /*! All ip of members */
-            std::list<Server::Player> _players;
+            std::vector<Server::Player> _players;
             /*! queue of all event get in the hub */
-            std::queue<size_t> _event;
+            std::queue<std::pair<int, size_t>> _event;
             /*! Map of all actions when you received a udp message from client */
             std::unordered_map<int, std::function<void(Server::UdpNetwork *socket, Network::headerUdp *packet)>> _actions;
 
