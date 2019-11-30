@@ -68,16 +68,13 @@ std::size_t Client::GraphicalModule::addTexture(const std::string &filepath)
         if (it.second.first == filepath)
             return it.first;
 
+    std::cout << "new texture !!" << std::endl;
     // If not, adding it to our unordered map
     sf::Texture newTexture;
 
     // Checking if the texture can be loaded
-    if (!newTexture.loadFromFile(filepath)) {
-        Debug::Logger *log = Debug::Logger::getInstance();
-
-        log->generateDebugMessage(Debug::INFO, "Couldn't load a texture", "Client::GraphicalModule::addTexture");
+    if (!newTexture.loadFromFile(filepath))
         return 0;
-    }
     _textures.emplace(_textures.size() + 1, std::make_pair(filepath, newTexture));
     return _textures.size();
 }
@@ -95,6 +92,8 @@ void Client::GraphicalModule::parsePackets(void *packet)
         // Creating the entity and eventualy the texture
         std::size_t id = addTexture((char *)entity->texture);
         createEntity(entity->id, id);
+
+        std::cout << "entities: " << _entities.size() << std::endl;
 
         // Setting entity position and rectangle
         _entities[entity->id]->setPosition(entity->x, entity->y, entity->z);
@@ -151,7 +150,7 @@ void Client::GraphicalModule::display()
     // Draw all entities
     for (auto &it : _entities)
         _window.draw(it.second->sprite());
-    
+
     // Display all drawings
     _window.display();
 }
