@@ -135,11 +135,9 @@ void Server::Hub::startGame()
         // send entites
         std::stack<Network::Entity> &entities = _engine.SceneMachine()->getCurrentSceneEntityStack();
         while (!entities.empty()) {
-            std::cout << "sending entity n°" << entities.top().id << std::endl; 
             sendEntity(entities.top());
             entities.pop();
         }
-        std::cout << "OUT" << std::endl;
         // send event to scene
         _engine.SceneMachine()->sendEventsToCurrentScene(_event);
 
@@ -181,6 +179,7 @@ void Server::Hub::playerError(Server::UdpNetwork *socket, Network::headerUdp *pa
 {
     std::string ip = socket->remoteIp();
     Debug::Logger *l = Debug::Logger::getInstance(".log");
+
     l->generateDebugMessage(Debug::type::ERROR , "Error with the player" + ip + "\nError detail: " + packet->data, "Server::Hub::playerError");
     removeMember(ip);
 }
@@ -188,6 +187,7 @@ void Server::Hub::playerError(Server::UdpNetwork *socket, Network::headerUdp *pa
 void Server::Hub::sendEntity(Network::Entity &e)
 {
     Network::headerUdp data = Network::headerUdp();
+
     data.code = Network::SERVER_TICK;
     std::memcpy(&data.data, &e, Network::UDP_BUF_SIZE);
     sendToAllPlayer(&data, sizeof(data));

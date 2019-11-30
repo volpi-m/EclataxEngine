@@ -25,7 +25,7 @@
 namespace Server {
 
     /// \def path for the file containing all event declaration for the game
-    constexpr auto const CONF_FILE_PATH = "build/bin/ressources/r-type-event.conf";
+    constexpr auto const CONF_FILE_PATH = "ressources/r-type-event.conf";
 
     /// \class Mediator
     /// \brief Encapsulate interaction between all elements of rType game

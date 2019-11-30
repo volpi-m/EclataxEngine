@@ -48,6 +48,7 @@ void Client::GraphicalModule::createEntity(std::size_t id, std::size_t txtId)
         return;
     }
 
+    std::cout << "creating a new entity" << std::endl;
     std::shared_ptr<Client::Entity> entity(new Client::Entity(_textures[txtId].second, txtId));
 
     _entities.emplace(id, entity);
@@ -60,7 +61,6 @@ std::size_t Client::GraphicalModule::addTexture(const std::string &filepath)
         if (it.second.first == filepath)
             return it.first;
 
-    std::cout << "new texture !!" << std::endl;
     // If not, adding it to our unordered map
     sf::Texture newTexture;
 
@@ -80,12 +80,14 @@ void Client::GraphicalModule::parsePackets(void *packet)
     if (packetHeader->code == Network::SERVER_TICK)
         entity = getEntityParams(packetHeader);
     if (entity) {
-
+        
+        if (entity->deleted) {
+            _entities.erase(entity->id);
+            return;
+        }
         // Creating the entity and eventualy the texture
         std::size_t id = addTexture((char *)entity->texture);
         createEntity(entity->id, id);
-
-        std::cout << "entities: " << _entities.size() << std::endl;
 
         // Setting entity position and rectangle
         _entities[entity->id]->setPosition(entity->x, entity->y, entity->z);
@@ -96,7 +98,7 @@ void Client::GraphicalModule::parsePackets(void *packet)
 Network::Entity *Client::GraphicalModule::getEntityParams(Network::headerUdp *packetHeader)
 {
     // getting the length of the path of the texture
-    unsigned int len = Network::UDP_BUF_SIZE - (sizeof(unsigned long long) + sizeof(float) * 7);
+    unsigned int len = Network::UDP_BUF_SIZE - (sizeof(unsigned long long) + sizeof(char) + sizeof(float) * 7);
     Network::Entity *packetEntity = new Network::Entity;
 
     // Copying all packet data into the structure
@@ -108,7 +110,9 @@ Network::Entity *Client::GraphicalModule::getEntityParams(Network::headerUdp *pa
     std::memcpy(&(packetEntity->left), (float *)(packetHeader->data + sizeof(unsigned long long) + sizeof(float) * 4), sizeof(float));
     std::memcpy(&(packetEntity->width), (float *)(packetHeader->data + sizeof(unsigned long long) + sizeof(float) * 5), sizeof(float));
     std::memcpy(&(packetEntity->height), (float *)(packetHeader->data + sizeof(unsigned long long) + sizeof(float) * 6), sizeof(float));
-    std::memcpy(packetEntity->texture, packetHeader->data + sizeof(unsigned long long) + sizeof(float) * 7, len);
+    std::memcpy(&(packetEntity->deleted), (char *)(packetHeader->data + sizeof(unsigned long long) + sizeof(float) * 7), sizeof(char));
+    std::memcpy(packetEntity->texture, packetHeader->data + sizeof(unsigned long long) + sizeof(char) + sizeof(float) * 7, len);
+ 
     return packetEntity;
 }
 
