@@ -29,8 +29,28 @@ void Client::ClientMediator::run()
 
 void Client::ClientMediator::connectionProcedure()
 {
+    requireKeyMap();
     askForHub();
     playerIsReady();
+}
+
+void Client::ClientMediator::requireKeyMap()
+{
+    Network::headerTcp *data = new Network::headerTcp();
+
+    data->code = Network::CLIENT_REQUIRE_KEY;
+    std::memset(data->data, 0, Network::TCP_BUF_SIZE);
+
+    _tcp.send(data, sizeof(Network::headerTcp));
+
+    while (data->code != Network::SERVER_END_OF_EVENT) {
+        char *response = _tcp.receive();
+        if (response) {
+            std::memcpy(data, response, sizeof(Network::headerTcp));
+            if (data->code == Network::SERVER_SEND_KEYS)
+                _graph.addKey();
+        }
+    }
 }
 
 void Client::ClientMediator::askForHub()
@@ -40,7 +60,7 @@ void Client::ClientMediator::askForHub()
 
     // Casting the port into an int
     std::memcpy(&_port, header->data, sizeof(int));
-    std::cout << _port << std::endl;
+    std::cout << _port << " ";
     _udp.bind(_port);
 
     // Displaying the code
@@ -60,7 +80,7 @@ void Client::ClientMediator::askForHub()
 
 void Client::ClientMediator::playerIsReady()
 {
-     sendEmptyTcpHeader(Network::CLIENT_IS_READY);
+    sendEmptyTcpHeader(Network::CLIENT_IS_READY);
 
     // Client is ready
     Debug::Logger *log = Debug::Logger::getInstance();
@@ -94,6 +114,7 @@ void Client::ClientMediator::sendEvents()
 {
     struct Network::headerUdp *data = new Network::headerUdp();
     std::size_t evtTracker = _graph.trackEvent();
+    std::cout << evtTracker << std::endl;
 
     data->code = Network::CLIENT_TICK;
     std::memcpy(data->data, &evtTracker, sizeof(std::size_t));

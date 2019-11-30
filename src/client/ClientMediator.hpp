@@ -41,6 +41,9 @@ namespace Client
         /// \brief connect the client to the server
         void connectionProcedure();
 
+        /// \brief require all keys that will be used during the game
+        void requireKeyMap();
+
         /// \brief ask the server to give a valid hub 
         void askForHub();
 

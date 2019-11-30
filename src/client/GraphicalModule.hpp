@@ -62,7 +62,7 @@ namespace Client
         /// \brief detect events and threat them
         void processEvents();
 
-        /// \brief display all entiites on the window
+        /// \brief display all entities on the window
         void display();
 
     private:
