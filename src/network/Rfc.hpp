@@ -140,7 +140,9 @@ namespace Network
         float width;
         /*! height of the texxture of the entity */
         float height;
+        /*! as the entity been deleted */
+        char deleted;
         /*! texture to use */
-        char texture[UDP_BUF_SIZE - (sizeof(unsigned long long) + sizeof(float) * 7)] = {0};
+        char texture[UDP_BUF_SIZE - (sizeof(unsigned long long) + sizeof(char) + sizeof(float) * 7)] = {0};
     };
 }

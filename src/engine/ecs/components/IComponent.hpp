@@ -33,7 +33,8 @@ namespace ECS {
                                   life = 4096,
                                   speed = 8192,
                                   text = 16384,
-                                  animation2D = 32768
+                                  animation2D = 32768,
+                                  lifeSpan = 65536
             } flags;
         }
     }

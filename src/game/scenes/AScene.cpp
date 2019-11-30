@@ -61,7 +61,7 @@ void Scenes::AScene::pushEntityStack(std::shared_ptr<ECS::Entity> &entity, std::
         auto componentTransform = static_cast<ECS::Component::Transform *>(entity->component(ECS::Component::Flags::transform).get());
         auto componentSprite = static_cast<ECS::Component::Sprite *>(entity->component(ECS::Component::Flags::sprite).get());
 
-        // Compying parameters of the compnent into the network entity
+        // Copying parameters of the compnent into the network entity
         _stack.top().id = id;
         _stack.top().top = componentAnimation->rect.top;
         _stack.top().left = componentAnimation->rect.left;
@@ -71,6 +71,7 @@ void Scenes::AScene::pushEntityStack(std::shared_ptr<ECS::Entity> &entity, std::
         _stack.top().x = componentTransform->x;
         _stack.top().y = componentTransform->y;
         _stack.top().z = componentTransform->z;
+        _stack.top().deleted = entity->deleted() ? 1 : 0;
     } else if (entity->hasComponent(ECS::Component::Flags::sprite)) {
 
         _stack.emplace(Network::Entity());
@@ -79,7 +80,7 @@ void Scenes::AScene::pushEntityStack(std::shared_ptr<ECS::Entity> &entity, std::
         auto componentTransform = static_cast<ECS::Component::Transform *>(entity->component(ECS::Component::Flags::transform).get());
         auto componentSprite = static_cast<ECS::Component::Sprite *>(entity->component(ECS::Component::Flags::sprite).get());
 
-        // Compying parameters of the compnent into the network entity
+        // Copying parameters of the compnent into the network entity
         _stack.top().id = id;
         _stack.top().top = componentSprite->rect.top;
         _stack.top().left = componentSprite->rect.left;
@@ -89,5 +90,6 @@ void Scenes::AScene::pushEntityStack(std::shared_ptr<ECS::Entity> &entity, std::
         _stack.top().x = componentTransform->x;
         _stack.top().y = componentTransform->y;
         _stack.top().z = componentTransform->z;
+        _stack.top().deleted = entity->deleted() ? 1 : 0;
     }
 }

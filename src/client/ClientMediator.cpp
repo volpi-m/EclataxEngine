@@ -15,6 +15,7 @@ void Client::ClientMediator::run()
 {
     // Connect to the server
     const sf::RenderWindow &w = _graph.window();
+    //requireKeyMap();
 
     // If the client has been connected, we can start to loop
     // cf. RFC to understand the gameloop
@@ -34,7 +35,6 @@ void Client::ClientMediator::run()
 
 void Client::ClientMediator::connectionProcedure()
 {
-//    requireKeyMap();
     askForHub();
     playerIsReady();
 }
@@ -49,10 +49,13 @@ void Client::ClientMediator::requireKeyMap()
     _tcp.send(data, sizeof(Network::headerTcp));
 
     while (data->code != Network::SERVER_END_OF_EVENT) {
+        data->code = 0;
+        data->hubNbr = 0;
+        std::memset(data->data, 0, sizeof(Network::TCP_BUF_SIZE));
         char *response = _tcp.receive();
         if (response) {
             std::memcpy(data, response, sizeof(Network::headerTcp));
-            std::string comment = data->data;
+            char *comment = data->data;
             std::cout << comment << std::endl;
             if (data->code == Network::SERVER_SEND_KEYS)
                 _graph.addKey(comment);

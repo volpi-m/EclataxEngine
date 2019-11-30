@@ -58,7 +58,6 @@ set(SRC_SERVER
     src/engine/DLLoader.cpp
     src/engine/ecs/ECS.cpp
     src/engine/scenesManagement/sceneMachine/SceneMachine.cpp
-    src/engine/scenesManagement/scenes/DumyScene.cpp
     src/engine/ecs/ECS.cpp
     src/engine/ecs/entities/Entity.cpp
     src/engine/ecs/entities/EntityFactory.cpp
@@ -66,6 +65,7 @@ set(SRC_SERVER
     src/engine/ecs/systems/RenderSystem.cpp
     src/engine/ecs/systems/SpawnerSystem.cpp
     src/engine/ecs/systems/MovementSystem.cpp
+    src/engine/ecs/systems/LifeSpanSystem.cpp
     src/engine/ecs/systems/AnimationSystem.cpp
     src/engine/ecs/systems/CollisionSystem.cpp
     src/engine/ecs/systems/HealthManipulatorSystem.cpp
@@ -149,7 +149,6 @@ set (SRC_TEST
     tests/Exception/test_exception.cpp
     tests/Log/test_logger.cpp
     tests/sceneMachine/test_sceneMachine.cpp
-    tests/scenes/test_dummyScene.cpp
     tests/Benchmarking/test_breakpoints.cpp
     tests/ecs/test_ecs.cpp
     tests/entity/test_entity.cpp
@@ -166,6 +165,7 @@ set (SRC_TEST
     tests/component/test_Particules.cpp
     tests/component/test_Acceleration.cpp
     tests/component/test_collisionBox.cpp
+    tests/component/test_LifeSpan.cpp
     tests/systems/test_IA.cpp
     tests/systems/test_Render.cpp
     tests/systems/test_collision.cpp

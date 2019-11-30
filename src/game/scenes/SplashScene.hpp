@@ -16,8 +16,9 @@
 
 #include "AScene.hpp"
 #include "TransformComponent.hpp"
-#include "MovementSystem.hpp"
 #include "AnimationSystem.hpp"
+#include "MovementSystem.hpp"
+#include "LifeSpanSystem.hpp"
 #include "SpawnerSystem.hpp"
 #include "IASystem.hpp"
 

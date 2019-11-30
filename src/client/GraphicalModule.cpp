@@ -48,7 +48,6 @@ void Client::GraphicalModule::createEntity(std::size_t id, std::size_t txtId)
         return;
     }
 
-    std::cout << "creating a new entity" << std::endl;
     std::shared_ptr<Client::Entity> entity(new Client::Entity(_textures[txtId].second, txtId));
 
     _entities.emplace(id, entity);

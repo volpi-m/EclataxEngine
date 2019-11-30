@@ -26,7 +26,7 @@ namespace ECS {
         /// \namespace Flags
         /// \brief Flags for systems
         namespace Flags {
-            typedef enum e_flags {Movement, AudioPlayer, LifeManipulator, Gravity, Animation, Script, Parallax, IA, Spawner} flags;
+            typedef enum e_flags {Movement, AudioPlayer, LifeManipulator, Gravity, Animation, Script, Parallax, IA, Spawner, LifeSpan} flags;
         }
     }
     /// \class ISystem
