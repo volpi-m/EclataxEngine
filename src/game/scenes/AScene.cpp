@@ -50,7 +50,7 @@ std::stack<Network::Entity> &Scenes::AScene::entityStack()
     return _stack;
 }
 
-void Scenes::AScene::pushEntityStack(std::shared_ptr<ECS::Entity> &entity)
+void Scenes::AScene::pushEntityStack(std::shared_ptr<ECS::Entity> &entity, std::size_t id)
 {
     if (entity->hasComponent(ECS::Component::Flags::animation2D) && entity->hasComponent(ECS::Component::Flags::sprite)) {
 
@@ -62,6 +62,7 @@ void Scenes::AScene::pushEntityStack(std::shared_ptr<ECS::Entity> &entity)
         auto componentSprite = static_cast<ECS::Component::Sprite *>(entity->component(ECS::Component::Flags::sprite).get());
 
         // Compying parameters of the compnent into the network entity
+        _stack.top().id = id;
         _stack.top().top = componentAnimation->rect.top;
         _stack.top().left = componentAnimation->rect.left;
         _stack.top().width = componentAnimation->rect.width;
@@ -79,6 +80,7 @@ void Scenes::AScene::pushEntityStack(std::shared_ptr<ECS::Entity> &entity)
         auto componentSprite = static_cast<ECS::Component::Sprite *>(entity->component(ECS::Component::Flags::sprite).get());
 
         // Compying parameters of the compnent into the network entity
+        _stack.top().id = id;
         _stack.top().top = componentSprite->rect.top;
         _stack.top().left = componentSprite->rect.left;
         _stack.top().width = componentSprite->rect.width;

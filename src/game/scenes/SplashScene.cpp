@@ -25,13 +25,13 @@ Scenes::IScene *Scenes::SplashScene::run()
     auto sps = _ECS->entity(_ids.front());
     auto movementSystem = static_cast<ECS::System::MovementSystem *>(_ECS->system(ECS::System::Flags::Movement).get());
 
-    std::cout << std::get<0>(movementSystem->transform(sps)) << std::endl;
     if (std::get<0>(movementSystem->transform(sps)) > 0) {
         _ECS->update();
-        pushEntityStack(sps);
+        for (unsigned long long id = 0; _ECS->hasEntity(id); ++id)
+            pushEntityStack(_ECS->entity(id), id);
         return nullptr;
     } else {
-        movementSystem->setTransform(sps, 1920, 0, 0);
+        movementSystem->setTransform(sps, 1920, std::get<1>(movementSystem->transform(sps)), 0);
         return nullptr;
     }
 }
@@ -51,6 +51,7 @@ void Scenes::SplashScene::initComponents()
     std::unique_ptr<ECS::ISystem> systemIA(new ECS::System::IASystem);
     std::unique_ptr<ECS::ISystem> systemAnimation(new ECS::System::AnimationSystem);
     std::unique_ptr<ECS::ISystem> systemMovement(new ECS::System::MovementSystem);
+    std::unique_ptr<ECS::ISystem> systemSpawn(new ECS::System::SpawnerSystem);
 
     _ids.push_back(_ECS->createEntityFromLibrary("lib/libship.so"));
     _ids.push_back(_ECS->createEntity("Background"));
@@ -58,6 +59,7 @@ void Scenes::SplashScene::initComponents()
     _ECS->addSystem(ECS::System::Flags::IA, systemIA);
     _ECS->addSystem(ECS::System::Flags::Animation, systemAnimation);
     _ECS->addSystem(ECS::System::Flags::Movement, systemMovement);
+    _ECS->addSystem(ECS::System::Flags::Spawner, systemSpawn);
 }
 
 void Scenes::SplashScene::handleEvent(std::queue<std::pair<int, size_t>> &events)

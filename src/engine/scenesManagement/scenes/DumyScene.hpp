@@ -97,8 +97,9 @@ namespace Scenes {
 
         private:
             /// \param entity : The entity that will be pushed onto the stack
+            /// \param id : id of the entity
             /// \brief push an entity to the stack of the scene
-            void pushEntityStack(std::shared_ptr<ECS::Entity> &entity) override;
+            void pushEntityStack(std::shared_ptr<ECS::Entity> &entity, std::size_t id) override;
 
             /*! name of the scene */
             std::string _name;

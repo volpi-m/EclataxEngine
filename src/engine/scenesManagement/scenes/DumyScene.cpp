@@ -123,7 +123,7 @@ std::stack<Network::Entity> &Scenes::DumyScene::entityStack()
     return _stack;
 }
 
-void Scenes::DumyScene::pushEntityStack(std::shared_ptr<ECS::Entity> &entity)
+void Scenes::DumyScene::pushEntityStack(std::shared_ptr<ECS::Entity> &entity, std::size_t id)
 {
     if (entity->hasComponent(ECS::Component::Flags::animation2D) && entity->hasComponent(ECS::Component::Flags::sprite)) {
 
@@ -135,6 +135,7 @@ void Scenes::DumyScene::pushEntityStack(std::shared_ptr<ECS::Entity> &entity)
         auto componentTransform = static_cast<ECS::Component::Transform *>(entity->component(ECS::Component::Flags::transform).get());
 
         // Compying parameters of the compnent into the network entity
+        _stack.top().id = id;
         _stack.top().top = componentAnimation->rect.top;
         _stack.top().left = componentAnimation->rect.left;
         _stack.top().width = componentAnimation->rect.width;

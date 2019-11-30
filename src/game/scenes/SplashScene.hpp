@@ -18,6 +18,7 @@
 #include "TransformComponent.hpp"
 #include "MovementSystem.hpp"
 #include "AnimationSystem.hpp"
+#include "SpawnerSystem.hpp"
 #include "IASystem.hpp"
 
 /// \namespace Scenes

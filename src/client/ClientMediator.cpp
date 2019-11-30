@@ -132,6 +132,8 @@ void Client::ClientMediator::readNetwork()
 {
     void *packet = _udp.receive();
 
-    if (packet)
+    while (packet) {
         _graph.parsePackets(packet);
+        packet = _udp.receive();
+    }
 }

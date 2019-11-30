@@ -18,10 +18,14 @@
 #include "Logger.hpp"
 #include "Hub.hpp"
 #include "Rfc.hpp"
+#include "ConfReader.hpp"
 
 /// \namespace Server
 /// \brief Used for the all server classes
 namespace Server {
+
+    /// \def path for the file containing all event declaration for the game
+    constexpr auto const CONF_FILE_PATH = "build/bin/ressources/r-type-event.conf";
 
     /// \class Mediator
     /// \brief Encapsulate interaction between all elements of rType game
@@ -46,12 +50,14 @@ namespace Server {
         private:
             /*! Boost contexte */
             boost::asio::io_context _ioContext;
-            /*! Object handling tcp dialogue */
-            Server::TcpNetwork _tcp;
             /*! Mediator mutex */
             std::mutex _mut;
             /*! Thread for running boost */
             std::thread _boostThread;
+            /*! reader */
+            Common::ConfReader _reader;
+            /*! Object handling tcp dialogue */
+            Server::TcpNetwork _tcp;
             /*! Thread list of all hub */
             std::vector<std::thread> _threads;
             /*! List of hub */
@@ -61,11 +67,18 @@ namespace Server {
             /*! Map of all actions when you received a tcp message from client */
             std::unordered_map<int, std::function<void(Server::TcpConnection *socket, Network::headerTcp *packet)>> _actions;
 
+            /*! Map of all events need in the game */
+            std::unordered_map<int, std::string> _eventTemplate;
+
+            /// \brief read the conf file for the game
+            /// The conf file is specified in Server::CONF_FILE_PATH
+            void readEventFile();
             /// \param ip ip of the hub creator
             /// \brief method for creating a new hub
             void createHub(std::string ip);
             /// \brief Launch Boost librairire
             void launchBoost();
+
             /// \param ip ip of the asking client
             /// \return return number of the assigned hub
             /// \brief assign a hub to the current ip. If no hub is available, it create a thread with the new hub inside.
