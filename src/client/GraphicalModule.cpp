@@ -28,6 +28,13 @@ Client::GraphicalModule::GraphicalModule()
     _view.setCenter((float)size.width / 2, (float)size.height / 2);
     _view.setSize((sf::Vector2f) {(float)size.width, (float)size.height});
     _window.setView(_view);
+
+    _evtList.push_back({sf::Keyboard::Key::Z, "Move Up"});
+    _evtList.push_back({sf::Keyboard::Key::S, "Move Down"});
+    _evtList.push_back({sf::Keyboard::Key::Q, "Move Left"});
+    _evtList.push_back({sf::Keyboard::Key::D, "Move Right"});
+    _evtList.push_back({sf::Keyboard::Key::Enter, "Enter"});
+    _evtList.push_back({sf::Keyboard::Key::Space, "Space"});
 }
 
 const sf::RenderWindow &Client::GraphicalModule::window() const

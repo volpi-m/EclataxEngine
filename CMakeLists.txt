@@ -76,6 +76,7 @@ set(SRC_SERVER
 ## Game sources
 
 set (SRC_GAME
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/game/scenes/Level1Scene.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/game/scenes/SplashScene.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/game/scenes/AScene.cpp
 )

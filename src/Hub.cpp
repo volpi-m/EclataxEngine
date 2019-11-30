@@ -57,12 +57,11 @@ void Server::Hub::startGame()
     Debug::Logger *l = Debug::Logger::getInstance(".log");
     std::string msg("Hub number ");
     l->generateDebugMessage(Debug::type::INFO , "Starting the game", msg + std::to_string(_id));
-    auto scene = std::shared_ptr<Scenes::IScene>(new Scenes::SplashScene("Splash scene", _engine.ECS()));
+    auto scene = std::shared_ptr<Scenes::IScene>(new Scenes::Level1Scene("level1Scene", _engine.ECS()));
 
     _engine.SceneMachine()->push(scene);
 
     while (_engine.SceneMachine()->run() != false && !_players.empty() && !_stoped) {
-
         // Calculatin time of execution
         std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
 
@@ -87,7 +86,7 @@ void Server::Hub::startGame()
     l->generateDebugMessage(Debug::type::INFO , "Ending the game", msg + std::to_string(_id));
     _engine.ECS()->clear();
     _engine.SceneMachine()->clear();
-    if (_players.empty() && !_stoped)
+    if (!_stoped)
         start();
 }
 

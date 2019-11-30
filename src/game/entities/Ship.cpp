@@ -17,18 +17,18 @@ extern "C" ECS::Entity *entryPoint()
 std::shared_ptr<ECS::Entity> Game::ShipBeam::createEntity(std::shared_ptr<ECS::Entity> &parent)
 {
     std::shared_ptr<ECS::Entity> newEntity(new ECS::Entity("Enemy Bullet"));
-    Game::Rect rect(0, 0, 32, 32);
+    Game::Rect rect(0, 0, 16, 16);
     auto parentTransform = static_cast<ECS::Component::Transform * >(parent->component(ECS::Component::Flags::transform).get());
 
     std::shared_ptr<ECS::IComponent> audio(new ECS::Component::Audio("bullet.mp3", false));
     std::shared_ptr<ECS::IComponent> damage(new ECS::Component::Damage(20));
     std::shared_ptr<ECS::IComponent> health(new ECS::Component::Health(1));
     std::shared_ptr<ECS::IComponent> script(new ECS::Component::Script(&ShipBeam::IA));
-    std::shared_ptr<ECS::IComponent> sprite(new ECS::Component::Sprite("ressources/bullet.gif", rect));
+    std::shared_ptr<ECS::IComponent> sprite(new ECS::Component::Sprite("ressources/bullet.png", rect));
     std::shared_ptr<ECS::IComponent> speed(new ECS::Component::Speed(5));
     std::shared_ptr<ECS::IComponent> transform(new ECS::Component::Transform(parentTransform->x, parentTransform->y, parentTransform->z));
-    std::shared_ptr<ECS::IComponent> collision(new ECS::Component::CollisionBox2D(0, 0, 20, 20));
-    std::shared_ptr<ECS::IComponent> animation(new ECS::Component::Animation2D(std::chrono::milliseconds(50), rect, 533, 32));
+    std::shared_ptr<ECS::IComponent> collision(new ECS::Component::CollisionBox2D(0, 0, 16, 16));
+    std::shared_ptr<ECS::IComponent> animation(new ECS::Component::Animation2D(std::chrono::milliseconds(50), rect, 116, 16.5));
     std::shared_ptr<ECS::IComponent> lifeSpan(new ECS::Component::LifeSpan(std::chrono::seconds(5)));
 
 

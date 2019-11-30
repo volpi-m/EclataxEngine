@@ -52,7 +52,7 @@ std::stack<Network::Entity> &Scenes::AScene::entityStack()
 
 void Scenes::AScene::pushEntityStack(std::shared_ptr<ECS::Entity> &entity, std::size_t id)
 {
-    if (entity->hasComponent(ECS::Component::Flags::animation2D) && entity->hasComponent(ECS::Component::Flags::sprite)) {
+    if (entity->hasComponent(ECS::Component::Flags::animation2D) && entity->hasComponent(ECS::Component::Flags::sprite) && entity->hasComponent(ECS::Component::Flags::transform)) {
 
         _stack.emplace(Network::Entity());
 
@@ -72,7 +72,7 @@ void Scenes::AScene::pushEntityStack(std::shared_ptr<ECS::Entity> &entity, std::
         _stack.top().y = componentTransform->y;
         _stack.top().z = componentTransform->z;
         _stack.top().deleted = entity->deleted() ? 1 : 0;
-    } else if (entity->hasComponent(ECS::Component::Flags::sprite)) {
+    } else if (entity->hasComponent(ECS::Component::Flags::sprite) && entity->hasComponent(ECS::Component::Flags::transform)) {
 
         _stack.emplace(Network::Entity());
 
