@@ -12,7 +12,7 @@
 TEST(ConfigTest, ValidFile)
 {
     try {
-        Client::ConfReader c("ressources/tests/.conf");
+        Common::ConfReader c("ressources/tests/.conf");
     } catch (Debug::MissingFileException &) {
         ASSERT_TRUE(false);
         return;
@@ -23,7 +23,7 @@ TEST(ConfigTest, ValidFile)
 TEST(ConfigTest, InvalidFile)
 {
     try {
-        Client::ConfReader c("ressources/tests/ouais.conf");
+        Common::ConfReader c("ressources/tests/ouais.conf");
     } catch (Debug::MissingFileException &) {
         ASSERT_TRUE(true);
         return;
@@ -34,7 +34,7 @@ TEST(ConfigTest, InvalidFile)
 TEST(ConfigTest, SimpleConstructor)
 {
     try {
-        Client::ConfReader c;
+        Common::ConfReader c;
     } catch (Debug::MissingFileException &) {
         ASSERT_TRUE(true);
         return;
@@ -44,7 +44,7 @@ TEST(ConfigTest, SimpleConstructor)
 
 TEST(ConfigTest, ValidKey)
 {
-    Client::ConfReader conf("ressources/tests/.conf");
+    Common::ConfReader conf("ressources/tests/.conf");
 
     std::optional<std::string> val = conf.conf("value1");
     std::optional<std::string> val2 = conf.conf("value3");
@@ -55,7 +55,7 @@ TEST(ConfigTest, ValidKey)
 
 TEST(ConfigTest, TestValue)
 {
-    Client::ConfReader conf("ressources/tests/.conf");
+    Common::ConfReader conf("ressources/tests/.conf");
 
     std::optional<std::string> val1 = conf.conf("value1");
     std::optional<std::string> val2 = conf.conf("value2");
@@ -68,7 +68,7 @@ TEST(ConfigTest, TestValue)
 
 TEST(ConfigTest, InvalidKey)
 {
-    Client::ConfReader conf("ressources/tests/.conf");
+    Common::ConfReader conf("ressources/tests/.conf");
 
     std::optional<std::string> val = conf.conf("fdp");
     ASSERT_FALSE(val.has_value());
@@ -76,7 +76,7 @@ TEST(ConfigTest, InvalidKey)
 
 TEST(ConfigTest, ManyDoublePoint)
 {
-    Client::ConfReader conf("ressources/tests/.conf");
+    Common::ConfReader conf("ressources/tests/.conf");
 
     std::optional<std::string> val = conf.conf("multiplepoint");
 
@@ -86,7 +86,7 @@ TEST(ConfigTest, ManyDoublePoint)
 TEST(ConfigTest, InvalidFormatting)
 {
     try {
-        Client::ConfReader conf("ressources/tests/.conf");
+        Common::ConfReader conf("ressources/tests/.conf");
     } catch (std::exception &) {
         ASSERT_FALSE(true);
         return;
@@ -104,8 +104,8 @@ TEST(ConfigTest, writeInFile)
     conf.emplace("var4", "value4");
 
     // Writing the configuration and reading it
-    Client::ConfWriter write(conf, "ressources/tests/.confw");
-    Client::ConfReader read("ressources/tests/.confw");
+    Common::ConfWriter write(conf, "ressources/tests/.confw");
+    Common::ConfReader read("ressources/tests/.confw");
 
     ASSERT_STREQ(read.conf("var1").value().c_str(), "value1");
     ASSERT_STREQ(read.conf("var2").value().c_str(), "value2");
