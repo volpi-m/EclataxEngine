@@ -8,8 +8,7 @@
 TEST(AnimationComponentsTest, createBasicComponent)
 {
     Game::Rect rect(10, 10, 10, 10);
-    auto timePoint = std::chrono::high_resolution_clock::now();
-    ECS::Component::Animation2D component(timePoint, std::chrono::milliseconds(10), rect, 50, 32);
+    ECS::Component::Animation2D component(std::chrono::milliseconds(10), rect, 50, 32);
     ECS::Component::Animation2D componentDefault;
 
     ASSERT_EQ(componentDefault.animationTime, std::chrono::milliseconds(1000));

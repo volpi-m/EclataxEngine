@@ -18,6 +18,7 @@
 #include "SpriteComponent.hpp"
 #include "SpawnerComponent.hpp"
 #include "TransformComponent.hpp"
+#include "Animation2DComponent.hpp"
 #include "CollisionBox2DComponent.hpp"
 
 namespace Game {
