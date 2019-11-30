@@ -85,7 +85,7 @@ void Client::GraphicalModule::parsePackets(void *packet)
         std::size_t id = addTexture((char *)entity->texture);
         createEntity(entity->id, id);
 
-        std::cout << "entities: " << _entities.size() << std::endl;
+        //std::cout << "entities: " << _entities.size() << std::endl;
 
         // Setting entity position and rectangle
         _entities[entity->id]->setPosition(entity->x, entity->y, entity->z);

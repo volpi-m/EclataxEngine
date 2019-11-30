@@ -50,7 +50,7 @@ namespace Client
         /*! Keep track of packet sending with non-blocking sfml */
         std::size_t _sent;
         /*! Buffer */
-        char _buf[Network::TCP_BUF_SIZE + sizeof(int)];
+        char _buf[Network::TCP_BUF_SIZE + sizeof(int) * 2];
     };
 }
 
