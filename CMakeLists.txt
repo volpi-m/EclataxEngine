@@ -67,6 +67,11 @@ set(ENTITY_SWARM
     ${CMAKE_CURRENT_SOURCE_DIR}/src/game/entities/Bee.cpp
 )
 
+set(ENTITY_PARALLAX
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/engine/ecs/entities/Entity.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/game/entities/Parallax.cpp
+)
+
 ## General sources
 set(SRC
     src/ConfReader.cpp
@@ -157,6 +162,8 @@ add_library(player SHARED ${ENTITY_PLAYER})
 add_library(bee SHARED ${ENTITY_BEES})
 
 add_library(swarm SHARED ${ENTITY_SWARM})
+
+add_library(parallax SHARED ${ENTITY_PARALLAX})
 
 ## Creating server executable
 add_executable(r-type_server
