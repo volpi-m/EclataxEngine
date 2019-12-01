@@ -84,10 +84,12 @@ namespace Client
 
         /*! window attribute */
         sf::RenderWindow _window;
+        /*! view attribute */
+        sf::View _view;
         /*! events attribute */
         sf::Event _events;
         /*! entities stocked attribute */
-        std::unordered_map<std::size_t, std::shared_ptr<Client::Entity>> _entities;
+        std::map<std::size_t, std::shared_ptr<Client::Entity>> _entities;
         /*! entities stocked attribute */
         std::unordered_map<std::size_t, std::pair<std::string, sf::Texture>> _textures;
         /*! List of event with a small description */

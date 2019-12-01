@@ -79,7 +79,5 @@ bool ECS::Entity::deleted() const
 
 void ECS::Entity::deleteEntity()
 {
-    for (auto &child : _children)
-        child->deleteEntity();
     _deleted = true;
 }

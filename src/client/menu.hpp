@@ -26,7 +26,8 @@ namespace Client
     public:
         /// \brief Constructor
         /// \param window : window of the graphical client
-        Menu(sf::RenderWindow &window);
+        /// \param view : view of the graphical client
+        Menu(sf::RenderWindow &window, sf::View &view);
 
         /// \brief detect events and threat them
         void processEvents();
@@ -53,6 +54,8 @@ namespace Client
 
         /*! window attribute */
         sf::RenderWindow &_window;
+        /*! window attribute */
+        sf::View &_view;
         /*! events attribute */
         sf::Event _events;
         /*! a vector of sprites and their callbacks for the menu */

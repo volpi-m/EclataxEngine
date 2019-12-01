@@ -13,16 +13,28 @@
 
 Client::GraphicalModule::GraphicalModule()
     : _window(sf::RenderWindow(sf::VideoMode::getDesktopMode(), "EclataxEngine Client")),
-    _trackEvent(0), _menu(Client::Menu(_window))
+    _trackEvent(0), _menu(Client::Menu(_window, _view))
 {
     _window.setFramerateLimit(60);
     sf::Texture artefact;
+    auto size = sf::VideoMode::getDesktopMode();
 
     // Creating an artefact texture
     artefact.create(50, 50);
     _textures.emplace(0, std::make_pair("artefact", artefact));
 
     generateBitmaskList();
+
+    _view.setCenter((float)size.width / 2, (float)size.height / 2);
+    _view.setSize((sf::Vector2f) {(float)size.width, (float)size.height});
+    _window.setView(_view);
+
+    _evtList.push_back({sf::Keyboard::Key::Z, "Move Up"});
+    _evtList.push_back({sf::Keyboard::Key::S, "Move Down"});
+    _evtList.push_back({sf::Keyboard::Key::Q, "Move Left"});
+    _evtList.push_back({sf::Keyboard::Key::D, "Move Right"});
+    _evtList.push_back({sf::Keyboard::Key::Enter, "Enter"});
+    _evtList.push_back({sf::Keyboard::Key::Space, "Space"});
 }
 
 const sf::RenderWindow &Client::GraphicalModule::window() const

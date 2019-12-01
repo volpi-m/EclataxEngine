@@ -8,6 +8,7 @@
 #pragma once
 
 #include <cmath>
+#include <random>
 
 #include "IEnnemy.hpp"
 #include "SpeedComponent.hpp"
@@ -60,10 +61,15 @@ namespace Game {
             /// \brief initialise the entity
             /// \return a pointer to the new entity
             ECS::Entity *createEntity() override;
+
+            /// \brief creates an entity for a spawner
+            /// \return a shared pointer to an entity
+            static std::shared_ptr<ECS::Entity> createEntityToSpawn(std::shared_ptr<ECS::Entity> &parent);
         private:
             /// \brief script for the entity
             /// \return moves the ship in a sin wave momement
             static void IA(std::shared_ptr<ECS::Entity> &entity);
+
             /*! A simple instance of a bullet */
             ShipBeam _weapon;
 	};

@@ -7,18 +7,18 @@
 
 #include "SplashScene.hpp"
 
-Scenes::SplashScene::SplashScene(const std::string &name, std::shared_ptr<Module::EntityComponentSystem> &ECS) : AScene(name, ECS) { }
+Scenes::SplashScene::SplashScene(const std::string &name, std::shared_ptr<Module::EntityComponentSystem> &ECS, int players) : AScene(name, ECS, players) { }
 
-Scenes::SplashScene::SplashScene(const char *name, std::shared_ptr<Module::EntityComponentSystem> &ECS) : AScene(name, ECS)
+Scenes::SplashScene::SplashScene(const char *name, std::shared_ptr<Module::EntityComponentSystem> &ECS, int players) : AScene(name, ECS, players)
 {
     Debug::Logger *l = Debug::Logger::getInstance();
     l->generateDebugMessage(Debug::type::INFO , "Let's build a wall !", "SplashScene::constructor()");
     initComponents();
 }
 
-Scenes::SplashScene::SplashScene(const std::string &name) : AScene(name) {}
+Scenes::SplashScene::SplashScene(int players, const std::string &name) : AScene(players, name) {}
 
-Scenes::SplashScene::SplashScene(const char *name) : AScene(name) {}
+Scenes::SplashScene::SplashScene(int players, const char *name) : AScene(players, name) {}
 
 Scenes::IScene *Scenes::SplashScene::run()
 {

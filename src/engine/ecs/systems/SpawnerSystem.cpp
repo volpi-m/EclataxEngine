@@ -17,7 +17,7 @@ void ECS::System::SpawnerSystem::update(std::unordered_map<unsigned long long, s
             std::chrono::high_resolution_clock::time_point t = std::chrono::high_resolution_clock::now();
 
             // creating a new instance if timer is reached
-            if (component->createBlueprint && std::chrono::duration_cast<std::chrono::seconds>(t - component->timeSinceLastSpawn) >= component->seconds) {
+            if (component->seconds.count() && component->createBlueprint && std::chrono::duration_cast<std::chrono::seconds>(t - component->timeSinceLastSpawn) >= component->seconds) {
 
                 // Reseting time
                 component->timeSinceLastSpawn = t;
@@ -32,4 +32,16 @@ void ECS::System::SpawnerSystem::update(std::unordered_map<unsigned long long, s
                 entity.second->addChild(child);
             }
         }
+}
+
+void ECS::System::SpawnerSystem::spawn(std::shared_ptr<Entity> &entity, std::shared_ptr<Module::EntityComponentSystem> &ECS)
+{
+    // Getting the spawner component
+    auto component = static_cast<ECS::Component::Spawner *>(entity->component(ECS::Component::Flags::spawner).get());
+
+    // Using the spawn script
+    auto child = component->createBlueprint(entity);
+    
+    ECS->addEntity(child);
+    entity->addChild(child);
 }

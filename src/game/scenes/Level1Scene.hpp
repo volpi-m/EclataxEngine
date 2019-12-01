@@ -2,17 +2,16 @@
 ** EPITECH PROJECT, 2019
 ** Rtype
 ** File description:
-** splash screen
+** Level1Scene screen
 */
 
-/// \file SplashScene.hpp
-/// \author Arthur L.
-/// \brief SplashScene class declaration
+/// \file Level1Scene.hpp
+/// \author Lucsa T.
+/// \brief Level1Scene class declaration
 
 #pragma once
 
 #include <iostream>
-
 
 #include "AScene.hpp"
 #include "TransformComponent.hpp"
@@ -22,39 +21,41 @@
 #include "SpawnerSystem.hpp"
 #include "IASystem.hpp"
 
+#include "Fleet.hpp"
+
 /// \namespace Scenes
 /// \brief Used for all scenes
 namespace Scenes {
 
     /// \class SplashScene
     /// \brief SplashScene class
-    class SplashScene : public AScene {
+    class Level1Scene : public AScene {
 
         public:
             /// \param name : the new name of the current scene
             /// \param ECS : ECS instance to pass to the scene
-            /// \param player : number of players
+            /// \param players : number of players
             /// \brief scene constructor
-            SplashScene(const std::string &name, std::shared_ptr<Module::EntityComponentSystem> &ECS, int player);
+            Level1Scene(const std::string &name, std::shared_ptr<Module::EntityComponentSystem> &ECS, int player);
 
             /// \param name : the new name of the current scene
             /// \param ECS : ECS instance to pass to the scene
-            /// \param player : number of players
+            /// \param players : number of players
             /// \brief scene constructor
-            SplashScene(const char *name, std::shared_ptr<Module::EntityComponentSystem> &ECS, int player);
+            Level1Scene(const char *name, std::shared_ptr<Module::EntityComponentSystem> &ECS, int player);
 
-            /// \param player : number of players
             /// \param name : the new name of the current scene
+            /// \param players : number of players
             /// \brief scene constructor
-            SplashScene(int player, const std::string &name = default_tag);
+            Level1Scene(int player, const std::string &name = default_tag);
 
-            /// \param player : number of players
             /// \param name : the new name of the current scene
+            /// \param players : number of players
             /// \brief scene constructor
-            SplashScene(int player, const char *name = default_tag);
+            Level1Scene(int player, const char *name = default_tag);
 
             /// \brief default scene destructor
-            ~SplashScene() override = default;
+            ~Level1Scene() override = default;
 
             /// \return a bool representing the state of the scene
             /// \brief run the scenes logic
@@ -72,6 +73,8 @@ namespace Scenes {
 
 
         private:
+            void createFleet();
+
             /*! scene entities */
             std::vector<unsigned long long> _ids;
 

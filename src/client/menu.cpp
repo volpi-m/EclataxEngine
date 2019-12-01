@@ -11,15 +11,15 @@
 
 #include "menu.hpp"
 
-Client::Menu::Menu(sf::RenderWindow &window) : _window(window), _start(false)
+Client::Menu::Menu(sf::RenderWindow &window, sf::View &view) : _window(window), _view(view), _start(false)
 {
     if (!_texture.loadFromFile("ressources/menu.png"))
         throw Debug::Exception("Couldn't load textures for the menu", "Client::Menu::Menu");
 
     // Options of the sprites
     sf::IntRect rect(0, 0, 200, 100);
-    auto windowSize = _window.getSize();
-    sf::Vector2f pos(windowSize.x / 2, windowSize.y / 3);
+    auto windowSize = _view.getSize();
+    sf::Vector2f pos(windowSize.x, windowSize.y / 3);
 
     // Creating callbacks
     std::array<std::function<void(Menu &)>, 3> callbacks = {&Menu::callbackStart, &Menu::callbackOptions, &Menu::callbackQuit};

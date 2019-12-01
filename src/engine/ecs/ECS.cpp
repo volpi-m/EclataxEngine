@@ -18,6 +18,16 @@ void Module::EntityComponentSystem::addSystem(ECS::flagType type, std::unique_pt
         _systems.emplace(type, std::move(system));
 }
 
+unsigned long long Module::EntityComponentSystem::addEntity(std::shared_ptr<ECS::Entity> &entity)
+{
+    // Creating an new id for a new entity
+    while (_entities.find(_newId) != _entities.end())
+        _newId++;
+    _entities.emplace(_newId, entity);
+
+    return _newId;
+}
+
 unsigned long long Module::EntityComponentSystem::createEntity(const std::string &tag)
 {
     // Creating an new id for a new entity

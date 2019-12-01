@@ -45,3 +45,11 @@ void ECS::System::MovementSystem::move(const std::shared_ptr<Entity> &entity, fl
     component->y += y;
     component->z += z;
 }
+
+float ECS::System::MovementSystem::speed(const std::shared_ptr<Entity> &entity)
+{
+    // Casting it to the correct component
+    auto component = static_cast<ECS::Component::Speed *>(entity->component(Component::Flags::speed).get());
+
+    return component->speed;
+}

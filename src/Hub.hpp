@@ -18,6 +18,7 @@
 #include "UdpNetwork.hpp"
 #include "Rfc.hpp"
 #include "IScene.hpp"
+#include "Level1Scene.hpp"
 #include "SplashScene.hpp"
 #include "HubLoadingScene.hpp"
 #include "GameEngine.hpp"

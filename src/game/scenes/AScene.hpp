@@ -28,21 +28,25 @@ namespace Scenes {
         public:
             /// \param name : the new name of the current scene
             /// \param ECS : ECS instance to pass to the scene
+            /// \param players : number of players
             /// \brief scene constructor
-            AScene(const std::string &name, std::shared_ptr<Module::EntityComponentSystem> &ECS);
+            AScene(const std::string &name, std::shared_ptr<Module::EntityComponentSystem> &ECS, int players);
 
             /// \param name : the new name of the current scene
             /// \param ECS : ECS instance to pass to the scene
+            /// \param players : number of players
             /// \brief scene constructor
-            AScene(const char *name, std::shared_ptr<Module::EntityComponentSystem> &ECS);
+            AScene(const char *name, std::shared_ptr<Module::EntityComponentSystem> &ECS, int players);
 
+            /// \param players : number of players
             /// \param name : the new name of the current scene
             /// \brief scene constructor
-            AScene(const std::string &name = default_tag);
+            AScene(int players, const std::string &name = default_tag);
 
+            /// \param players : number of players
             /// \param name : the new name of the current scene
             /// \brief scene constructor
-            AScene(const char *name = default_tag);
+            AScene(int players, const char *name = default_tag);
 
             /// \brief default scene destructor
             ~AScene() override = default;
@@ -107,6 +111,7 @@ namespace Scenes {
             bool _swap;
             /*! stack of entity */
             std::stack<Network::Entity> _stack;
+            /*! number of players */
+            int _players;
     };
-
 }
