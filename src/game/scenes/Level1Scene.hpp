@@ -14,8 +14,10 @@
 #include <iostream>
 
 #include "AScene.hpp"
+#include "HealthManipulatorSystem.hpp"
 #include "TransformComponent.hpp"
 #include "AnimationSystem.hpp"
+#include "CollisionSystem.hpp"
 #include "MovementSystem.hpp"
 #include "LifeSpanSystem.hpp"
 #include "SpawnerSystem.hpp"
@@ -73,12 +75,26 @@ namespace Scenes {
 
 
         private:
-            void createFleet();
 
-            /*! scene entities */
-            std::vector<unsigned long long> _ids;
+            /// \brief check if players are still alive
+            /// \return a boolean set to true if a player is still alive, false otherwise
+            bool alivePlayers();
+
+            /// \brief get all players current speeds
+            /// \param speeds : array of speeds
+            /// \param movementSystem : the system that will get the speeds
+            void getPlayersSpeed(float *speeds, ECS::System::MovementSystem *movementSystem);
+
+            /// \brief get all players current speeds
+            /// \param first : an entity
+            /// \param second : another entity
+            /// \param collisionSystem : the system that will check colision
+            void checkCollisionTags(std::shared_ptr<ECS::Entity> &first, std::shared_ptr<ECS::Entity> &second,  ECS::System::CollisionSystem *collisionSystem);
 
             /// \brief method for initialize all scene components
             void initComponents();
+
+            /*! scene entities */
+            std::vector<unsigned long long> _ids;
     };
 }

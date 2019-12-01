@@ -26,22 +26,23 @@ namespace Game
     /// \class ShipBeam
     /// \brief kinda bullet entity
     class PlayerShipBeam {
-		public:
-            /// \brief constructor
-            /// Initialize Asteroid class
-			PlayerShipBeam() = default;
-
-            /// \brief destructor
-            /// Destroy Asteroid class
-			~PlayerShipBeam() = default;
-
-            /// \brief initialise the entity
-            /// \return a pointer to the new entity
-            static std::shared_ptr<ECS::Entity> createEntity(std::shared_ptr<ECS::Entity> &parent);
-        private:
-            /// \brief script for the entity
-            /// \return moves the bullet
-            static void IA(std::shared_ptr<ECS::Entity> &entity);
+	public:
+        /// \brief constructor
+        /// Initialize Asteroid class
+		PlayerShipBeam() = default;
+        
+        /// \brief destructor
+        /// Destroy Asteroid class
+		~PlayerShipBeam() = default;
+        
+        /// \brief initialise the entity
+        /// \return a pointer to the new entity
+        static std::shared_ptr<ECS::Entity> createEntity(std::shared_ptr<ECS::Entity> &parent);
+    private:
+        
+        /// \brief script for the entity
+        /// \param entity : entity to move
+        static void IA(std::shared_ptr<ECS::Entity> &entity);
     };
 
     /// \class Player
@@ -59,6 +60,11 @@ namespace Game
         /// \brief initialise the entity
         /// \return a pointer to the new entity
         ECS::Entity *createEntity();
+    private:
+
+        /// \brief Reset the pos of the player
+        /// \param entty : player
+        static void IA(std::shared_ptr<ECS::Entity> &entity);
 	};
 }
 

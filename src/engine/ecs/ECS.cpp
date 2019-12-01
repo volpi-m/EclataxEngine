@@ -12,10 +12,10 @@ Module::EntityComponentSystem::EntityComponentSystem() : _newId(0), _initialised
     init();
 }
 
-void Module::EntityComponentSystem::addSystem(ECS::flagType type, std::unique_ptr<ECS::ISystem> &system)
+void Module::EntityComponentSystem::addSystem(ECS::flagType type, std::shared_ptr<ECS::ISystem> &system)
 {
     if (_systems.find(type) == _systems.end())
-        _systems.emplace(type, std::move(system));
+        _systems.emplace(type, system);
 }
 
 unsigned long long Module::EntityComponentSystem::addEntity(std::shared_ptr<ECS::Entity> &entity)

@@ -40,7 +40,7 @@ namespace Module {
         /// \param type : type of the system
         /// \param system : the system to add to the ECS's system list
         /// \brief add a system to the ECS's system list
-        void addSystem(ECS::flagType type, std::unique_ptr<ECS::ISystem> &system);
+        void addSystem(ECS::flagType type, std::shared_ptr<ECS::ISystem> &system);
 
         /// \param entity : the entity to add to the ECS's entity list
         /// \brief add an entity to the ECS's entity list

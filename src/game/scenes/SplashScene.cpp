@@ -50,11 +50,11 @@ void Scenes::SplashScene::remove()
 
 void Scenes::SplashScene::initComponents()
 {
-    std::unique_ptr<ECS::ISystem> systemIA(new ECS::System::IASystem);
-    std::unique_ptr<ECS::ISystem> systemAnimation(new ECS::System::AnimationSystem);
-    std::unique_ptr<ECS::ISystem> systemMovement(new ECS::System::MovementSystem);
-    std::unique_ptr<ECS::ISystem> systemSpawn(new ECS::System::SpawnerSystem);
-    std::unique_ptr<ECS::ISystem> systemLifeSpan(new ECS::System::LifeSpanSystem);
+    std::shared_ptr<ECS::ISystem> systemIA(new ECS::System::IASystem);
+    std::shared_ptr<ECS::ISystem> systemAnimation(new ECS::System::AnimationSystem);
+    std::shared_ptr<ECS::ISystem> systemMovement(new ECS::System::MovementSystem);
+    std::shared_ptr<ECS::ISystem> systemSpawn(new ECS::System::SpawnerSystem);
+    std::shared_ptr<ECS::ISystem> systemLifeSpan(new ECS::System::LifeSpanSystem);
 
     _ids.push_back(_ECS->createEntityFromLibrary("lib/libship.so"));
     _ids.push_back(_ECS->createEntity("Background"));

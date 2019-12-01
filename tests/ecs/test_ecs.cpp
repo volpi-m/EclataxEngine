@@ -10,7 +10,7 @@
 TEST(ECSTests, AddSystemToEcs)
 {
     Module::EntityComponentSystem ECS;
-    std::unique_ptr<ECS::ISystem> system(new ECS::System::MovementSystem);
+    std::shared_ptr<ECS::ISystem> system(new ECS::System::MovementSystem);
 
     ASSERT_EQ(ECS.isInitialised(), true);
     ASSERT_EQ(ECS.systems(), 0);
@@ -58,7 +58,7 @@ TEST(ECSTests, getEntityAndSystem)
 {
     Module::EntityComponentSystem ECS;
     std::shared_ptr<ECS::IComponent> component(new ECS::Component::Transform(0, 10, 82.5));
-    std::unique_ptr<ECS::ISystem> system(new ECS::System::MovementSystem);
+    std::shared_ptr<ECS::ISystem> system(new ECS::System::MovementSystem);
     auto entity = ECS.createEntity(std::string("The best entity"));
 
     ECS.addSystem(ECS::System::Flags::Movement, system);
