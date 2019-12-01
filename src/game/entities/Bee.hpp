@@ -25,6 +25,8 @@
 
 namespace Game
 {
+    /// \class Bee
+    /// \brief another Enemy
     class Bee : public IEnnemy
     {
     public:
@@ -46,7 +48,7 @@ namespace Game
 
     private:
         /// \brief script for the entity
-        /// \return moves the ship in a sin wave momement
+        /// \return moves the bee forward
         static void IA(std::shared_ptr<ECS::Entity> &entity);
     };
 }
