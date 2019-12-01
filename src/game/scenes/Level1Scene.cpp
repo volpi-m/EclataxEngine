@@ -33,7 +33,7 @@ Scenes::IScene *Scenes::Level1Scene::run()
         _pop = true;
         return nullptr;
     }
-        
+
     // Chceking collisions
     for (unsigned long long item1 = 0; item1 < _ids.size() && _ECS->hasEntity(_ids[item1]); ++item1)
         for (unsigned long long item2 = 0; item2 < _ids.size() && _ECS->hasEntity(_ids[item2]); ++item2)
@@ -120,9 +120,17 @@ void Scenes::Level1Scene::handleEvent(std::queue<std::pair<int, size_t>> &events
     std::chrono::high_resolution_clock::now(), std::chrono::high_resolution_clock::now(), std::chrono::high_resolution_clock::now()};
     float speeds[4];
 
+    // Getting the current speed of all players
     getPlayersSpeed(speeds, movementSystem);
     while (!events.empty()) {
 
+        // std::cout << "player: " << events.front().first << ", event: " << events.front().second << std::endl; 
+        
+        // Checking inputs from the player that sent the packet
+        if (!_ECS->hasEntity(_ids.at(events.front().first))) {
+            events.pop();
+            continue;
+        }
         auto sps = _ECS->entity(_ids.at(events.front().first));
         float x = 0;
         float y = 0;
@@ -136,6 +144,8 @@ void Scenes::Level1Scene::handleEvent(std::queue<std::pair<int, size_t>> &events
             x += 2;
         if (events.front().second & SPACE)
             computeShots(sps, lastShot[events.front().first - 1]);
+        
+        // Moving the player of needed
         movementSystem->move(sps, x * speeds[events.front().first - 1], y * speeds[events.front().first - 1], 0);
         events.pop();
     }
@@ -160,6 +170,6 @@ void Scenes::Level1Scene::getPlayersSpeed(float *speeds, ECS::System::MovementSy
 {
     // getting the speed of all players
     for (int i = 0; i < _players; ++i)
-        if (_ECS->hasEntity(_ids[i + 1]))
+        if (_ECS->hasEntity(_ids[i + 1]) && _ECS->entity(_ids[i + 1])->tag() == "Player")
             speeds[i] = movementSystem->speed(_ECS->entity(_ids[i + 1]));
 }
