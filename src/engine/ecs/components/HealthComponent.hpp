@@ -30,12 +30,12 @@ namespace ECS {
             Health() : health(1), healthLimit(0) {}
 
             /// \brief constructor
-            Health(std::size_t _health, std::size_t _healthLimit = 0) : health(_health), healthLimit(_healthLimit) {}
+            Health(int _health, int _healthLimit = 0) : health(_health), healthLimit(_healthLimit) {}
 
             /*! health attribute */
-            std::size_t health;
+            int health;
             /*! health limit attribute (O is unlimited) */
-            std::size_t healthLimit;
+            int healthLimit;
         };
     }
 }

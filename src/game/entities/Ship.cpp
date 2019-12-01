@@ -9,7 +9,7 @@
 
 std::shared_ptr<ECS::Entity> Game::ShipBeam::createEntity(std::shared_ptr<ECS::Entity> &parent)
 {
-    std::shared_ptr<ECS::Entity> newEntity(new ECS::Entity("Enemy Bullet"));
+    std::shared_ptr<ECS::Entity> newEntity(new ECS::Entity("Enemy"));
     Game::Rect rect(0, 0, 16, 16);
     auto parentTransform = static_cast<ECS::Component::Transform * >(parent->component(ECS::Component::Flags::transform).get());
 
@@ -48,7 +48,7 @@ void Game::ShipBeam::IA(std::shared_ptr<ECS::Entity> &entity)
 
 ECS::Entity *Game::Ship::createEntity()
 {
-    ECS::Entity *newEntity = new ECS::Entity("Enemy Ship");
+    ECS::Entity *newEntity = new ECS::Entity("Enemy");
     Game::Rect rect(0, 0, 34, 34);
     std::random_device rd;
     std::mt19937 gen(rd());

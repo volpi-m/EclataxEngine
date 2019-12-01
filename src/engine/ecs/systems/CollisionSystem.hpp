@@ -18,9 +18,10 @@
 
 #include "ISystem.hpp"
 #include "Entity.hpp"
+#include "DamageComponent.hpp"
+#include "HealthComponent.hpp"
 #include "TransformComponent.hpp"
 #include "CollisionBox2DComponent.hpp"
-
 /// \namespace ECS
 /// \brief Used for the all entity component system subclasses
 namespace ECS {
@@ -40,6 +41,11 @@ namespace ECS {
                 /// \param second : another entity
                 /// \brief checks if both entities have collided
                 bool onCollide2D(std::shared_ptr<Entity> &first, std::shared_ptr<Entity> &second);
+
+                /// \param first : an entity
+                /// \param second : another entity
+                /// \brief checks if both entities have collided and deal damage to one another
+                void onCollideDamage2D(std::shared_ptr<Entity> &first, std::shared_ptr<Entity> &second);
         };
     }
 }
