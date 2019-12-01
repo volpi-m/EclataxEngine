@@ -7,17 +7,8 @@
 
 #include "RenderSystem.hpp"
 
-void ECS::System::RenderSystem::update(std::unordered_map<unsigned long long, std::shared_ptr<Entity>> &entities)
-{
-    for (auto &entity : entities)
-        if (entity.second->hasComponent(Component::Flags::sprite)) {
-            std::cout << "Sprite component found. Casting ..." << std::endl;
-
-            auto component = static_cast<ECS::Component::Sprite *>(entity.second->component(Component::Flags::sprite).get());
-
-            std::cout << component->texture << std::endl;
-        }
-}
+void ECS::System::RenderSystem::update([[maybe_unused]]std::unordered_map<unsigned long long, std::shared_ptr<Entity>> &entities)
+{ }
 
 std::string ECS::System::RenderSystem::texture(std::shared_ptr<ECS::Entity> &entity) const
 {

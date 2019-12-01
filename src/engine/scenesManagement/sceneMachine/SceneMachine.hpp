@@ -84,6 +84,10 @@ namespace Module {
             /// \brief clear all scene in th stack
             void clear();
 
+            /// \brief remove elements of top scene
+            void remove();
+
+
 
         private:
             /*! the stack of scenes */

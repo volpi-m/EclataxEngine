@@ -15,7 +15,7 @@ void Client::ClientMediator::run()
 {
     // Connect to the server
     const sf::RenderWindow &w = _graph.window();
-    //requireKeyMap();
+//    requireKeyMap();
 
     // If the client has been connected, we can start to loop
     // cf. RFC to understand the gameloop
@@ -23,7 +23,7 @@ void Client::ClientMediator::run()
 
         // Launching menu if the player isn't in a hub
         if (!_hub && _graph.menu().run())
-            connectionProcedure();
+            askForHub();
 
         // Reading packets and process entities to display
         readNetwork();
@@ -36,7 +36,7 @@ void Client::ClientMediator::run()
 void Client::ClientMediator::connectionProcedure()
 {
     askForHub();
-    playerIsReady();
+    // playerIsReady();
 }
 
 void Client::ClientMediator::requireKeyMap()

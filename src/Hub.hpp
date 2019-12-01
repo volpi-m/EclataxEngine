@@ -130,9 +130,9 @@ namespace Server {
             void playerError(Server::UdpNetwork *socket, Network::headerUdp *packet);
             /// \brief method call for sending entities for all player
             void sendEntity(Network::Entity &e);
-
-
-            //event : unsigned char
-            //request : tableau avec la description de chaque event (la position est l'id)
+            /// \brief method setting all player state to false
+            void initStatePlayers();
+            /// \brief handle event for hub
+            void handleEvent();
     };
 }

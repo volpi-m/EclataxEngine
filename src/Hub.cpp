@@ -29,27 +29,39 @@ void Server::Hub::start()
     std::string msg("hub number ");
 
     l->generateDebugMessage(Debug::type::INFO , msg + std::to_string(_id) + " is running !" , "Server::Hub::start()");
-    auto scene = std::shared_ptr<Scenes::IScene>(new Scenes::HubLoadingScene("Hub scene", _engine.ECS()));
+    auto scene = std::shared_ptr<Scenes::IScene>(new Scenes::HubLoadingScene("Hub scene", _engine.ECS(), _players.size()));
     _engine.SceneMachine()->push(scene);
 
-    while (_engine.SceneMachine()->run() != false && !allIsReady() && !_stoped) {
+    while (_engine.SceneMachine()->run() != false && !_stoped) {
+        if (allIsReady()) {
+            std::stack<Network::Entity> &entities = _engine.SceneMachine()->getCurrentSceneEntityStack();
+            while (!entities.empty())
+                entities.pop();
+            _engine.SceneMachine()->remove();
+            while (!entities.empty()) {
+                sendEntity(entities.top());
+                entities.pop();
+            }
+            startGame();
+            initStatePlayers();
+        }
         std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
         std::stack<Network::Entity> &entities = _engine.SceneMachine()->getCurrentSceneEntityStack();
         while (!entities.empty()) {
             sendEntity(entities.top());
             entities.pop();
         }
+        handleEvent();
         // // send event to scene
         _engine.SceneMachine()->sendEventsToCurrentScene(_event);
 
         // // update event stack
-        while(!_event.empty())
+        while(!_event.empty()) {
             _event.pop();
+        }
         std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
         std::this_thread::sleep_for(std::chrono::milliseconds(16 - std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count()));
     }
-    // if (!_players.empty() && !_stoped)
-    //     startGame();
 }
 
 void Server::Hub::stop()
@@ -67,20 +79,25 @@ void Server::Hub::stop()
 void Server::Hub::startGame()
 {
     _isPlaying = true;
-    Debug::Logger *l = Debug::Logger::getInstance(".log");
+    Debug::Logger *l = Debug::Logger::getInstance();
     std::string msg("Hub number ");
     l->generateDebugMessage(Debug::type::INFO , "Starting the game", msg + std::to_string(_id));
+    std::unique_lock lock(_mutex);
     auto scene = std::shared_ptr<Scenes::IScene>(new Scenes::Level1Scene("level1Scene", _engine.ECS(), _players.size()));
+    lock.unlock();
 
     _engine.SceneMachine()->push(scene);
 
-    while (_engine.SceneMachine()->run() != false && !_players.empty() && !_stoped) {
+    while (_engine.SceneMachine()->name() != "Hub scene" && !_players.empty() && !_stoped) {
+        _engine.SceneMachine()->run();
         // Calculatin time of execution
         std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
 
         // send entites
         std::stack<Network::Entity> &entities = _engine.SceneMachine()->getCurrentSceneEntityStack();
+        std::cout << entities.size() << std::endl;
         while (!entities.empty()) {
+            std::cout << "Sending entities" << std::endl;
             sendEntity(entities.top());
             entities.pop();
         }
@@ -163,6 +180,7 @@ void Server::Hub::setPlayerReady(const std::string &ip, bool state)
 
 void Server::Hub::sendToAllPlayer(void *msg, const std::size_t size)
 {
+    std::unique_lock<std::mutex> lock(_mutex);
     for (auto &i : _players)
         _udp.write(i.ip, msg, size);
 }
@@ -206,4 +224,28 @@ void Server::Hub::sendEntity(Network::Entity &e)
     data.code = Network::SERVER_TICK;
     std::memcpy(&data.data, &e, Network::UDP_BUF_SIZE);
     sendToAllPlayer(&data, sizeof(data));
+}
+
+void Server::Hub::initStatePlayers()
+{
+    std::unique_lock<std::mutex> lock(_mutex);
+    for (auto &i : _players) {
+        i.isReady = false;
+    }
+}
+
+void Server::Hub::handleEvent()
+{
+    if (_event.size() != 0) {
+        auto i = _event.front();
+        if ((i.second & 32) == 32)
+            _players[i.first - 1].isReady = true;
+        for (auto last = _event.back(); i != last; i = _event.front()) {
+            if ((i.second & 32) == 32) {
+                _players[i.first - 1].isReady = true;
+            }
+            _event.push(_event.front());
+            _event.pop();
+        }
+    }
 }

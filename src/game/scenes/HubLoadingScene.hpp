@@ -10,18 +10,24 @@
 #include "AScene.hpp"
 #include "TextComponent.hpp"
 #include "TextSystem.hpp"
+#include "RenderSystem.hpp"
+
 /// \namespace Scenes
 /// \brief Used for all scenes
 namespace Scenes {
 
     /// \def path for ship sprite
-    constexpr const auto SHIP_PATH = "lib/ship.so";
+    constexpr const auto PLAYER_SHIP_PATH = "lib/libplayer.so";
+    constexpr const auto CHECK_PATH = "ressources/check.png";
+    constexpr const auto CROSS_PATH = "ressources/cross.png";
 
     struct HubPlayer
     {
-        HubPlayer(bool state, unsigned long long text) : state(state), text(text) {};
+        HubPlayer(bool state, unsigned long long ico) : state(state), ico(ico) {};
+        /*! state of player */
         bool state;
-        unsigned long long text;
+        /*! id of player icon */
+        unsigned long long ico;
     };
     
 
@@ -33,11 +39,11 @@ namespace Scenes {
             /// \param name : the new name of the current scene
             /// \param ECS : ECS instance to pass to the scene
             /// \brief scene constructor
-            HubLoadingScene(const std::string &name, std::shared_ptr<Module::EntityComponentSystem> &ECS);
+            HubLoadingScene(const std::string &name, std::shared_ptr<Module::EntityComponentSystem> &ECS, int player);
             /// \param name : the new name of the current scene
             /// \param ECS : ECS instance to pass to the scene
             /// \brief scene constructor
-            HubLoadingScene(const char *name, std::shared_ptr<Module::EntityComponentSystem> &ECS);
+            HubLoadingScene(const char *name, std::shared_ptr<Module::EntityComponentSystem> &ECS, int player);
             /// \brief destructor
             ~HubLoadingScene();
 
@@ -55,6 +61,11 @@ namespace Scenes {
             /// \brief handle events
             void handleEvent(std::queue<std::pair<int, size_t>> &events);
 
+            /// \param playerNb : numbre of player
+            /// \param state : state of the player
+            /// \brief modified the player display
+            void setPlayerReady(int playerNb, bool state);
+
         private:
             /*! state of all player */
             std::vector<HubPlayer> _playerStat;
@@ -63,6 +74,9 @@ namespace Scenes {
             void initComponents();
             /// \param playerNb : number of the player in the hub
             /// \brief modified the player display
-            void displayPlayer(unsigned int playerNb);
+            void displayPlayer(int playerNb);
+            /// \param nb : number of the concerned player
+            /// \brief create info category for one player
+            void createCategory(int nb);
     };
 }
