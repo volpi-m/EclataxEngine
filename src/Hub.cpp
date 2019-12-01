@@ -33,18 +33,6 @@ void Server::Hub::start()
     _engine.SceneMachine()->push(scene);
 
     while (_engine.SceneMachine()->run() != false && !_stoped) {
-        if (allIsReady()) {
-            std::stack<Network::Entity> &entities = _engine.SceneMachine()->getCurrentSceneEntityStack();
-            while (!entities.empty())
-                entities.pop();
-            _engine.SceneMachine()->remove();
-            while (!entities.empty()) {
-                sendEntity(entities.top());
-                entities.pop();
-            }
-            startGame();
-            initStatePlayers();
-        }
         std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
         std::stack<Network::Entity> &entities = _engine.SceneMachine()->getCurrentSceneEntityStack();
         while (!entities.empty()) {
@@ -61,6 +49,18 @@ void Server::Hub::start()
         }
         std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
         std::this_thread::sleep_for(std::chrono::milliseconds(16 - std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count()));
+        if (allIsReady()) {
+            std::stack<Network::Entity> &entities = _engine.SceneMachine()->getCurrentSceneEntityStack();
+            while (!entities.empty())
+                entities.pop();
+            _engine.SceneMachine()->remove();
+            while (!entities.empty()) {
+                sendEntity(entities.top());
+                entities.pop();
+            }
+            startGame();
+            initStatePlayers();
+        }
     }
 }
 
@@ -79,7 +79,7 @@ void Server::Hub::stop()
 void Server::Hub::startGame()
 {
     _isPlaying = true;
-    Debug::Logger *l = Debug::Logger::getInstance();
+    Debug::Logger *l = Debug::Logger::getInstance(".log");
     std::string msg("Hub number ");
     l->generateDebugMessage(Debug::type::INFO , "Starting the game", msg + std::to_string(_id));
     std::unique_lock lock(_mutex);
@@ -95,9 +95,7 @@ void Server::Hub::startGame()
 
         // send entites
         std::stack<Network::Entity> &entities = _engine.SceneMachine()->getCurrentSceneEntityStack();
-        std::cout << entities.size() << std::endl;
         while (!entities.empty()) {
-            std::cout << "Sending entities" << std::endl;
             sendEntity(entities.top());
             entities.pop();
         }
@@ -115,7 +113,7 @@ void Server::Hub::startGame()
     _isPlaying = false;
     l->generateDebugMessage(Debug::type::INFO , "Ending the game", msg + std::to_string(_id));
     _engine.ECS()->clear();
-    _engine.SceneMachine()->clear();
+    _engine.SceneMachine()->pop("Hub scene");
     if (!_stoped)
         start();
 }
@@ -237,15 +235,32 @@ void Server::Hub::initStatePlayers()
 void Server::Hub::handleEvent()
 {
     if (_event.size() != 0) {
-        auto i = _event.front();
-        if ((i.second & 32) == 32)
-            _players[i.first - 1].isReady = true;
-        for (auto last = _event.back(); i != last; i = _event.front()) {
-            if ((i.second & 32) == 32) {
-                _players[i.first - 1].isReady = true;
+        if (_event.size() == 1 && (_event.front().second & 32) == 32) {
+                _players[_event.front().first - 1].isReady = true;
+        } else {
+            auto current = _event.front();
+            for (auto last = _event.back(); current != last; current = _event.front()) {
+                if (current.second & 32) {
+                    _players[current.first - 1].isReady = true;
+                }
+                _event.push(current);
+                _event.pop();
             }
-            _event.push(_event.front());
-            _event.pop();
         }
+
+
+
+
+
+
+        // if ((i.second & 32) == 32)
+        //     _players[i.first - 1].isReady = true;
+        // for (auto last = _event.back(); i != last; i = _event.front()) {
+        //     if ((i.second & 32) == 32) {
+        //         _players[i.first - 1].isReady = true;
+        //     }
+        //     _event.push(_event.front());
+        //     _event.pop();
+        // }
     }
 }

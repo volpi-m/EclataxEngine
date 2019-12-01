@@ -108,6 +108,5 @@ void Module::SceneMachine::clear()
 
 void Module::SceneMachine::remove()
 {
-    std::cout << "Name : " << _scenes.top()->name() << std::endl;
     _scenes.top().get()->remove();
 }

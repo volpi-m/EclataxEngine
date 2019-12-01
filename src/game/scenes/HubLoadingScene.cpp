@@ -71,7 +71,7 @@ void Scenes::HubLoadingScene::handleEvent(std::queue<std::pair<int, size_t>> &ev
 }
 
 void Scenes::HubLoadingScene::displayPlayer(int playerNb) {
-    if (static_cast<unsigned int>(playerNb) <= _playerStat.size()) {
+    if (static_cast<unsigned int>(playerNb + 1) <= _playerStat.size()) {
         if (!_playerStat[playerNb].state) {
             if (_ECS->hasComponent(_playerStat[playerNb].ico, ECS::Component::Flags::sprite))
                 static_cast<ECS::System::RenderSystem *>(_ECS->system(ECS::System::Flags::RenderSystem).get())->setTexture(_ECS->entity(_playerStat[playerNb].ico), CHECK_PATH);
