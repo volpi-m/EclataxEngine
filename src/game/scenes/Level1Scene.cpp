@@ -116,13 +116,13 @@ void Scenes::Level1Scene::initComponents()
 void Scenes::Level1Scene::handleEvent(std::queue<std::pair<int, size_t>> &events)
 {
     auto movementSystem = static_cast<ECS::System::MovementSystem *>(_ECS->system(ECS::System::Flags::Movement).get());
-    static std::chrono::high_resolution_clock::time_point lastShot = std::chrono::high_resolution_clock::now();
-    static auto fireRate = std::chrono::milliseconds(400);
-    float speeds[_players];
+    static std::chrono::high_resolution_clock::time_point lastShot[4] = {std::chrono::high_resolution_clock::now(),
+    std::chrono::high_resolution_clock::now(), std::chrono::high_resolution_clock::now(), std::chrono::high_resolution_clock::now()};
+    float speeds[4];
 
     getPlayersSpeed(speeds, movementSystem);
     while (!events.empty()) {
-        
+
         auto sps = _ECS->entity(_ids.at(events.front().first));
         float x = 0;
         float y = 0;
@@ -134,18 +134,25 @@ void Scenes::Level1Scene::handleEvent(std::queue<std::pair<int, size_t>> &events
             x -= 2;
         else if (events.front().second & RIGHT)
             x += 2;
-        if (events.front().second & SPACE) {
-            std::chrono::high_resolution_clock::time_point now = std::chrono::high_resolution_clock::now();
-
-            if (std::chrono::duration_cast<std::chrono::milliseconds>(now - lastShot).count() > fireRate.count()) {
-                auto spawnerSystem = static_cast<ECS::System::SpawnerSystem *>(_ECS->system(ECS::System::Flags::Spawner).get());
-
-                spawnerSystem->spawn(sps, _ECS);
-                lastShot = now;
-            }
-        }
+        if (events.front().second & SPACE)
+            computeShots(sps, lastShot[events.front().first - 1]);
         movementSystem->move(sps, x * speeds[events.front().first - 1], y * speeds[events.front().first - 1], 0);
         events.pop();
+    }
+}
+
+void Scenes::Level1Scene::computeShots(std::shared_ptr<ECS::Entity> &entity, std::chrono::high_resolution_clock::time_point &lastShot)
+{
+    static const auto fireRate = std::chrono::milliseconds(400);
+    std::chrono::high_resolution_clock::time_point now = std::chrono::high_resolution_clock::now();
+
+    // Checking if the player as shoot 1/2 second beforehand
+    if (std::chrono::duration_cast<std::chrono::milliseconds>(now - lastShot).count() > fireRate.count()) {
+        
+        auto spawnerSystem = static_cast<ECS::System::SpawnerSystem *>(_ECS->system(ECS::System::Flags::Spawner).get());
+        
+        spawnerSystem->spawn(entity, _ECS);
+        lastShot = now;
     }
 }
 

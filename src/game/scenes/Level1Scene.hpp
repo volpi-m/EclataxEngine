@@ -91,6 +91,11 @@ namespace Scenes {
             /// \param collisionSystem : the system that will check colision
             void checkCollisionTags(std::shared_ptr<ECS::Entity> &first, std::shared_ptr<ECS::Entity> &second,  ECS::System::CollisionSystem *collisionSystem);
 
+            /// \brief get all players current speeds
+            /// \param entity : player to compute
+            /// \param lastShot : last time the player shot
+            void computeShots(std::shared_ptr<ECS::Entity> &entity, std::chrono::high_resolution_clock::time_point &lastShot);
+
             /// \brief method for initialize all scene components
             void initComponents();
 
