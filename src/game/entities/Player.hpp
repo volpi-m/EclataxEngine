@@ -23,10 +23,30 @@
 
 namespace Game
 {
+    /// \class ShipBeam
+    /// \brief kinda bullet entity
+    class PlayerShipBeam {
+		public:
+            /// \brief constructor
+            /// Initialize Asteroid class
+			PlayerShipBeam() = default;
+
+            /// \brief destructor
+            /// Destroy Asteroid class
+			~PlayerShipBeam() = default;
+
+            /// \brief initialise the entity
+            /// \return a pointer to the new entity
+            static std::shared_ptr<ECS::Entity> createEntity(std::shared_ptr<ECS::Entity> &parent);
+        private:
+            /// \brief script for the entity
+            /// \return moves the bullet
+            static void IA(std::shared_ptr<ECS::Entity> &entity);
+    };
+
     /// \class Player
     /// \brief player class
-    class Player
-    {
+    class Player {
     public:
         /// \brief constructor
         /// Initialize Asteroid class
@@ -39,11 +59,6 @@ namespace Game
         /// \brief initialise the entity
         /// \return a pointer to the new entity
         ECS::Entity *createEntity();
-
-    private:
-        /// \brief script for the entity
-        /// \return moves the ship in a sin wave momement
-        static void IA(std::shared_ptr<ECS::Entity> &entity);
 	};
 }
 

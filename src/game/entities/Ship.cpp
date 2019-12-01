@@ -18,7 +18,7 @@ std::shared_ptr<ECS::Entity> Game::ShipBeam::createEntity(std::shared_ptr<ECS::E
     std::shared_ptr<ECS::IComponent> health(new ECS::Component::Health(1));
     std::shared_ptr<ECS::IComponent> script(new ECS::Component::Script(&ShipBeam::IA));
     std::shared_ptr<ECS::IComponent> sprite(new ECS::Component::Sprite("ressources/bullet.png", rect));
-    std::shared_ptr<ECS::IComponent> speed(new ECS::Component::Speed(5));
+    std::shared_ptr<ECS::IComponent> speed(new ECS::Component::Speed(10));
     std::shared_ptr<ECS::IComponent> transform(new ECS::Component::Transform(parentTransform->x, parentTransform->y, parentTransform->z));
     std::shared_ptr<ECS::IComponent> collision(new ECS::Component::CollisionBox2D(0, 0, 16, 16));
     std::shared_ptr<ECS::IComponent> animation(new ECS::Component::Animation2D(std::chrono::milliseconds(50), rect, 116, 16.5));
@@ -59,7 +59,7 @@ ECS::Entity *Game::Ship::createEntity()
     std::shared_ptr<ECS::IComponent> health(new ECS::Component::Health(1));
     std::shared_ptr<ECS::IComponent> script(new ECS::Component::Script(&Ship::IA));
     std::shared_ptr<ECS::IComponent> sprite(new ECS::Component::Sprite("ressources/ship.gif", rect));
-    std::shared_ptr<ECS::IComponent> speed(new ECS::Component::Speed(2));
+    std::shared_ptr<ECS::IComponent> speed(new ECS::Component::Speed(5));
     std::shared_ptr<ECS::IComponent> transform(new ECS::Component::Transform(1920, randomSpawn(gen), 0));
     std::shared_ptr<ECS::IComponent> collision(new ECS::Component::CollisionBox2D(0, 0, 50, 50));
     std::shared_ptr<ECS::IComponent> spawner(new ECS::Component::Spawner(std::chrono::seconds(2), &ShipBeam::createEntity));

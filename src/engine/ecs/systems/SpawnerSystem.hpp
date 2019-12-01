@@ -15,6 +15,7 @@
 #include <iostream>
 #include <memory>
 
+#include "ECS.hpp"
 #include "Entity.hpp"
 #include "ISystem.hpp"
 #include "SpawnerComponent.hpp"
@@ -34,6 +35,11 @@ namespace ECS {
                 /// \param entities : entities that needs to be updated
                 /// \brief update all entities with the current system
                 void update(std::unordered_map<unsigned long long, std::shared_ptr<Entity>> &entities) override;
+
+                /// \brief spawn e new entity
+                /// \param entity : entity with the spawn component
+                /// \param ECS : the ecs to store the new child
+                void spawn(std::shared_ptr<Entity> &entity, std::shared_ptr<Module::EntityComponentSystem> &ECS);
         };
     }
 }

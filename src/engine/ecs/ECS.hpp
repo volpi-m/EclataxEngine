@@ -42,6 +42,10 @@ namespace Module {
         /// \brief add a system to the ECS's system list
         void addSystem(ECS::flagType type, std::unique_ptr<ECS::ISystem> &system);
 
+        /// \param entity : the entity to add to the ECS's entity list
+        /// \brief add an entity to the ECS's entity list
+        unsigned long long addEntity(std::shared_ptr<ECS::Entity> &entity);
+
         /// \param tag : the new name of the entity
         /// \brief creates an entity
         unsigned long long createEntity(const std::string &tag = "");

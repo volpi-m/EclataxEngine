@@ -19,6 +19,7 @@
 #include "ISystem.hpp"
 #include "Entity.hpp"
 #include "TransformComponent.hpp"
+#include "SpeedComponent.hpp"
 
 /// \namespace ECS
 /// \brief Used for the all entity component system subclasses
@@ -52,6 +53,10 @@ namespace ECS {
                 /// \param z : z coordinates
                 /// \brief move an entity
                 void move(const std::shared_ptr<Entity> &entity, float x, float y, float z);
+
+                /// \param entity : entity that we want the speed from
+                /// \brief get the speed of a entity
+                float speed(const std::shared_ptr<Entity> &entity);
         };
     }
 }

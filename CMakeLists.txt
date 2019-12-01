@@ -50,6 +50,11 @@ set(ENTITY_FLEET
     ${CMAKE_CURRENT_SOURCE_DIR}/src/game/entities/Fleet.cpp
 )
 
+set(ENTITY_PLAYER
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/engine/ecs/entities/Entity.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/game/entities/Player.cpp
+)
+
 ## General sources
 set(SRC
     src/ConfReader.cpp
@@ -132,6 +137,8 @@ add_library(asteroid SHARED ${ENTITY_ASTEROID})
 add_library(ship SHARED ${ENTITY_SHIP})
 
 add_library(fleet SHARED ${ENTITY_FLEET})
+
+add_library(player SHARED ${ENTITY_PLAYER})
 
 ## Creating server executable
 add_executable(r-type_server
