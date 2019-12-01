@@ -55,6 +55,18 @@ set(ENTITY_PLAYER
     ${CMAKE_CURRENT_SOURCE_DIR}/src/game/entities/Player.cpp
 )
 
+set(ENTITY_BEES
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/engine/ecs/entities/Entity.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/game/entities/BeeEntrypoint.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/game/entities/Bee.cpp
+)
+
+set(ENTITY_SWARM
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/engine/ecs/entities/Entity.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/game/entities/BeeSwarm.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/game/entities/Bee.cpp
+)
+
 ## General sources
 set(SRC
     src/ConfReader.cpp
@@ -141,6 +153,10 @@ add_library(ship SHARED ${ENTITY_SHIP})
 add_library(fleet SHARED ${ENTITY_FLEET})
 
 add_library(player SHARED ${ENTITY_PLAYER})
+
+add_library(bee SHARED ${ENTITY_BEES})
+
+add_library(swarm SHARED ${ENTITY_SWARM})
 
 ## Creating server executable
 add_executable(r-type_server
