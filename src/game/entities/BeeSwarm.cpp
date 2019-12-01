@@ -14,7 +14,7 @@ extern "C" ECS::Entity *entrypoint()
     return swarm.createEntity();
 }
 
-ECS::Entity *Game::Bee::createEntity()
+ECS::Entity *Game::BeeSwarm::createEntity()
 {
     ECS::Entity *swarm = new ECS::Entity("Bee Swarm");
     Game::Rect rect(0, 0, 62, 64);
