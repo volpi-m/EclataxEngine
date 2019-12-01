@@ -96,9 +96,6 @@ namespace Scenes {
             /// \brief push an entity to the stack of the scene
             virtual void handleEvent(std::queue<std::pair<int, size_t>> &events) = 0;
 
-            // virtual void getElementsToDisplay() = 0;
-            // virtual void manageEvent() = 0;
-
         protected:
             /*! name of the scene */
             std::string _name;

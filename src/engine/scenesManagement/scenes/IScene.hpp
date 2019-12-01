@@ -69,6 +69,10 @@ namespace Scenes {
             /// \brief push an entity to the stack of the scene
             virtual void pushEntityStack(std::shared_ptr<ECS::Entity> &entity, std::size_t id) = 0;
 
-            virtual void handleEvent(std::queue<std::pair<int, size_t>>& ) = 0;
+            /// \param event : stack of all event
+            /// Int is the number of the player
+            /// size_t is the event
+            /// \brief manage all event in the scene
+            virtual void handleEvent(std::queue<std::pair<int, size_t>>& event) = 0;
     };
 }

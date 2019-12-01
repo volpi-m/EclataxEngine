@@ -69,6 +69,7 @@ set(SRC_SERVER
     src/engine/ecs/systems/AnimationSystem.cpp
     src/engine/ecs/systems/CollisionSystem.cpp
     src/engine/ecs/systems/HealthManipulatorSystem.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/engine/ecs/systems/TextSystem.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Mediator.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Hub.cpp
 )
@@ -78,6 +79,7 @@ set(SRC_SERVER
 set (SRC_GAME
     ${CMAKE_CURRENT_SOURCE_DIR}/src/game/scenes/SplashScene.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/game/scenes/AScene.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/game/scenes/HubLoadingScene.cpp
 )
 
 ## Game include location

@@ -35,6 +35,8 @@ namespace ECS {
 
             /*! text attribute */
             std::string text;
+            /*! font of the text */
+            std::string font;
         };
     }
 }

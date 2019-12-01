@@ -19,6 +19,7 @@
 #include "Rfc.hpp"
 #include "IScene.hpp"
 #include "SplashScene.hpp"
+#include "HubLoadingScene.hpp"
 #include "GameEngine.hpp"
 
 constexpr auto const HUBLIMIT = 4;

@@ -29,19 +29,32 @@ void Server::Hub::start()
     std::string msg("hub number ");
 
     l->generateDebugMessage(Debug::type::INFO , msg + std::to_string(_id) + " is running !" , "Server::Hub::start()");
-    std::unique_lock<std::mutex> lock(_mutex);
-    while (!allIsReady() && !_stoped) {
-        _cond_var.wait(lock);
+    auto scene = std::shared_ptr<Scenes::IScene>(new Scenes::HubLoadingScene("Hub scene", _engine.ECS()));
+    _engine.SceneMachine()->push(scene);
+
+    while (_engine.SceneMachine()->run() != false && !allIsReady() && !_stoped) {
+        std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
+        std::stack<Network::Entity> &entities = _engine.SceneMachine()->getCurrentSceneEntityStack();
+        while (!entities.empty()) {
+            sendEntity(entities.top());
+            entities.pop();
+        }
+        // // send event to scene
+        _engine.SceneMachine()->sendEventsToCurrentScene(_event);
+
+        // // update event stack
+        while(!_event.empty())
+            _event.pop();
+        std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
+        std::this_thread::sleep_for(std::chrono::milliseconds(16 - std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count()));
     }
-    lock.unlock();
-    if (!_players.empty() && !_stoped)
-        startGame();
+    // if (!_players.empty() && !_stoped)
+    //     startGame();
 }
 
 void Server::Hub::stop()
 {
-    _stoped = true;
-    _cond_var.notify_one();
+    _stoped = true;    
     Network::headerUdp data;
     data.code = Network::CLIENT_ERROR;
     char msg[20] = "Server was stopped";
@@ -71,14 +84,14 @@ void Server::Hub::startGame()
             sendEntity(entities.top());
             entities.pop();
         }
-        // send event to scene
+        // // send event to scene
         _engine.SceneMachine()->sendEventsToCurrentScene(_event);
 
-        // update event stack
+        // // update event stack
         while(!_event.empty())
             _event.pop();
 
-        // Sleeping before starting the next frame
+        // // Sleeping before starting the next frame
         std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
         std::this_thread::sleep_for(std::chrono::milliseconds(16 - std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count()));
     }
@@ -118,8 +131,7 @@ void Server::Hub::removeMember(const std::string &ip)
     for (unsigned int i = 0; i < _players.size(); i++) {
         if (_players[i].ip == ip)
             _players.erase(_players.begin() + i);
-    }
-    _cond_var.notify_one();
+    }    
     // _players.remove_if([&] (Player &p) { return(p.ip == ip); });
 }
 
@@ -145,8 +157,7 @@ void Server::Hub::setPlayerReady(const std::string &ip, bool state)
 {
     for (auto &i : _players)
         if (i.ip == ip) {
-            i.isReady = state;
-            _cond_var.notify_one();
+            i.isReady = state;            
         }
 }
 
