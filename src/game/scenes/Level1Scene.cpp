@@ -152,7 +152,7 @@ void Scenes::Level1Scene::handleEvent(std::queue<std::pair<int, size_t>> &events
     while (!events.empty()) {
 
         // Checking inputs from the player that sent the packet
-        if (!_ECS->hasEntity(_ids.at(events.front().first))) {
+        if ((int)(events.front().first) >= _ids.size() || !_ECS->hasEntity(_ids.at(events.front().first))) {
             events.pop();
             continue;
         }
