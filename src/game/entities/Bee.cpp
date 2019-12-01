@@ -19,7 +19,7 @@ ECS::Entity *Game::Bee::createEntity()
     std::shared_ptr<ECS::IComponent> damage(new ECS::Component::Damage(1));
     std::shared_ptr<ECS::IComponent> health(new ECS::Component::Health(1));
     std::shared_ptr<ECS::IComponent> script(new ECS::Component::Script(&Bee::IA));
-    std::shared_ptr<ECS::IComponent> sprite(new ECS::Component::Sprite("ressources/bees.gif", rect));
+    std::shared_ptr<ECS::IComponent> sprite(new ECS::Component::Sprite("ressources/bees.png", rect));
     std::shared_ptr<ECS::IComponent> speed(new ECS::Component::Speed(7));
     std::shared_ptr<ECS::IComponent> transform(new ECS::Component::Transform(1920, randomSpawn(gen), 0));
     std::shared_ptr<ECS::IComponent> collision(new ECS::Component::CollisionBox2D(0, 0, 50, 50));
