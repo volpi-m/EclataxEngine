@@ -7,13 +7,13 @@
 
 #include "AScene.hpp"
 
-Scenes::AScene::AScene(const std::string &name, std::shared_ptr<Module::EntityComponentSystem> &ECS) : _name(name), _ECS(ECS), _pop(false), _swap(false) {}
+Scenes::AScene::AScene(const std::string &name, std::shared_ptr<Module::EntityComponentSystem> &ECS, int players) : _name(name), _ECS(ECS), _pop(false), _swap(false), _players(players) {}
 
-Scenes::AScene::AScene(const char *name, std::shared_ptr<Module::EntityComponentSystem> &ECS) : _name(name), _ECS(ECS), _pop(false), _swap(false) {}
+Scenes::AScene::AScene(const char *name, std::shared_ptr<Module::EntityComponentSystem> &ECS, int players) : _name(name), _ECS(ECS), _pop(false), _swap(false), _players(players) {}
 
-Scenes::AScene::AScene(const std::string &name) : _name(name), _pop(false), _swap(false) {}
+Scenes::AScene::AScene(int players, const std::string &name) : _name(name), _pop(false), _swap(false), _players(players) {}
 
-Scenes::AScene::AScene(const char *name) : _name(name), _pop(false), _swap(false) {}
+Scenes::AScene::AScene(int players, const char *name) : _name(name), _pop(false), _swap(false), _players(players) {}
 
 std::string Scenes::AScene::name() const
 {

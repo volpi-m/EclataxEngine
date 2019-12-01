@@ -57,7 +57,7 @@ void Server::Hub::startGame()
     Debug::Logger *l = Debug::Logger::getInstance(".log");
     std::string msg("Hub number ");
     l->generateDebugMessage(Debug::type::INFO , "Starting the game", msg + std::to_string(_id));
-    auto scene = std::shared_ptr<Scenes::IScene>(new Scenes::Level1Scene("level1Scene", _engine.ECS()));
+    auto scene = std::shared_ptr<Scenes::IScene>(new Scenes::Level1Scene("level1Scene", _engine.ECS(), _players.size()));
 
     _engine.SceneMachine()->push(scene);
 
