@@ -27,14 +27,18 @@ namespace ECS {
         struct LifeSpan : public IComponent {
             
             /// \brief constructor
-            LifeSpan() : dateOfBirth(std::chrono::high_resolution_clock::now()), lifeSpan(10)  {}
+            LifeSpan() : dateOfBirth(std::chrono::high_resolution_clock::now()), lifeSpan(10), deleteChildren(false)  {}
 
-            LifeSpan(std::chrono::seconds _lifeSpan) : dateOfBirth(std::chrono::high_resolution_clock::now()), lifeSpan(_lifeSpan)  {}
+            LifeSpan(std::chrono::seconds _lifeSpan, bool _deleteChildren) : dateOfBirth(std::chrono::high_resolution_clock::now()), lifeSpan(_lifeSpan), deleteChildren(_deleteChildren)  {}
 
             /*! time when the component entity is instanciated */
             std::chrono::high_resolution_clock::time_point dateOfBirth;
 
+            /*! life time of the entity */
             std::chrono::seconds lifeSpan;
+
+            /*! does the children needs to be deleted */
+            bool deleteChildren;
         };
     }
 }

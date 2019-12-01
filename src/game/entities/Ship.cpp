@@ -7,13 +7,6 @@
 
 #include "Ship.hpp"
 
-extern "C" ECS::Entity *entryPoint()
-{
-    Game::Ship ship;
-
-    return ship.createEntity();
-}
-
 std::shared_ptr<ECS::Entity> Game::ShipBeam::createEntity(std::shared_ptr<ECS::Entity> &parent)
 {
     std::shared_ptr<ECS::Entity> newEntity(new ECS::Entity("Enemy Bullet"));
@@ -29,7 +22,7 @@ std::shared_ptr<ECS::Entity> Game::ShipBeam::createEntity(std::shared_ptr<ECS::E
     std::shared_ptr<ECS::IComponent> transform(new ECS::Component::Transform(parentTransform->x, parentTransform->y, parentTransform->z));
     std::shared_ptr<ECS::IComponent> collision(new ECS::Component::CollisionBox2D(0, 0, 16, 16));
     std::shared_ptr<ECS::IComponent> animation(new ECS::Component::Animation2D(std::chrono::milliseconds(50), rect, 116, 16.5));
-    std::shared_ptr<ECS::IComponent> lifeSpan(new ECS::Component::LifeSpan(std::chrono::seconds(5)));
+    std::shared_ptr<ECS::IComponent> lifeSpan(new ECS::Component::LifeSpan(std::chrono::seconds(5), false));
 
 
     newEntity->addComponent(ECS::Component::Flags::audio, audio);
@@ -57,6 +50,9 @@ ECS::Entity *Game::Ship::createEntity()
 {
     ECS::Entity *newEntity = new ECS::Entity("Enemy Ship");
     Game::Rect rect(0, 0, 34, 34);
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<int> randomSpawn(20, 1060);
 
     std::shared_ptr<ECS::IComponent> audio(new ECS::Component::Audio("ship.mp3", false));
     std::shared_ptr<ECS::IComponent> damage(new ECS::Component::Damage(1));
@@ -64,7 +60,7 @@ ECS::Entity *Game::Ship::createEntity()
     std::shared_ptr<ECS::IComponent> script(new ECS::Component::Script(&Ship::IA));
     std::shared_ptr<ECS::IComponent> sprite(new ECS::Component::Sprite("ressources/ship.gif", rect));
     std::shared_ptr<ECS::IComponent> speed(new ECS::Component::Speed(2));
-    std::shared_ptr<ECS::IComponent> transform(new ECS::Component::Transform(1920, 600, 0));
+    std::shared_ptr<ECS::IComponent> transform(new ECS::Component::Transform(1920, randomSpawn(gen), 0));
     std::shared_ptr<ECS::IComponent> collision(new ECS::Component::CollisionBox2D(0, 0, 50, 50));
     std::shared_ptr<ECS::IComponent> spawner(new ECS::Component::Spawner(std::chrono::seconds(2), &ShipBeam::createEntity));
     std::shared_ptr<ECS::IComponent> animation(new ECS::Component::Animation2D(std::chrono::milliseconds(100), rect, 232, 34));
@@ -82,6 +78,14 @@ ECS::Entity *Game::Ship::createEntity()
     return newEntity;
 }
 
+std::shared_ptr<ECS::Entity> Game::Ship::createEntityToSpawn(std::shared_ptr<ECS::Entity> &parent)
+{
+    Ship newShip;
+
+    (void)parent;
+    return std::shared_ptr<ECS::Entity>(newShip.createEntity());
+}
+
 void Game::Ship::IA(std::shared_ptr<ECS::Entity> &entity)
 {
     const float amp = 30;
@@ -92,6 +96,6 @@ void Game::Ship::IA(std::shared_ptr<ECS::Entity> &entity)
 
     transform->y = std::sin(transform->x / freq) * amp + startPoint;
     transform->x -= speed->speed;
-
-    // USE THE SCRIPT TO SEE IF THE CHILDREN ENTITIES (BULLETS) NEEDS TO BE DELETED
+    if (transform->x >= 1920)
+        entity->deleteEntity();
 }

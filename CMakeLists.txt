@@ -41,6 +41,13 @@ set(ENTITY_ASTEROID
 set(ENTITY_SHIP
     ${CMAKE_CURRENT_SOURCE_DIR}/src/engine/ecs/entities/Entity.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/game/entities/Ship.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/game/entities/ShipEntryPoint.cpp
+)
+
+set(ENTITY_FLEET
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/engine/ecs/entities/Entity.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/game/entities/Ship.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/game/entities/Fleet.cpp
 )
 
 ## General sources
@@ -123,6 +130,8 @@ include_directories(
 add_library(asteroid SHARED ${ENTITY_ASTEROID})
 
 add_library(ship SHARED ${ENTITY_SHIP})
+
+add_library(fleet SHARED ${ENTITY_FLEET})
 
 ## Creating server executable
 add_executable(r-type_server

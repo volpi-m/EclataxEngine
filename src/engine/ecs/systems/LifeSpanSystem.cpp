@@ -21,6 +21,14 @@ void ECS::System::LifeSpanSystem::update(std::unordered_map<unsigned long long, 
 
                 // deleting the entity
                 entity.second->deleteEntity();
+
+                // Deleting children if specified
+                if (component->deleteChildren) {
+
+                    auto children = entity.second->children();
+                    for (auto &child : children)
+                        child->deleteEntity();
+                }
             }
         }
 }

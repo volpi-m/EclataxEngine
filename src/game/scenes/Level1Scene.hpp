@@ -13,7 +13,6 @@
 
 #include <iostream>
 
-
 #include "AScene.hpp"
 #include "TransformComponent.hpp"
 #include "AnimationSystem.hpp"
@@ -21,6 +20,8 @@
 #include "LifeSpanSystem.hpp"
 #include "SpawnerSystem.hpp"
 #include "IASystem.hpp"
+
+#include "Fleet.hpp"
 
 /// \namespace Scenes
 /// \brief Used for all scenes
@@ -33,21 +34,25 @@ namespace Scenes {
         public:
             /// \param name : the new name of the current scene
             /// \param ECS : ECS instance to pass to the scene
+            /// \param players : number of players
             /// \brief scene constructor
-            Level1Scene(const std::string &name, std::shared_ptr<Module::EntityComponentSystem> &ECS);
+            Level1Scene(const std::string &name, std::shared_ptr<Module::EntityComponentSystem> &ECS, int player);
 
             /// \param name : the new name of the current scene
             /// \param ECS : ECS instance to pass to the scene
+            /// \param players : number of players
             /// \brief scene constructor
-            Level1Scene(const char *name, std::shared_ptr<Module::EntityComponentSystem> &ECS);
+            Level1Scene(const char *name, std::shared_ptr<Module::EntityComponentSystem> &ECS, int player);
 
             /// \param name : the new name of the current scene
+            /// \param players : number of players
             /// \brief scene constructor
-            Level1Scene(const std::string &name = default_tag);
+            Level1Scene(int player, const std::string &name = default_tag);
 
             /// \param name : the new name of the current scene
+            /// \param players : number of players
             /// \brief scene constructor
-            Level1Scene(const char *name = default_tag);
+            Level1Scene(int player, const char *name = default_tag);
 
             /// \brief default scene destructor
             ~Level1Scene() override = default;
@@ -68,6 +73,8 @@ namespace Scenes {
 
 
         private:
+            void createFleet();
+
             /*! scene entities */
             std::vector<unsigned long long> _ids;
 
