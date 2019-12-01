@@ -12,6 +12,7 @@
 #pragma once
 
 #include <iostream>
+#include <functional>
 
 #include "AScene.hpp"
 #include "HealthManipulatorSystem.hpp"
@@ -96,10 +97,24 @@ namespace Scenes {
             /// \param lastShot : last time the player shot
             void computeShots(std::shared_ptr<ECS::Entity> &entity, std::chrono::high_resolution_clock::time_point &lastShot);
 
+            /// \brief change the waves
+            void changeWave();
+
             /// \brief method for initialize all scene components
             void initComponents();
 
             /*! scene entities */
             std::vector<unsigned long long> _ids;
+
+            /*! maximum waves */
+            int _MaxWaves = 2;
+
+            /*! waves instanciation */
+            std::vector<std::function<void(Level1Scene &)>> _waves;
+
+            /*! waves */
+            void waveOne();
+            void waveTwo();
+            void waveThree();
     };
 }

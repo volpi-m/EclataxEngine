@@ -27,8 +27,8 @@ void ECS::System::SpawnerSystem::update(std::unordered_map<unsigned long long, s
 
                 // Assigning it an id and pushing it to our list of entities
                 for (auto &entity : entities)
-                    newId = entity.first > newId ? entity.first : newId;
-                entities.emplace(++newId, child);
+                    newId = entity.first >= newId ? entity.first + 1 : newId;
+                entities.emplace(newId, child);
                 entity.second->addChild(child);
             }
         }

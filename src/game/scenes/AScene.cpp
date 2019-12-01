@@ -71,7 +71,7 @@ void Scenes::AScene::pushEntityStack(std::shared_ptr<ECS::Entity> &entity, std::
         _stack.top().x = componentTransform->x;
         _stack.top().y = componentTransform->y;
         _stack.top().z = componentTransform->z;
-        _stack.top().deleted = entity->deleted() ? 1 : 0;
+        _stack.top().deleted = entity->deleted() || !componentSprite->loaded ? 1 : 0;
     } else if (entity->hasComponent(ECS::Component::Flags::sprite) && entity->hasComponent(ECS::Component::Flags::transform)) {
 
         _stack.emplace(Network::Entity());
@@ -90,6 +90,6 @@ void Scenes::AScene::pushEntityStack(std::shared_ptr<ECS::Entity> &entity, std::
         _stack.top().x = componentTransform->x;
         _stack.top().y = componentTransform->y;
         _stack.top().z = componentTransform->z;
-        _stack.top().deleted = entity->deleted() ? 1 : 0;
+        _stack.top().deleted = entity->deleted() || !componentSprite->loaded ? 1 : 0;
     }
 }

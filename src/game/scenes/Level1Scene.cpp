@@ -18,6 +18,11 @@ Scenes::Level1Scene::Level1Scene(const char *name, std::shared_ptr<Module::Entit
 {
     Debug::Logger *l = Debug::Logger::getInstance();
     l->generateDebugMessage(Debug::type::INFO , "Starting Level 1", "Level1Scene::constructor()");
+
+    _waves.push_back(&Level1Scene::waveOne);
+    _waves.push_back(&Level1Scene::waveTwo);
+    _waves.push_back(&Level1Scene::waveThree);
+
     initComponents();
 }
 
@@ -34,6 +39,9 @@ Scenes::IScene *Scenes::Level1Scene::run()
         return nullptr;
     }
 
+    // Changing the current wave if needed
+    changeWave();
+
     // Chceking collisions
     for (unsigned long long item1 = 0; item1 < _ids.size() && _ECS->hasEntity(_ids[item1]); ++item1)
         for (unsigned long long item2 = 0; item2 < _ids.size() && _ECS->hasEntity(_ids[item2]); ++item2)
@@ -43,13 +51,28 @@ Scenes::IScene *Scenes::Level1Scene::run()
     _ECS->update();
 
     // Pushing entities to the stack
-    for (unsigned long long id = 0; id < _ids.size() && _ECS->hasEntity(_ids[id]); ++id)
+    _ids = _ECS->ids();
+    //std::cout << "entities on screen: " << _ids.size() << std::endl;
+    for (unsigned long long id = 0; id < _ids.size(); ++id)
         pushEntityStack(_ECS->entity(_ids[id]), _ids[id]);
-
     // Clearing deleted entities
     _ECS->clearEntities();
     _ids = _ECS->ids();
     return nullptr;
+}
+
+void Scenes::Level1Scene::changeWave()
+{
+    static int wave = 0;
+
+    _ids = _ECS->ids();
+    for (unsigned long long item = 0; item < _ids.size() && _ECS->hasEntity(_ids[item]); ++item)
+        if (_ECS->entity(_ids[item])->tag() == "Enemy" || _ECS->entity(_ids[item])->tag() == "Spawner")
+            return;
+    wave += 1;
+    if (wave <= _MaxWaves)
+        _waves.at(wave)(*this);
+    _ids = _ECS->ids();
 }
 
 void Scenes::Level1Scene::checkCollisionTags(std::shared_ptr<ECS::Entity> &first, std::shared_ptr<ECS::Entity> &second, ECS::System::CollisionSystem *collisionSystem)
@@ -95,10 +118,11 @@ void Scenes::Level1Scene::initComponents()
     std::shared_ptr<ECS::IComponent> sprite(new ECS::Component::Sprite("ressources/level_1.jpg", Game::Rect(0, 0, 1920, 1080)));
     std::shared_ptr<ECS::IComponent> transform(new ECS::Component::Transform);
 
-    _ids.push_back(_ECS->createEntity("Background"));
+    _ECS->createEntity("Background");
     for (int i = 0; i < _players; ++i)
-        _ids.push_back(_ECS->createEntityFromLibrary("lib/libplayer.so"));
-    _ids.push_back(_ECS->createEntityFromLibrary("lib/libfleet.so"));
+        _ECS->createEntityFromLibrary("lib/libplayer.so");
+    _ids = _ECS->ids();
+    _waves.at(0)(*this);
 
     _ECS->addComponentToEntity(_ids.front(), ECS::Component::Flags::sprite, sprite);
     _ECS->addComponentToEntity(_ids.front(), ECS::Component::Flags::transform, transform);
@@ -110,7 +134,6 @@ void Scenes::Level1Scene::initComponents()
     _ECS->addSystem(ECS::System::Flags::LifeSpan, systemLifeSpan);
     _ECS->addSystem(ECS::System::Flags::HealthManipulator, systemHealthManipulator);
     _ECS->addSystem(ECS::System::Flags::Collision, systemCollisionSystem);
-    _ids = _ECS->ids();
 }
 
 void Scenes::Level1Scene::handleEvent(std::queue<std::pair<int, size_t>> &events)
@@ -124,8 +147,6 @@ void Scenes::Level1Scene::handleEvent(std::queue<std::pair<int, size_t>> &events
     getPlayersSpeed(speeds, movementSystem);
     while (!events.empty()) {
 
-        // std::cout << "player: " << events.front().first << ", event: " << events.front().second << std::endl; 
-        
         // Checking inputs from the player that sent the packet
         if (!_ECS->hasEntity(_ids.at(events.front().first))) {
             events.pop();
@@ -172,4 +193,24 @@ void Scenes::Level1Scene::getPlayersSpeed(float *speeds, ECS::System::MovementSy
     for (int i = 0; i < _players; ++i)
         if (_ECS->hasEntity(_ids[i + 1]) && _ECS->entity(_ids[i + 1])->tag() == "Player")
             speeds[i] = movementSystem->speed(_ECS->entity(_ids[i + 1]));
+}
+
+void Scenes::Level1Scene::waveOne()
+{
+    // Creating fleets
+    _ECS->createEntityFromLibrary("lib/libswarm.so");
+    _ECS->createEntityFromLibrary("lib/libfleet.so");
+    _ECS->createEntityFromLibrary("lib/libfleet.so");
+    _ECS->createEntityFromLibrary("lib/libfleet.so");
+}
+
+void Scenes::Level1Scene::waveTwo()
+{
+    _ECS->createEntityFromLibrary("lib/libship.so");
+    _ECS->createEntityFromLibrary("lib/libship.so");
+}
+
+void Scenes::Level1Scene::waveThree()
+{
+    _ECS->createEntityFromLibrary("lib/libswarm.so");
 }

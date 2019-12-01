@@ -8,7 +8,8 @@
 #pragma once
 
 #include <cmath>
-#include <random>
+#include <cstdlib>
+#include <ctime>
 
 #include "IEnnemy.hpp"
 #include "SpeedComponent.hpp"

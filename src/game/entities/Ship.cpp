@@ -44,15 +44,16 @@ void Game::ShipBeam::IA(std::shared_ptr<ECS::Entity> &entity)
     auto transform = static_cast<ECS::Component::Transform *>(entity->component(ECS::Component::Flags::transform).get());
 
     transform->x -= speed->speed;
+    if (transform->x < 0)
+        entity->deleteEntity();
 }
 
 ECS::Entity *Game::Ship::createEntity()
 {
     ECS::Entity *newEntity = new ECS::Entity("Enemy");
     Game::Rect rect(0, 0, 34, 34);
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    std::uniform_int_distribution<int> randomSpawn(20, 1060);
+
+    int random_variable = (std::rand() % 1060) + 20;
 
     std::shared_ptr<ECS::IComponent> audio(new ECS::Component::Audio("ship.mp3", false));
     std::shared_ptr<ECS::IComponent> damage(new ECS::Component::Damage(1));
@@ -60,7 +61,7 @@ ECS::Entity *Game::Ship::createEntity()
     std::shared_ptr<ECS::IComponent> script(new ECS::Component::Script(&Ship::IA));
     std::shared_ptr<ECS::IComponent> sprite(new ECS::Component::Sprite("ressources/ship.gif", rect));
     std::shared_ptr<ECS::IComponent> speed(new ECS::Component::Speed(5));
-    std::shared_ptr<ECS::IComponent> transform(new ECS::Component::Transform(1920, randomSpawn(gen), 0));
+    std::shared_ptr<ECS::IComponent> transform(new ECS::Component::Transform(1920, random_variable, 0));
     std::shared_ptr<ECS::IComponent> collision(new ECS::Component::CollisionBox2D(0, 0, 50, 50));
     std::shared_ptr<ECS::IComponent> spawner(new ECS::Component::Spawner(std::chrono::seconds(2), &ShipBeam::createEntity));
     std::shared_ptr<ECS::IComponent> animation(new ECS::Component::Animation2D(std::chrono::milliseconds(100), rect, 232, 34));
@@ -81,9 +82,13 @@ ECS::Entity *Game::Ship::createEntity()
 std::shared_ptr<ECS::Entity> Game::Ship::createEntityToSpawn(std::shared_ptr<ECS::Entity> &parent)
 {
     Ship newShip;
+    auto newEntity = newShip.createEntity();
+    auto transformComponent = static_cast<ECS::Component::Transform *>(newEntity->component(ECS::Component::Flags::transform).get());
+    auto transformComponentParent = static_cast<ECS::Component::Transform *>(parent->component(ECS::Component::Flags::transform).get());
 
-    (void)parent;
-    return std::shared_ptr<ECS::Entity>(newShip.createEntity());
+    int random_variable = (std::rand() % 20) + transformComponentParent->y;
+    transformComponent->y = random_variable;
+    return std::shared_ptr<ECS::Entity>(newEntity);
 }
 
 void Game::Ship::IA(std::shared_ptr<ECS::Entity> &entity)
@@ -96,6 +101,6 @@ void Game::Ship::IA(std::shared_ptr<ECS::Entity> &entity)
 
     transform->y = std::sin(transform->x / freq) * amp + startPoint;
     transform->x -= speed->speed;
-    if (transform->x >= 1920)
+    if (transform->x < 0)
         entity->deleteEntity();
 }
