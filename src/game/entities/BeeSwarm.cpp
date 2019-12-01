@@ -16,7 +16,7 @@ extern "C" ECS::Entity *entryPoint()
 
 ECS::Entity *Game::BeeSwarm::createEntity()
 {
-    ECS::Entity *swarm = new ECS::Entity("Bee Swarm");
+    ECS::Entity *swarm = new ECS::Entity("Enemy");
     Game::Rect rect(0, 0, 62, 64);
     std::random_device rd;
     std::mt19937 gen(rd());
@@ -26,8 +26,9 @@ ECS::Entity *Game::BeeSwarm::createEntity()
     std::shared_ptr<ECS::IComponent> speed(new ECS::Component::Speed(4));
     std::shared_ptr<ECS::IComponent> spawner(new ECS::Component::Spawner(std::chrono::seconds(1), &Bee::createEntityToSpawn));
     std::shared_ptr<ECS::IComponent> sprite(new ECS::Component::Sprite("ressources/swarm.png", rect));
-    std::shared_ptr<ECS::IComponent> animation( new ECS::Component::Animation2D());
-    std::shared_ptr<ECS::IComponent> collision( new ECS::Component::CollisionBox2D(0, 0, 80, 80));
+    std::shared_ptr<ECS::IComponent> script(new ECS::Component::Script(&BeeSwarm::IA));
+    std::shared_ptr<ECS::IComponent> animation(new ECS::Component::Animation2D(std::chrono::milliseconds(500), rect, 64 * 3, 64));
+    std::shared_ptr<ECS::IComponent> collision(new ECS::Component::CollisionBox2D(0, 0, 80, 80));
     std::shared_ptr<ECS::IComponent> damage(new ECS::Component::Damage(1));
     std::shared_ptr<ECS::IComponent> health(new ECS::Component::Health(3));
 
@@ -39,6 +40,7 @@ ECS::Entity *Game::BeeSwarm::createEntity()
     swarm->addComponent(ECS::Component::Flags::sprite, sprite);
     swarm->addComponent(ECS::Component::Flags::damage, damage);
     swarm->addComponent(ECS::Component::Flags::health, health);
+    swarm->addComponent(ECS::Component::Flags::script, script);
 
     return swarm;
 }
@@ -57,7 +59,7 @@ void Game::BeeSwarm::IA(std::shared_ptr<ECS::Entity> &entity)
     angle += 0.2;
 
     // Compute coordinate of hive to draw a circular shape
-    transform->x = originX + std::cos(angle) * radius - speed->speed;
+    transform->x = originX - std::cos(angle) * radius + speed->speed;
     transform->y = originY + std::sin(angle) * radius;
 
     if (transform->x < 0)

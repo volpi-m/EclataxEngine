@@ -16,9 +16,10 @@ extern "C" ECS::Entity *entryPoint()
 
 ECS::Entity *Game::Fleet::createEntity()
 {
-    ECS::Entity *newEntity = new ECS::Entity("Ship Fleet");
+    ECS::Entity *newEntity = new ECS::Entity("Spawner");
+    int random_variable = (std::rand() % 1060) + 20;
 
-    std::shared_ptr<ECS::IComponent> transform(new ECS::Component::Transform(1920, 600, 0));
+    std::shared_ptr<ECS::IComponent> transform(new ECS::Component::Transform(1920, random_variable, 0));
     std::shared_ptr<ECS::IComponent> spawner(new ECS::Component::Spawner(std::chrono::seconds(1), &Ship::createEntityToSpawn));
     std::shared_ptr<ECS::IComponent> lifeSpan(new ECS::Component::LifeSpan(std::chrono::seconds(5), false));
 

@@ -9,6 +9,9 @@
 /// \author Lucas T.
 /// \brief main function
 
+#include <cstdlib>
+#include <ctime>
+
 #include "Mediator.hpp"
 #include "TcpNetwork.hpp"
 #include "UdpNetwork.hpp"
@@ -19,6 +22,7 @@
 /// \brief main function
 int main()
 {
+    std::srand(std::time(nullptr));
     try
     {
         Server::Mediator m;
