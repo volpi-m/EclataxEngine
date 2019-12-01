@@ -7,7 +7,7 @@
 
 #include "BeeSwarm.hpp"
 
-extern "C" ECS::Entity *entrypoint()
+extern "C" ECS::Entity *entryPoint()
 {
     Game::BeeSwarm swarm;
 
