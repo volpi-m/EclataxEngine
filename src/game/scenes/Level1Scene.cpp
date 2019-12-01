@@ -22,6 +22,7 @@ Scenes::Level1Scene::Level1Scene(const char *name, std::shared_ptr<Module::Entit
     _waves.push_back(&Level1Scene::waveOne);
     _waves.push_back(&Level1Scene::waveTwo);
     _waves.push_back(&Level1Scene::waveThree);
+    _waves.push_back(&Level1Scene::waveFour);
 
     initComponents();
 }
@@ -34,7 +35,8 @@ Scenes::IScene *Scenes::Level1Scene::run()
 {
     auto collisionSystem = static_cast<ECS::System::CollisionSystem *>(_ECS->system(ECS::System::Flags::Collision).get());
 
-    if (!alivePlayers()) {
+    // Checking if all player are alive or that the hit the final wave
+    if (!alivePlayers() || _currentWave == _MaxWaves) {
         _pop = true;
         return nullptr;
     }
@@ -42,7 +44,7 @@ Scenes::IScene *Scenes::Level1Scene::run()
     // Changing the current wave if needed
     changeWave();
 
-    // Chceking collisions
+    // Checking collisions
     for (unsigned long long item1 = 0; item1 < _ids.size() && _ECS->hasEntity(_ids[item1]); ++item1)
         for (unsigned long long item2 = 0; item2 < _ids.size() && _ECS->hasEntity(_ids[item2]); ++item2)
             checkCollisionTags(_ECS->entity(_ids[item1]), _ECS->entity(_ids[item2]), collisionSystem);
@@ -55,6 +57,7 @@ Scenes::IScene *Scenes::Level1Scene::run()
     //std::cout << "entities on screen: " << _ids.size() << std::endl;
     for (unsigned long long id = 0; id < _ids.size(); ++id)
         pushEntityStack(_ECS->entity(_ids[id]), _ids[id]);
+
     // Clearing deleted entities
     _ECS->clearEntities();
     _ids = _ECS->ids();
@@ -63,15 +66,16 @@ Scenes::IScene *Scenes::Level1Scene::run()
 
 void Scenes::Level1Scene::changeWave()
 {
-    static int wave = 0;
-
+    // Checking if the current wave needs to be changed
     _ids = _ECS->ids();
     for (unsigned long long item = 0; item < _ids.size() && _ECS->hasEntity(_ids[item]); ++item)
         if (_ECS->entity(_ids[item])->tag() == "Enemy" || _ECS->entity(_ids[item])->tag() == "Spawner")
             return;
-    wave += 1;
-    if (wave <= _MaxWaves)
-        _waves.at(wave)(*this);
+
+    // Changing wave
+    _currentWave += 1;
+    if (_currentWave <= _MaxWaves)
+        _waves.at(_currentWave)(*this);
     _ids = _ECS->ids();
 }
 
@@ -198,19 +202,33 @@ void Scenes::Level1Scene::getPlayersSpeed(float *speeds, ECS::System::MovementSy
 void Scenes::Level1Scene::waveOne()
 {
     // Creating fleets
-    _ECS->createEntityFromLibrary("lib/libswarm.so");
-    _ECS->createEntityFromLibrary("lib/libfleet.so");
-    _ECS->createEntityFromLibrary("lib/libfleet.so");
     _ECS->createEntityFromLibrary("lib/libfleet.so");
 }
 
 void Scenes::Level1Scene::waveTwo()
 {
+    // Spawning small ships
     _ECS->createEntityFromLibrary("lib/libship.so");
     _ECS->createEntityFromLibrary("lib/libship.so");
+    _ECS->createEntityFromLibrary("lib/libship.so");
+    _ECS->createEntityFromLibrary("lib/libfleet.so");
 }
 
 void Scenes::Level1Scene::waveThree()
 {
+    // Spawning swarms
     _ECS->createEntityFromLibrary("lib/libswarm.so");
+    _ECS->createEntityFromLibrary("lib/libswarm.so");
+    _ECS->createEntityFromLibrary("lib/libswarm.so");
+    _ECS->createEntityFromLibrary("lib/libfleet.so");
+}
+
+void Scenes::Level1Scene::waveFour()
+{
+    // Spawning swarms
+    _ECS->createEntityFromLibrary("lib/libswarm.so");
+    _ECS->createEntityFromLibrary("lib/libship.so");
+    _ECS->createEntityFromLibrary("lib/libship.so");
+    _ECS->createEntityFromLibrary("lib/libship.so");
+    _ECS->createEntityFromLibrary("lib/libfleet.so");
 }

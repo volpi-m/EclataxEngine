@@ -107,7 +107,8 @@ namespace Scenes {
             std::vector<unsigned long long> _ids;
 
             /*! maximum waves */
-            int _MaxWaves = 2;
+            int _MaxWaves = 3;
+            int _currentWave = 0;
 
             /*! waves instanciation */
             std::vector<std::function<void(Level1Scene &)>> _waves;
@@ -116,5 +117,6 @@ namespace Scenes {
             void waveOne();
             void waveTwo();
             void waveThree();
+            void waveFour();
     };
 }
