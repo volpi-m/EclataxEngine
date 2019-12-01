@@ -10,7 +10,7 @@
 ECS::Entity *Game::Bee::createEntity()
 {
     ECS::Entity *newEntity = new ECS::Entity("Enemy");
-    Game::Rect rect(0, 0, 34, 34);
+    Game::Rect rect(0, 0, 33, 34);
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_int_distribution<int> randomSpawn(20, 1060);
@@ -23,7 +23,7 @@ ECS::Entity *Game::Bee::createEntity()
     std::shared_ptr<ECS::IComponent> speed(new ECS::Component::Speed(7));
     std::shared_ptr<ECS::IComponent> transform(new ECS::Component::Transform(1920, randomSpawn(gen), 0));
     std::shared_ptr<ECS::IComponent> collision(new ECS::Component::CollisionBox2D(0, 0, 50, 50));
-    std::shared_ptr<ECS::IComponent> animation(new ECS::Component::Animation2D(std::chrono::milliseconds(50), rect, 498, 34));
+    std::shared_ptr<ECS::IComponent> animation(new ECS::Component::Animation2D(std::chrono::milliseconds(100), rect, 495, 33));
 
     newEntity->addComponent(ECS::Component::Flags::audio, audio);
     newEntity->addComponent(ECS::Component::Flags::damage, damage);
@@ -37,11 +37,16 @@ ECS::Entity *Game::Bee::createEntity()
     return newEntity;
 }
 
-std::shared_ptr<ECS::Entity> Game::Bee::createEntityToSpawn([[maybe_unused]] std::shared_ptr<ECS::Entity> &parent)
+std::shared_ptr<ECS::Entity> Game::Bee::createEntityToSpawn(std::shared_ptr<ECS::Entity> &parent)
 {
     Bee newBee;
+    auto newEntity = newBee.createEntity();
+    auto transform = static_cast<ECS::Component::Transform *>(newEntity->component(ECS::Component::Flags::transform).get());
+    auto transformParent = static_cast<ECS::Component::Transform *>(parent->component(ECS::Component::Flags::transform).get());
 
-    return std::shared_ptr<ECS::Entity>(newBee.createEntity());
+    transform->y = std::rand() % 20 + transformParent->y;
+    transform->x = transformParent->x;
+    return std::shared_ptr<ECS::Entity>(newEntity);
 }
 
 void Game::Bee::IA(std::shared_ptr<ECS::Entity> &entity)
