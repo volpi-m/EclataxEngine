@@ -11,6 +11,12 @@ Scenes::Level1Scene::Level1Scene(const std::string &name, std::shared_ptr<Module
 {
     Debug::Logger *l = Debug::Logger::getInstance();
     l->generateDebugMessage(Debug::type::INFO , "Starting Level 1", "Level1Scene::constructor()");
+
+    _waves.push_back(&Level1Scene::waveOne);
+    _waves.push_back(&Level1Scene::waveTwo);
+    _waves.push_back(&Level1Scene::waveThree);
+    _waves.push_back(&Level1Scene::waveFour);
+
     initComponents();
 }
 
@@ -131,16 +137,16 @@ void Scenes::Level1Scene::initComponents()
     _ECS->addComponentToEntity(_ids.front(), ECS::Component::Flags::sprite, sprite);
     _ECS->addComponentToEntity(_ids.front(), ECS::Component::Flags::transform, transform);
 
+    _ECS->addSystem(ECS::System::Flags::Collision, systemCollisionSystem);
     _ECS->addSystem(ECS::System::Flags::IA, systemIA);
     _ECS->addSystem(ECS::System::Flags::Animation, systemAnimation);
     _ECS->addSystem(ECS::System::Flags::Movement, systemMovement);
     _ECS->addSystem(ECS::System::Flags::Spawner, systemSpawn);
     _ECS->addSystem(ECS::System::Flags::LifeSpan, systemLifeSpan);
     _ECS->addSystem(ECS::System::Flags::HealthManipulator, systemHealthManipulator);
-    _ECS->addSystem(ECS::System::Flags::Collision, systemCollisionSystem);
 }
 
-void Scenes::Level1Scene::handleEvent(std::queue<std::pair<int, size_t>> &events)
+void Scenes::Level1Scene::handleEvent(std::queue<std::pair<int, size_t>> events)
 {
     auto movementSystem = static_cast<ECS::System::MovementSystem *>(_ECS->system(ECS::System::Flags::Movement).get());
     static std::chrono::high_resolution_clock::time_point lastShot[4] = {std::chrono::high_resolution_clock::now(),
@@ -152,7 +158,7 @@ void Scenes::Level1Scene::handleEvent(std::queue<std::pair<int, size_t>> &events
     while (!events.empty()) {
 
         // Checking inputs from the player that sent the packet
-        if ((int)(events.front().first) >= _ids.size() || !_ECS->hasEntity(_ids.at(events.front().first))) {
+        if (events.front().first >= (int)_ids.size() || !checkPlayer(events.front()) || !_ECS->hasEntity(_ids.at(events.front().first))) {
             events.pop();
             continue;
         }
@@ -169,11 +175,25 @@ void Scenes::Level1Scene::handleEvent(std::queue<std::pair<int, size_t>> &events
             x += 2;
         if (events.front().second & SPACE)
             computeShots(sps, lastShot[events.front().first - 1]);
-        
+
         // Moving the player of needed
         movementSystem->move(sps, x * speeds[events.front().first - 1], y * speeds[events.front().first - 1], 0);
         events.pop();
     }
+    std::cout << "OUT" << std::endl;
+}
+
+bool Scenes::Level1Scene::checkPlayer(std::pair<int, std::size_t> &key)
+{
+    for (auto id : _ids) {
+        //std::cout << "id: " << id << ", key: " << key.first << std::endl; 
+        if ((int)id == key.first) {
+            //std::cout << "OK" << std::endl;
+            return true;
+        }
+    }
+    //std::cout << "OUT" << std::endl;
+    return false;
 }
 
 void Scenes::Level1Scene::computeShots(std::shared_ptr<ECS::Entity> &entity, std::chrono::high_resolution_clock::time_point &lastShot)
@@ -183,9 +203,9 @@ void Scenes::Level1Scene::computeShots(std::shared_ptr<ECS::Entity> &entity, std
 
     // Checking if the player as shoot 1/2 second beforehand
     if (std::chrono::duration_cast<std::chrono::milliseconds>(now - lastShot).count() > fireRate.count()) {
-        
+
         auto spawnerSystem = static_cast<ECS::System::SpawnerSystem *>(_ECS->system(ECS::System::Flags::Spawner).get());
-        
+
         spawnerSystem->spawn(entity, _ECS);
         lastShot = now;
     }
@@ -195,7 +215,7 @@ void Scenes::Level1Scene::getPlayersSpeed(float *speeds, ECS::System::MovementSy
 {
     // getting the speed of all players
     for (int i = 0; i < _players; ++i)
-        if (_ECS->hasEntity(_ids[i + 1]) && _ECS->entity(_ids[i + 1])->tag() == "Player")
+        if (i + 1 < (int)_ids.size() && _ECS->hasEntity(_ids[i + 1]) && _ECS->entity(_ids[i + 1])->tag() == "Player")
             speeds[i] = movementSystem->speed(_ECS->entity(_ids[i + 1]));
 }
 
@@ -203,6 +223,7 @@ void Scenes::Level1Scene::waveOne()
 {
     // Creating fleets
     _ECS->createEntityFromLibrary("lib/libfleet.so");
+    _ids = _ECS->ids();
 }
 
 void Scenes::Level1Scene::waveTwo()
