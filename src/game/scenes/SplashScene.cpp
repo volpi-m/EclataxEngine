@@ -66,7 +66,7 @@ void Scenes::SplashScene::initComponents()
     _ECS->addSystem(ECS::System::Flags::LifeSpan, systemLifeSpan);
 }
 
-void Scenes::SplashScene::handleEvent(std::queue<std::pair<int, size_t>> &events)
+void Scenes::SplashScene::handleEvent(std::queue<std::pair<int, size_t>> events)
 {
     auto sps = _ECS->entity(_ids.front());
     auto movementSystem = static_cast<ECS::System::MovementSystem *>(_ECS->system(ECS::System::Flags::Movement).get());

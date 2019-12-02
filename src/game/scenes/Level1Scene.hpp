@@ -72,7 +72,7 @@ namespace Scenes {
             void remove() override;
 
             /// \brief handle events
-            void handleEvent(std::queue<std::pair<int, size_t>> &events);
+            void handleEvent(std::queue<std::pair<int, size_t>> events);
 
 
         private:
@@ -100,8 +100,12 @@ namespace Scenes {
             /// \brief change the waves
             void changeWave();
 
+            bool checkPlayer(std::pair<int, std::size_t> &key);
+
             /// \brief method for initialize all scene components
             void initComponents();
+
+            std::unordered_map<int, std::size_t> _playersIds;
 
             /*! scene entities */
             std::vector<unsigned long long> _ids;

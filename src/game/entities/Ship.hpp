@@ -71,7 +71,11 @@ namespace Game {
             /// \return moves the ship in a sin wave momement
             static void IA(std::shared_ptr<ECS::Entity> &entity);
 
+            float _startPoint;
+
             /*! A simple instance of a bullet */
             ShipBeam _weapon;
 	};
+
 }
+

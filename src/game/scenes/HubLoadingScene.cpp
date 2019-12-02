@@ -60,7 +60,7 @@ void Scenes::HubLoadingScene::initComponents()
     createCategory(100);
 }
 
-void Scenes::HubLoadingScene::handleEvent(std::queue<std::pair<int, size_t>> &events)
+void Scenes::HubLoadingScene::handleEvent(std::queue<std::pair<int, size_t>> events)
 {
     while (!events.empty()) {
         if ((events.front().second & Scenes::Event::SPACE) == Scenes::Event::SPACE) {

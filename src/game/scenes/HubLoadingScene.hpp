@@ -59,7 +59,7 @@ namespace Scenes {
             void remove() override;
 
             /// \brief handle events
-            void handleEvent(std::queue<std::pair<int, size_t>> &events);
+            void handleEvent(std::queue<std::pair<int, size_t>> events);
 
             /// \param playerNb : numbre of player
             /// \param state : state of the player

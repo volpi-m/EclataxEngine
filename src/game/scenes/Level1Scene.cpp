@@ -41,14 +41,14 @@ Scenes::IScene *Scenes::Level1Scene::run()
 {
     auto collisionSystem = static_cast<ECS::System::CollisionSystem *>(_ECS->system(ECS::System::Flags::Collision).get());
 
+    // Changing the current wave if needed
+    changeWave();
+
     // Checking if all player are alive or that the hit the final wave
-    if (!alivePlayers() || _currentWave == _MaxWaves) {
+    if (!alivePlayers() || _currentWave > _MaxWaves) {
         _pop = true;
         return nullptr;
     }
-
-    // Changing the current wave if needed
-    changeWave();
 
     // Checking collisions
     for (unsigned long long item1 = 0; item1 < _ids.size() && _ECS->hasEntity(_ids[item1]); ++item1)
@@ -80,8 +80,12 @@ void Scenes::Level1Scene::changeWave()
 
     // Changing wave
     _currentWave += 1;
-    if (_currentWave <= _MaxWaves)
+    if (_currentWave <= _MaxWaves) {
+        Debug::Logger *log = Debug::Logger::getInstance();
+
+        log->generateDebugMessage(Debug::INFO, "Player are currently on wave " + std::to_string(_currentWave), "Scenes::Level1Scene::changeWave");
         _waves.at(_currentWave)(*this);
+    }
     _ids = _ECS->ids();
 }
 
@@ -131,7 +135,7 @@ void Scenes::Level1Scene::initComponents()
     //_ECS->createEntity("Background");
     _ECS->createEntityFromLibrary("lib/libparallax.so");
     for (int i = 0; i < _players; ++i)
-        _ECS->createEntityFromLibrary("lib/libplayer.so");
+        _playersIds.emplace(i + 1, _ECS->createEntityFromLibrary("lib/libplayer.so"));
     _ids = _ECS->ids();
     _waves.at(0)(*this);
 
@@ -159,11 +163,11 @@ void Scenes::Level1Scene::handleEvent(std::queue<std::pair<int, size_t>> events)
     while (!events.empty()) {
 
         // Checking inputs from the player that sent the packet
-        if (events.front().first >= (int)_ids.size() || !checkPlayer(events.front()) || !_ECS->hasEntity(_ids.at(events.front().first))) {
+        if (!checkPlayer(events.front()) || !_ECS->hasEntity(_playersIds[events.front().first])) {
             events.pop();
             continue;
         }
-        auto sps = _ECS->entity(_ids.at(events.front().first));
+        auto sps = _ECS->entity(_playersIds[events.front().first]);
         float x = 0;
         float y = 0;
         if (events.front().second & UP)
@@ -181,14 +185,13 @@ void Scenes::Level1Scene::handleEvent(std::queue<std::pair<int, size_t>> events)
         movementSystem->move(sps, x * speeds[events.front().first - 1], y * speeds[events.front().first - 1], 0);
         events.pop();
     }
-    std::cout << "OUT" << std::endl;
 }
 
 bool Scenes::Level1Scene::checkPlayer(std::pair<int, std::size_t> &key)
 {
-    for (auto id : _ids) {
+    for (auto id : _playersIds) {
         //std::cout << "id: " << id << ", key: " << key.first << std::endl; 
-        if ((int)id == key.first) {
+        if (id.first == key.first) {
             //std::cout << "OK" << std::endl;
             return true;
         }
@@ -233,24 +236,23 @@ void Scenes::Level1Scene::waveTwo()
     _ECS->createEntityFromLibrary("lib/libship.so");
     _ECS->createEntityFromLibrary("lib/libship.so");
     _ECS->createEntityFromLibrary("lib/libship.so");
-    _ECS->createEntityFromLibrary("lib/libfleet.so");
 }
 
 void Scenes::Level1Scene::waveThree()
 {
     // Spawning swarms
-    _ECS->createEntityFromLibrary("lib/libswarm.so");
-    _ECS->createEntityFromLibrary("lib/libswarm.so");
-    _ECS->createEntityFromLibrary("lib/libswarm.so");
     _ECS->createEntityFromLibrary("lib/libfleet.so");
+    // _ECS->createEntityFromLibrary("lib/libfleet.so");
+    // _ECS->createEntityFromLibrary("lib/libfleet.so");
+    // _ECS->createEntityFromLibrary("lib/libfleet.so");
 }
 
 void Scenes::Level1Scene::waveFour()
 {
     // Spawning swarms
     _ECS->createEntityFromLibrary("lib/libswarm.so");
-    _ECS->createEntityFromLibrary("lib/libship.so");
-    _ECS->createEntityFromLibrary("lib/libship.so");
-    _ECS->createEntityFromLibrary("lib/libship.so");
-    _ECS->createEntityFromLibrary("lib/libfleet.so");
+    // _ECS->createEntityFromLibrary("lib/libship.so");
+    // _ECS->createEntityFromLibrary("lib/libship.so");
+    // _ECS->createEntityFromLibrary("lib/libship.so");
+    // _ECS->createEntityFromLibrary("lib/libfleet.so");
 }

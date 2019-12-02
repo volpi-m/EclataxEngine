@@ -40,6 +40,8 @@ std::shared_ptr<ECS::Entity> Game::ShipBeam::createEntity(std::shared_ptr<ECS::E
 
 void Game::ShipBeam::IA(std::shared_ptr<ECS::Entity> &entity)
 {
+    if (!entity->hasComponent(ECS::Component::Flags::speed) || !entity->hasComponent(ECS::Component::Flags::transform))
+        return;
     auto speed = static_cast<ECS::Component::Speed *>(entity->component(ECS::Component::Flags::speed).get());
     auto transform = static_cast<ECS::Component::Transform *>(entity->component(ECS::Component::Flags::transform).get());
 
@@ -93,12 +95,25 @@ std::shared_ptr<ECS::Entity> Game::Ship::createEntityToSpawn(std::shared_ptr<ECS
 
 void Game::Ship::IA(std::shared_ptr<ECS::Entity> &entity)
 {
+    static std::unordered_map<ECS::Entity *, float> _startingPoints;
     const float amp = 30;
     const float freq = 60;
+
+    // Checking necessary components
+    if (!entity->hasComponent(ECS::Component::Flags::speed) || !entity->hasComponent(ECS::Component::Flags::transform))
+        return;
+
+    // Getting all components
     auto speed = static_cast<ECS::Component::Speed *>(entity->component(ECS::Component::Flags::speed).get());
     auto transform = static_cast<ECS::Component::Transform *>(entity->component(ECS::Component::Flags::transform).get());
-    static const float startPoint = transform->y;
 
+    if (_startingPoints.find(entity.get()) == _startingPoints.end())
+        _startingPoints.emplace(entity.get(), transform->y);
+
+    // Getting the current starting point
+    float startPoint = _startingPoints[entity.get()];
+
+    // Calculating y position (sin wave)
     transform->y = std::sin(transform->x / freq) * amp + startPoint;
     transform->x -= speed->speed;
     if (transform->x < 0)

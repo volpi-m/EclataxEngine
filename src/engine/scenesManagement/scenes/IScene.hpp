@@ -73,6 +73,6 @@ namespace Scenes {
             /// Int is the number of the player
             /// size_t is the event
             /// \brief manage all event in the scene
-            virtual void handleEvent(std::queue<std::pair<int, size_t>>& event) = 0;
+            virtual void handleEvent(std::queue<std::pair<int, size_t>> event) = 0;
     };
 }

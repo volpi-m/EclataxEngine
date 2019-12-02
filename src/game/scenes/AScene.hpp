@@ -98,7 +98,7 @@ namespace Scenes {
             /// The first element of pair is the number of the player that did the event
             /// The second element of pair is the event
             /// \brief push an entity to the stack of the scene
-            virtual void handleEvent(std::queue<std::pair<int, size_t>> &events) = 0;
+            virtual void handleEvent(std::queue<std::pair<int, size_t>> events) = 0;
 
         protected:
             /*! name of the scene */

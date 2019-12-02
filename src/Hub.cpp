@@ -32,6 +32,7 @@ void Server::Hub::start()
     auto scene = std::shared_ptr<Scenes::IScene>(new Scenes::HubLoadingScene("Hub scene", _engine.ECS(), _players.size()));
     _engine.SceneMachine()->push(scene);
 
+    initStatePlayers();
     while (_engine.SceneMachine()->run() != false && !_stoped) {
         std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
         std::stack<Network::Entity> &entities = _engine.SceneMachine()->getCurrentSceneEntityStack();
@@ -58,8 +59,8 @@ void Server::Hub::start()
                 sendEntity(entities.top());
                 entities.pop();
             }
+            _engine.ECS()->clear();
             startGame();
-            initStatePlayers();
         }
     }
 }
