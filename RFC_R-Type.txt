@@ -1,4 +1,4 @@
-59 118 177 236 295 354
+
 
 
 
@@ -26,14 +26,14 @@ Table of Contents
     3a. Client event sending . . . . . . . . . . . . . . 5
     4.  Server gameloop  . . . . . . . . . . . . . . . . 6
     4a. Server Entity sending  . . . . . . . . . . . . . 6
-    5.  Configuration file . . . . . . . . . . . . . . . 
-    6.  Server prompt  . . . . . . . . . . . . . . . . . 
+    5.  Configuration file . . . . . . . . . . . . . . . 7
+    6.  Server prompt  . . . . . . . . . . . . . . . . . 7
+    7.  Authors' details . . . . . . . . . . . . . . . . 8
+    8.  Full Copyright Statement . . . . . . . . . . . . 8
 
 
 
 
-    X.  Authors' details
-    Y.  Full Copyright Statement
 
 
 
@@ -327,23 +327,24 @@ RFC -42             Instruction to R-Type Developper      November 2019
 
     4a. Server Entity sending
 
+        Server MAY send entities one by one on UDP network to
+        each client. There is probably a better way to do it where
+        you use network less but, hey, shut up !
 
+        The entity structure to send data is made like that:
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        struct Entity {
+            unsigned lon long int id;
+            float x;
+            float y;
+            float z;
+            float top;
+            float left;
+            float width;
+            float height;
+            char deleted;
+            char texture[SOME_SIZE];
+        }
 
 
 Informational                                                  [Page 6]
@@ -351,94 +352,119 @@ Informational                                                  [Page 6]
                 Matteo V. Lucas T. Arthur L. Paulin F.
 
 =======================================================================
-
-Netcode:
-    Tick every 16 ms (~60 t/s)
-
-    here's a basic gameloop:
-    while 1:
-        read_network();
-        read_events();
-        update_world();
-        send_events();
-        render_game();
-
-    send_events():
-        send a packet each tick
-        every packet is composed of a map of events
-        {up: True, down: False, left: True ...}
-
-    read_network():
-        read a packet each tick
-        every packet ...
+RFC -42             Instruction to R-Type Developper      November 2019
 
 
-1xx: informations
+5.  Configuration file
 
-2xx: client communication
-    201: ask for hub
-    202: client ready
-    203: client not ready
-    204: request sprites
-    205: client tick
-    206: require key
+    To rule some part of the client/server, values are passed
+    in configuration files. You MUST uses these configuration
+    files at least to store server's ip and port on client side
+    and key mapping on server side.
 
-3xx: client error
-    301: Client debug
-    302: Client error
+    These files looks like this:
 
-4xx: server communication
-    401: player is in hub
-    402: server tick
-    403: New player in hub
-    404: New ennemy information
-    405: Game is starting
-    406: Send key
+    server_ip:127.0.0.1
+    #server_ip:10.18.207.215
+    tcp_port:1234
+    udp_port:4321
 
-5xx: server error
-    501: Server debug
-    502: Server error
+    A Configuration file parser/writer is shipped with the r-type.
+    You can comment lines in the file.
+
+    If you read this you are probably mad or got nothing else to do,
+    so basically I don't know if you should feel ashamed or proud of
+    you. But at least you will be able to produce an replica of
+    our r-type. GG !
 
 
-- every key has an event associated
-    struct {
-        eventUp = sfKeyA;
-        eventDown = sfKeyS;
-        ...
-    }
+6.  Server prompt
 
-- change a key: change the key associated with the event
+    When you launch the server (despite all log messages that will
+    be printed on screen) you can type commands in a small shell:
 
-- enum in client
-typedef enum event {
-    eventUp, eventDown, eventLeft ...
-} event_t;
+    $> hubs
 
-=========================================
+    There are a few commands wich are:
+    - help: print help for all commands
 
-Client scenes:
-    - SplashScreen
-    - Menu
-        - Options
-        - Play Solo
-        - Play Multiplayer -> request a hub
-            - Hub
-            - Game
+    - quit/shutdown: quit the server properly
 
-=========================================
+    - hubs: print informations about all actives hubs
 
-Client keymap: up, down, left, right, shoot
+    - kick: kick a player from a game
 
-=========================================
 
-Client send events:
 
-max packet size: 512 - sizeof(short)
 
-to send events from client to server we send a
 
-=========================================
 
-Server send:
-    For each sprite:
-        ID de l'ennemi + x + y + scaleX + scaleY
+
+
+
+
+
+
+Informational                                                  [Page 7]
+
+                Matteo V. Lucas T. Arthur L. Paulin F.
+
+=======================================================================
+RFC -42             Instruction to R-Type Developper      November 2019
+
+
+8.  Authors' details
+
+    All members of this project are students of Epitech school in
+    France. This project was part of an "Advanced C++" module.
+
+    Matteo Volpi:
+        matteo.volpi@epitech.eu
+
+    Lucas Tabis:
+        lucas.tabis@epitech.eu
+
+    Arthur Lang:
+        arthur.lang@epitech.eu
+
+    Paulin Flammang:
+        paulin.flammang@epitech.eu
+
+
+9.  Full Copyright Statement
+
+    Basically:
+    Do what you want 'cause a pirate is free, you are a pirate !
+
+    On a more serious note, this project is provided with no
+    warranty that you can compile it or made it works.
+
+    But you can try.
+
+    If you read until this point.
+
+
+
+    Please if someon really read all this file until this point
+    send me a mail and tell it to me.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Informational                                                  [Page 8]
+
+                Matteo V. Lucas T. Arthur L. Paulin F.
+
+=======================================================================
