@@ -51,13 +51,15 @@ void Scenes::HubLoadingScene::initComponents()
     std::shared_ptr<ECS::IComponent> sprite(new ECS::Component::Sprite("ressources/level_1.jpg", Game::Rect(0, 0, 1920, 1080)));
 
     std::shared_ptr<ECS::ISystem>render(new ECS::System::RenderSystem());
+    std::shared_ptr<ECS::ISystem>mov(new ECS::System::MovementSystem());
     _ECS->addSystem(ECS::System::Flags::RenderSystem, render);
+    _ECS->addSystem(ECS::System::Flags::Movement, mov);
 
     unsigned long long bgId = _ECS->createEntity("Background");
     _ECS->addComponentToEntity(bgId, ECS::Component::Flags::transform, transform);
     _ECS->addComponentToEntity(bgId, ECS::Component::Flags::sprite, sprite);
     pushEntityStack(_ECS->entity(bgId), bgId);
-    createCategory(100);
+    createCategory(0);
 }
 
 void Scenes::HubLoadingScene::handleEvent(std::queue<std::pair<int, size_t>> events)
@@ -78,19 +80,18 @@ void Scenes::HubLoadingScene::displayPlayer(int playerNb) {
             _playerStat[playerNb].state = !_playerStat[playerNb].state;
         }
     } else {
-        createCategory(100 + (playerNb * 25));
+        createCategory(playerNb);
     }
 }
 
 void Scenes::HubLoadingScene::createCategory(int pos)
 {
-    std::shared_ptr<ECS::IComponent> transform(new ECS::Component::Transform(100 + (pos * 10), 100, 0));
+    std::shared_ptr<ECS::IComponent> transform(new ECS::Component::Transform((1920 / 2 - 100), 150 + (pos * 200), 0));
     std::shared_ptr<ECS::IComponent> sprite(new ECS::Component::Sprite(CROSS_PATH, Game::Rect(0, 0, 200, 200)));
-    unsigned long long ship = _ECS->createEntityFromLibrary(PLAYER_SHIP_PATH);
     unsigned long long ico = _ECS->createEntity("player ico");
-    _ECS->addComponentToEntity(ico, ECS::Component::Flags::transform, transform);
+    unsigned long long ship = _ECS->createEntityFromLibrary(PLAYER_SHIP_PATH);
+    static_cast<ECS::System::MovementSystem *>(_ECS->system(ECS::System::Flags::Movement).get())->setTransform(_ECS->entity(ship), 1920 / 2, 250 + (pos * 250), 0);
     _ECS->addComponentToEntity(ico, ECS::Component::Flags::sprite, sprite);
-    pushEntityStack(_ECS->entity(ico), ico);
-    pushEntityStack(_ECS->entity(ship), ship);
+    _ECS->addComponentToEntity(ico, ECS::Component::Flags::transform, transform);
     _playerStat.emplace_back(false, ico);
 }

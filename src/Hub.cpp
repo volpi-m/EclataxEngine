@@ -141,13 +141,17 @@ bool Server::Hub::addMember(const std::string &ip)
         return false;
 }
 
-void Server::Hub::removeMember(const std::string &ip)
+bool Server::Hub::removeMember(const std::string &ip)
 {
+    bool rm = false;
     std::unique_lock<std::mutex> lock(_mutex);
     for (unsigned int i = 0; i < _players.size(); i++) {
-        if (_players[i].ip == ip)
+        if (_players[i].ip == ip) {
             _players.erase(_players.begin() + i);
-    }    
+            rm = true;
+        }
+    }
+    return (rm);
     // _players.remove_if([&] (Player &p) { return(p.ip == ip); });
 }
 
