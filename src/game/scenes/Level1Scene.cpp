@@ -125,17 +125,18 @@ void Scenes::Level1Scene::initComponents()
     std::shared_ptr<ECS::ISystem> systemHealthManipulator(new ECS::System::HealthManipulator);
     std::shared_ptr<ECS::ISystem> systemCollisionSystem(new ECS::System::CollisionSystem);
 
-    std::shared_ptr<ECS::IComponent> sprite(new ECS::Component::Sprite("ressources/level_1.jpg", Game::Rect(0, 0, 1920, 1080)));
-    std::shared_ptr<ECS::IComponent> transform(new ECS::Component::Transform);
+    // std::shared_ptr<ECS::IComponent> sprite(new ECS::Component::Sprite("ressources/level_1.jpg", Game::Rect(0, 0, 1920, 1080)));
+    // std::shared_ptr<ECS::IComponent> transform(new ECS::Component::Transform);
 
-    _ECS->createEntity("Background");
+    //_ECS->createEntity("Background");
+    _ECS->createEntityFromLibrary("lib/libparallax.so");
     for (int i = 0; i < _players; ++i)
         _ECS->createEntityFromLibrary("lib/libplayer.so");
     _ids = _ECS->ids();
     _waves.at(0)(*this);
 
-    _ECS->addComponentToEntity(_ids.front(), ECS::Component::Flags::sprite, sprite);
-    _ECS->addComponentToEntity(_ids.front(), ECS::Component::Flags::transform, transform);
+    // _ECS->addComponentToEntity(_ids.front(), ECS::Component::Flags::sprite, sprite);
+    // _ECS->addComponentToEntity(_ids.front(), ECS::Component::Flags::transform, transform);
 
     _ECS->addSystem(ECS::System::Flags::Collision, systemCollisionSystem);
     _ECS->addSystem(ECS::System::Flags::IA, systemIA);
