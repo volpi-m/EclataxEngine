@@ -44,10 +44,6 @@ void Server::Hub::start()
         // // send event to scene
         _engine.SceneMachine()->sendEventsToCurrentScene(_event);
 
-        // // update event stack
-        while(!_event.empty()) {
-            _event.pop();
-        }
         std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
         std::this_thread::sleep_for(std::chrono::milliseconds(16 - std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count()));
         if (allIsReady()) {
@@ -194,6 +190,9 @@ void Server::Hub::processUdpMessage(Server::UdpNetwork *socket)
 void Server::Hub::addEvent(Server::UdpNetwork *socket, Network::headerUdp *packet)
 {
     // need to find the position of socket->remoteIp()
+
+    std::lock_guard<std::mutex> lock(_mutex);
+
     int nb = -1;
     for (unsigned int i = 0; i != _players.size(); i++) {
         if (_players[i].ip == socket->remoteIp()) {
@@ -236,12 +235,13 @@ void Server::Hub::initStatePlayers()
 void Server::Hub::handleEvent()
 {
     if (_event.size() != 0) {
-        if (_event.size() == 1 && (_event.front().second & 32) == 32) {
+        if (_event.size() == 1 && _event.front().second & Scenes::SPACE) {
                 _players[_event.front().first - 1].isReady = true;
         } else {
             auto current = _event.front();
+
             for (auto last = _event.back(); current != last; current = _event.front()) {
-                if (current.second & 32) {
+                if (current.second & Scenes::SPACE) {
                     _players[current.first - 1].isReady = true;
                 }
                 _event.push(current);

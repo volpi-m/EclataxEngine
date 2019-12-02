@@ -7,7 +7,7 @@
 
 #include "ECS.hpp"
 
-Module::EntityComponentSystem::EntityComponentSystem() : _newId(0), _initialised(false)
+Module::EntityComponentSystem::EntityComponentSystem() : _newId(1), _initialised(false)
 {
     init();
 }
@@ -189,5 +189,5 @@ void Module::EntityComponentSystem::clear()
 {
     _entities.clear();
     _systems.clear();
-    _newId = 0;
+    _newId = 1;
 }

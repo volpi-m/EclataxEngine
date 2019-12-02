@@ -107,6 +107,7 @@ void Game::Ship::IA(std::shared_ptr<ECS::Entity> &entity)
     auto speed = static_cast<ECS::Component::Speed *>(entity->component(ECS::Component::Flags::speed).get());
     auto transform = static_cast<ECS::Component::Transform *>(entity->component(ECS::Component::Flags::transform).get());
 
+    // Getting the current transform
     if (_startingPoints.find(entity.get()) == _startingPoints.end())
         _startingPoints.emplace(entity.get(), transform->y);
 

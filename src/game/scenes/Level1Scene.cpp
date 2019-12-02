@@ -134,8 +134,11 @@ void Scenes::Level1Scene::initComponents()
 
     //_ECS->createEntity("Background");
     _ECS->createEntityFromLibrary("lib/libparallax.so");
-    for (int i = 0; i < _players; ++i)
-        _playersIds.emplace(i + 1, _ECS->createEntityFromLibrary("lib/libplayer.so"));
+    for (int i = 1; i <= _players; ++i) {
+        auto newId = _ECS->createEntityFromLibrary("lib/libplayer.so");
+        if (newId)
+            _playersIds.emplace(i, newId);
+    }
     _ids = _ECS->ids();
     _waves.at(0)(*this);
 
@@ -163,7 +166,7 @@ void Scenes::Level1Scene::handleEvent(std::queue<std::pair<int, size_t>> events)
     while (!events.empty()) {
 
         // Checking inputs from the player that sent the packet
-        if (!checkPlayer(events.front()) || !_ECS->hasEntity(_playersIds[events.front().first])) {
+        if (!checkPlayer(events.front())) {
             events.pop();
             continue;
         }
@@ -191,7 +194,7 @@ bool Scenes::Level1Scene::checkPlayer(std::pair<int, std::size_t> &key)
 {
     for (auto id : _playersIds) {
         //std::cout << "id: " << id << ", key: " << key.first << std::endl; 
-        if (id.first == key.first) {
+        if (id.first == key.first && _ECS->hasEntity(_playersIds[key.first])) {
             //std::cout << "OK" << std::endl;
             return true;
         }
