@@ -64,14 +64,15 @@ void Server::Mediator::start()
                 std::cout << "Port: " << i.get()->port() << std::endl;
                 std::cout << "Number of player: " << i.get()->size() << std::endl;
             }
-        // } else if (input.find("kick") != input.end()) {
-        //     auto pos = input.find(" ");
-        //     std::string kick = input.substr(pos + 1, input.size());
-        //     for (auto &i : _hubs) {
-        //         if (i.get()->isInHub(kick) == true)
-        //             i.get()->removeMember(kick);
-        //     }
-        //     std::cout << "Kicked !" << std::endl;
+        } else if (input.find("kick") != std::string::npos) {
+            auto pos = input.find(" ");
+            std::string kick = input.substr(pos + 1, input.size());
+            for (auto &i : _hubs) {
+                if (i.get()->isInHub(kick) == true) {
+                    i.get()->removeMember(kick);
+                    std::cout << "Kicked !" << std::endl;
+                }
+            }
         }
     }
 }

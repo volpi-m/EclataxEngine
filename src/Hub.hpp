@@ -65,8 +65,9 @@ namespace Server {
             int size() const { return _players.size(); };
 
             /// \param ip : ip of the removed member
+            /// \return true or false if the player is remove or not
             /// \brief remove a player from the hub
-            void removeMember(const std::string &ip);
+            bool removeMember(const std::string &ip);
             /// \param ip : ip of the new member
             /// \brief add a player to the hub
             bool addMember(const std::string &ip);

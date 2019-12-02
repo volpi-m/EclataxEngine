@@ -11,6 +11,7 @@
 #include "TextComponent.hpp"
 #include "TextSystem.hpp"
 #include "RenderSystem.hpp"
+#include "MovementSystem.hpp"
 
 /// \namespace Scenes
 /// \brief Used for all scenes
