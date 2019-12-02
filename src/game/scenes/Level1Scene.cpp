@@ -16,6 +16,7 @@ Scenes::Level1Scene::Level1Scene(const std::string &name, std::shared_ptr<Module
     _waves.push_back(&Level1Scene::waveTwo);
     _waves.push_back(&Level1Scene::waveThree);
     _waves.push_back(&Level1Scene::waveFour);
+    _waves.push_back(&Level1Scene::waveFive);
 
     initComponents();
 }
@@ -29,6 +30,7 @@ Scenes::Level1Scene::Level1Scene(const char *name, std::shared_ptr<Module::Entit
     _waves.push_back(&Level1Scene::waveTwo);
     _waves.push_back(&Level1Scene::waveThree);
     _waves.push_back(&Level1Scene::waveFour);
+    _waves.push_back(&Level1Scene::waveFive);
 
     initComponents();
 }
@@ -117,6 +119,10 @@ void Scenes::Level1Scene::remove()
 {
     for (auto &id : _ids)
         _ECS->deleteEntity(id);
+    _ids = _ECS->ids();
+    for (unsigned long long id = 0; id < _ids.size(); ++id)
+        pushEntityStack(_ECS->entity(_ids[id]), _ids[id]);
+    _ECS->clearEntities();
 }
 
 void Scenes::Level1Scene::initComponents()
@@ -192,14 +198,9 @@ void Scenes::Level1Scene::handleEvent(std::queue<std::pair<int, size_t>> events)
 
 bool Scenes::Level1Scene::checkPlayer(std::pair<int, std::size_t> &key)
 {
-    for (auto id : _playersIds) {
-        //std::cout << "id: " << id << ", key: " << key.first << std::endl; 
-        if (id.first == key.first && _ECS->hasEntity(_playersIds[key.first])) {
-            //std::cout << "OK" << std::endl;
+    for (auto id : _playersIds)
+        if (id.first == key.first && _ECS->hasEntity(_playersIds[key.first]))
             return true;
-        }
-    }
-    //std::cout << "OUT" << std::endl;
     return false;
 }
 
@@ -245,17 +246,26 @@ void Scenes::Level1Scene::waveThree()
 {
     // Spawning swarms
     _ECS->createEntityFromLibrary("lib/libfleet.so");
-    // _ECS->createEntityFromLibrary("lib/libfleet.so");
-    // _ECS->createEntityFromLibrary("lib/libfleet.so");
-    // _ECS->createEntityFromLibrary("lib/libfleet.so");
+    _ECS->createEntityFromLibrary("lib/libfleet.so");
+    _ECS->createEntityFromLibrary("lib/libfleet.so");
+    _ECS->createEntityFromLibrary("lib/libfleet.so");
 }
 
 void Scenes::Level1Scene::waveFour()
 {
     // Spawning swarms
     _ECS->createEntityFromLibrary("lib/libswarm.so");
-    // _ECS->createEntityFromLibrary("lib/libship.so");
-    // _ECS->createEntityFromLibrary("lib/libship.so");
-    // _ECS->createEntityFromLibrary("lib/libship.so");
-    // _ECS->createEntityFromLibrary("lib/libfleet.so");
+    _ECS->createEntityFromLibrary("lib/libship.so");
+    _ECS->createEntityFromLibrary("lib/libship.so");
+    _ECS->createEntityFromLibrary("lib/libship.so");
+    _ECS->createEntityFromLibrary("lib/libfleet.so");
+}
+
+void Scenes::Level1Scene::waveFive()
+{
+    // Spawning swarms
+    _ECS->createEntityFromLibrary("lib/libswarm.so");
+    _ECS->createEntityFromLibrary("lib/libswarm.so");
+    _ECS->createEntityFromLibrary("lib/libswarm.so");
+    _ECS->createEntityFromLibrary("lib/libswarm.so");
 }
