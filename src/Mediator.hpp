@@ -103,5 +103,7 @@ namespace Server {
             /// \param packet packet send by client
             /// \brief method call when client ask for event list
             void sendEvent(Server::TcpConnection *socket, Network::headerTcp *packet);
+            /// \brief display shell help
+            void dispHelp();
     };
 }
