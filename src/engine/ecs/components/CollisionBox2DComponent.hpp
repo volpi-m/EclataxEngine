@@ -21,7 +21,7 @@ namespace ECS {
     /// \brief Used for the all component
     namespace Component {
 
-        /// \struct CollisionBox
+        /// \struct CollisionBox2D
         /// \brief CollisionBox structure, create the CollisionBox components
         struct CollisionBox2D : public IComponent {
             

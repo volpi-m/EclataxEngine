@@ -17,11 +17,20 @@
 /// \brief Used for all scenes
 namespace Scenes {
 
-    /// \def path for ship sprite
+    /// \def PLAYER_SHIP_PATH
+    /// \brief path to player library
     constexpr const auto PLAYER_SHIP_PATH = "lib/libplayer.so";
+
+    /// \def CHECK_PATH
+    /// \brief path to check image to check ready in hub
     constexpr const auto CHECK_PATH = "ressources/check.png";
+
+    /// \def CROSS_PATH
+    /// \brief path to cross image to select no ready in hub
     constexpr const auto CROSS_PATH = "ressources/cross.png";
 
+    /// \struct HubPlayer
+    /// \brief Represent info to know if a specific player is ready or not
     struct HubPlayer
     {
         HubPlayer(bool state, unsigned long long ico) : state(state), ico(ico) {};

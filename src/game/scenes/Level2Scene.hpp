@@ -30,8 +30,8 @@
 /// \brief Used for all scenes
 namespace Scenes {
 
-    /// \class SplashScene
-    /// \brief SplashScene class
+    /// \class Level2Scene
+    /// \brief Level2Scene class
     class Level2Scene : public AScene {
 
         public:

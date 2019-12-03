@@ -25,14 +25,19 @@
 
 namespace Game
 {
-    /// \class Parallax
-    /// \brief YES
+    /// \class Parallax2
+    /// \brief Parallax for level 2
     class Parallax2 : public IEnnemy
     {
     public:
+        /// \brief Constructor
         Parallax2() = default;
+
+        /// \brief Destructor
         ~Parallax2() = default;
 
+        /// \brief Create a parallax2 to be used
+        /// \return return a pointer on a Parallax2 entity
         ECS::Entity *createEntity() override;
     };
 }

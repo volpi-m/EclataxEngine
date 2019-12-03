@@ -19,12 +19,15 @@
 
 /// \namespace Scenes
 /// \brief Used for all scenes
-namespace Scenes {
+namespace Scenes
+{
 
     enum Event { UP = 1, DOWN = 2, LEFT = 4, RIGHT = 8, ENTER = 16, SPACE = 32, ESCAPE = 64};
 
-    class AScene : public IScene {
-
+    /// \class AScene
+    /// \brief Abstract class for each scene, add some other functions plus useful attributes
+    class AScene : public IScene
+    {
         public:
             /// \param name : the new name of the current scene
             /// \param ECS : ECS instance to pass to the scene

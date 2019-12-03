@@ -15,24 +15,37 @@
 #include <sys/types.h>
 #include <dirent.h>
 
-#define LIB_EXTENSION ".so"
+/// \def LIB_EXTENSION
+/// \brief extention of shared library to load
+constexpr auto const LIB_EXTENSION = ".so";
 
-namespace ECS {
+namespace ECS
+{
+    /// \class DLLoader
+    /// \brief templated class used to load shared library
+    class DLLoader
+    {
+    public:
+        /// \brief Constructor
+        DLLoader() = default;
 
-    class DLLoader {
-        public:
-            DLLoader() = default;
-            ~DLLoader();
+        /// \brief Destructor
+        ~DLLoader();
 
-            template<typename T>
-            T *getInstance(const std::string &file);
-            template<typename T>
-            std::vector<T *> openDirectory(const std::string &directory);
+        /// \brief get an instance of a shared library by calling entryPoint function
+        /// \param file : path to the shared library
+        /// \return an instance of the specific object
+        template<typename T> T *getInstance(const std::string &file);
 
-        private:
-            std::vector<void *> _ptr;
+        /// \brief open and return all instance of library in a specific directory
+        /// \param directory : path to the directory to search shared libraries
+        /// \return a vector of instance
+        template<typename T> std::vector<T *> openDirectory(const std::string &directory);
 
-            void disp_error() const;
+    private:
+        std::vector<void *> _ptr;
+
+        void disp_error() const;
     };
 
     template<typename T>

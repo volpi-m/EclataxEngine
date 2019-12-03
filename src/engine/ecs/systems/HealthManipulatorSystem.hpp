@@ -28,7 +28,7 @@ namespace ECS {
     /// \brief Used for the all System
     namespace System {
 
-        /// \class LifeManipulator
+        /// \class HealthManipulator
         /// \brief A system that will update the Life component
         class HealthManipulator : public ISystem {
             public:
