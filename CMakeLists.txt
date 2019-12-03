@@ -72,6 +72,11 @@ set(ENTITY_PARALLAX
     ${CMAKE_CURRENT_SOURCE_DIR}/src/game/entities/Parallax.cpp
 )
 
+set(ENTITY_PARALLAXALT
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/engine/ecs/entities/Entity.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/game/entities/Parallax2.cpp
+)
+
 ## General sources
 set(SRC
     src/ConfReader.cpp
@@ -107,6 +112,7 @@ set(SRC_SERVER
 
 set (SRC_GAME
     ${CMAKE_CURRENT_SOURCE_DIR}/src/game/scenes/Level1Scene.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/game/scenes/Level2Scene.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/game/scenes/SplashScene.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/game/scenes/AScene.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/game/scenes/HubLoadingScene.cpp
@@ -164,6 +170,8 @@ add_library(bee SHARED ${ENTITY_BEES})
 add_library(swarm SHARED ${ENTITY_SWARM})
 
 add_library(parallax SHARED ${ENTITY_PARALLAX})
+
+add_library(parallaxalt SHARED ${ENTITY_PARALLAXALT})
 
 ## Creating server executable
 add_executable(r-type_server

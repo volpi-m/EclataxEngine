@@ -47,9 +47,17 @@ Scenes::IScene *Scenes::Level1Scene::run()
     changeWave();
 
     // Checking if all player are alive or that the hit the final wave
-    if (!alivePlayers() || _currentWave > _MaxWaves) {
+    if (!alivePlayers()) {
+        remove();
         _pop = true;
         return nullptr;
+    } else if (_currentWave > _MaxWaves) {
+        // Switching to the next level
+        remove();
+        _pop = true;
+        Scenes::IScene *scene = new Scenes::Level2Scene("level2Scene", _ECS, _players);
+
+        return scene;
     }
 
     // Checking collisions
@@ -135,10 +143,6 @@ void Scenes::Level1Scene::initComponents()
     std::shared_ptr<ECS::ISystem> systemHealthManipulator(new ECS::System::HealthManipulator);
     std::shared_ptr<ECS::ISystem> systemCollisionSystem(new ECS::System::CollisionSystem);
 
-    // std::shared_ptr<ECS::IComponent> sprite(new ECS::Component::Sprite("ressources/level_1.jpg", Game::Rect(0, 0, 1920, 1080)));
-    // std::shared_ptr<ECS::IComponent> transform(new ECS::Component::Transform);
-
-    //_ECS->createEntity("Background");
     _ECS->createEntityFromLibrary("lib/libparallax.so");
     for (int i = 1; i <= _players; ++i) {
         auto newId = _ECS->createEntityFromLibrary("lib/libplayer.so");
@@ -147,9 +151,6 @@ void Scenes::Level1Scene::initComponents()
     }
     _ids = _ECS->ids();
     _waves.at(0)(*this);
-
-    // _ECS->addComponentToEntity(_ids.front(), ECS::Component::Flags::sprite, sprite);
-    // _ECS->addComponentToEntity(_ids.front(), ECS::Component::Flags::transform, transform);
 
     _ECS->addSystem(ECS::System::Flags::Collision, systemCollisionSystem);
     _ECS->addSystem(ECS::System::Flags::IA, systemIA);
@@ -187,6 +188,10 @@ void Scenes::Level1Scene::handleEvent(std::queue<std::pair<int, size_t>> events)
             x -= 2;
         else if (events.front().second & RIGHT)
             x += 2;
+        else if (events.front().second & ESCAPE) {
+            sps->deleteEntity();
+            pushEntityStack(sps, _playersIds[events.front().first]);
+        }
         if (events.front().second & SPACE)
             computeShots(sps, lastShot[events.front().first - 1]);
 
@@ -254,7 +259,6 @@ void Scenes::Level1Scene::waveThree()
 void Scenes::Level1Scene::waveFour()
 {
     // Spawning swarms
-    _ECS->createEntityFromLibrary("lib/libswarm.so");
     _ECS->createEntityFromLibrary("lib/libship.so");
     _ECS->createEntityFromLibrary("lib/libship.so");
     _ECS->createEntityFromLibrary("lib/libship.so");
@@ -263,9 +267,12 @@ void Scenes::Level1Scene::waveFour()
 
 void Scenes::Level1Scene::waveFive()
 {
-    // Spawning swarms
-    _ECS->createEntityFromLibrary("lib/libswarm.so");
-    _ECS->createEntityFromLibrary("lib/libswarm.so");
-    _ECS->createEntityFromLibrary("lib/libswarm.so");
-    _ECS->createEntityFromLibrary("lib/libswarm.so");
+    // Spawning bees
+    _ECS->createEntityFromLibrary("lib/libbee.so");
+    _ECS->createEntityFromLibrary("lib/libbee.so");
+    _ECS->createEntityFromLibrary("lib/libbee.so");
+    _ECS->createEntityFromLibrary("lib/libbee.so");
+    _ECS->createEntityFromLibrary("lib/libbee.so");
+    _ECS->createEntityFromLibrary("lib/libbee.so");
+    _ECS->createEntityFromLibrary("lib/libbee.so");
 }

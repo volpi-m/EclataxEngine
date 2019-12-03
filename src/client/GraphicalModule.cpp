@@ -35,6 +35,7 @@ Client::GraphicalModule::GraphicalModule()
     _evtList.push_back({sf::Keyboard::Key::D, "Move Right"});
     _evtList.push_back({sf::Keyboard::Key::Enter, "Enter"});
     _evtList.push_back({sf::Keyboard::Key::Space, "Space"});
+    _evtList.push_back({sf::Keyboard::Key::Escape, "Escape"});
 }
 
 const sf::RenderWindow &Client::GraphicalModule::window() const

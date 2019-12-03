@@ -21,7 +21,7 @@
 /// \brief Used for all scenes
 namespace Scenes {
 
-    enum Event { UP = 1, DOWN = 2, LEFT = 4, RIGHT = 8, ENTER = 16, SPACE = 32};
+    enum Event { UP = 1, DOWN = 2, LEFT = 4, RIGHT = 8, ENTER = 16, SPACE = 32, ESCAPE = 64};
 
     class AScene : public IScene {
 

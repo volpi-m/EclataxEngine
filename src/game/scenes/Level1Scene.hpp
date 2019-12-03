@@ -22,6 +22,7 @@
 #include "MovementSystem.hpp"
 #include "LifeSpanSystem.hpp"
 #include "SpawnerSystem.hpp"
+#include "Level2Scene.hpp"
 #include "IASystem.hpp"
 
 #include "Fleet.hpp"
