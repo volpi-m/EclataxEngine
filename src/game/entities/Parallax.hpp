@@ -26,16 +26,23 @@
 namespace Game
 {
     /// \class Parallax
-    /// \brief YES
+    /// \brief Parallax entity for level 1
     class Parallax : public IEnnemy
     {
     public:
+        ///\brief Constructor
         Parallax() = default;
+
+        /// \brief Destructor
         ~Parallax() = default;
 
+        /// \brief Create a parallax to be used
+        /// \return a pointer on a parallax object
         ECS::Entity *createEntity() override;
 
     private:
+        /// \brief IA function of this entity
+        /// \param entity : shared pointer on an instance of Parallax to be used
         static void IA(std::shared_ptr<ECS::Entity> &entity);
     };
 }

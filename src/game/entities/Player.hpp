@@ -23,7 +23,7 @@
 
 namespace Game
 {
-    /// \class ShipBeam
+    /// \class PlayerShipBeam
     /// \brief kinda bullet entity
     class PlayerShipBeam {
 	public:

@@ -23,7 +23,7 @@ namespace ECS {
     /// \brief Used for the all component
     namespace Component {
 
-        /// \struct Animation
+        /// \struct Animation2D
         /// \brief Animation structure, create the Animation component
         struct Animation2D : public IComponent {
             

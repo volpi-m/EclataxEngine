@@ -27,7 +27,7 @@ namespace ECS {
     /// \brief Used for the all System
     namespace System {
 
-        /// \class SpawnerSystem
+        /// \class AnimationSystem
         /// \brief A system that will spawns entities
         class AnimationSystem : public ISystem {
             public:
