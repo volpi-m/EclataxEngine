@@ -35,7 +35,7 @@ void ECS::System::MovementSystem::setTransform(std::shared_ptr<Entity> &entity, 
     component->z = z;
 }
 
-void ECS::System::MovementSystem::move(const std::shared_ptr<Entity> &entity, float x, float y, float z)
+void ECS::System::MovementSystem::move(std::shared_ptr<Entity> &entity, float x, float y, float z)
 {
     // Casting it to the correct component
     auto component = static_cast<ECS::Component::Transform *>(entity->component(Component::Flags::transform).get());

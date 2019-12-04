@@ -71,7 +71,6 @@ Scenes::IScene *Scenes::Level1Scene::run()
 
     // Pushing entities to the stack
     _ids = _ECS->ids();
-    //std::cout << "entities on screen: " << _ids.size() << std::endl;
     for (unsigned long long id = 0; id < _ids.size(); ++id)
         pushEntityStack(_ECS->entity(_ids[id]), _ids[id]);
 
@@ -189,7 +188,7 @@ void Scenes::Level1Scene::handleEvent(std::queue<std::pair<int, size_t>> events)
             x -= 2;
         else if (events.front().second & RIGHT)
             x += 2;
-        else if (events.front().second & ESCAPE) {
+        if (events.front().second & ESCAPE) {
             sps->deleteEntity();
             pushEntityStack(sps, _playersIds[events.front().first]);
         }
@@ -204,9 +203,13 @@ void Scenes::Level1Scene::handleEvent(std::queue<std::pair<int, size_t>> events)
 
 bool Scenes::Level1Scene::checkPlayer(std::pair<int, std::size_t> &key)
 {
-    for (auto id : _playersIds)
-        if (id.first == key.first && _ECS->hasEntity(_playersIds[key.first]))
+    for (auto id : _playersIds) {
+        //std::cout << "id: " << key.first << ", event: " << key.second << std::endl;
+        if (_playersIds.find(key.first) != _playersIds.end() && id.first == key.first && _ECS->hasEntity(_playersIds[key.first])) {
+            //std::cout << "TRUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUE" << std::endl;
             return true;
+        }
+    }
     return false;
 }
 

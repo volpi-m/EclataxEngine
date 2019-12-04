@@ -42,9 +42,13 @@ void Server::Hub::start()
             sendEntity(entities.top());
             entities.pop();
         }
-        handleEvent();
-        // // send event to scene
-        _engine.SceneMachine()->sendEventsToCurrentScene(_event);
+        {
+            handleEvent();
+            std::lock_guard<std::mutex> lock(_mutex);
+
+            // // send event to scene
+            _engine.SceneMachine()->sendEventsToCurrentScene(_event);
+        }
 
         std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
         std::this_thread::sleep_for(std::chrono::milliseconds(16 - std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count()));
@@ -84,7 +88,7 @@ void Server::Hub::startGame()
     std::string msg("Hub number ");
     l->generateDebugMessage(Debug::type::INFO , "Starting the game", msg + std::to_string(_id));
     Scenes::IScene *newScene = nullptr;
-
+ 
     auto scene = std::shared_ptr<Scenes::IScene>(new Scenes::Level1Scene("level1Scene", _engine.ECS(), _players.size()));
 
     _engine.SceneMachine()->push(scene);
@@ -111,12 +115,15 @@ void Server::Hub::startGame()
             std::shared_ptr<Scenes::IScene> s(newScene);
             _engine.SceneMachine()->push(s);
         }
-        // send event to scene
-        _engine.SceneMachine()->sendEventsToCurrentScene(_event);
+        {
+            std::lock_guard<std::mutex> lock(_mutex);
+           // send event to scene
+            _engine.SceneMachine()->sendEventsToCurrentScene(_event);
 
-        // update event stack
-        while (!_event.empty())
-            _event.pop();
+            // update event stack
+            while (!_event.empty())
+                _event.pop();
+        }
 
          // Sleeping before starting the next frame
         std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
@@ -243,7 +250,7 @@ void Server::Hub::initStatePlayers()
 
 void Server::Hub::handleEvent()
 {
-    if (_event.size() != 0) {
+    if (_event.size()) {
         if (_event.size() == 1 && _event.front().second & Scenes::SPACE) {
                 _players[_event.front().first - 1].isReady = true;
         } else {

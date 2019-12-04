@@ -52,7 +52,7 @@ namespace ECS {
                 /// \param y : y coordinates
                 /// \param z : z coordinates
                 /// \brief move an entity
-                void move(const std::shared_ptr<Entity> &entity, float x, float y, float z);
+                void move(std::shared_ptr<Entity> &entity, float x, float y, float z);
 
                 /// \param entity : entity that we want the speed from
                 /// \brief get the speed of a entity
