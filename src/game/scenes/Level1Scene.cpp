@@ -47,14 +47,15 @@ Scenes::IScene *Scenes::Level1Scene::run()
     changeWave();
 
     // Checking if all player are alive or that the hit the final wave
-    if (!alivePlayers()) {
+    if (!alivePlayers() || _pop) {
         remove();
         _pop = true;
+        _ECS->clear();
         return nullptr;
     } else if (_currentWave > _MaxWaves) {
         // Switching to the next level
         remove();
-        _pop = true;
+        _ECS->clear();
         Scenes::IScene *scene = new Scenes::Level2Scene("level2Scene", _ECS, _players);
 
         return scene;
@@ -62,7 +63,7 @@ Scenes::IScene *Scenes::Level1Scene::run()
 
     // Checking collisions
     for (unsigned long long item1 = 0; item1 < _ids.size() && _ECS->hasEntity(_ids[item1]); ++item1)
-        for (unsigned long long item2 = 0; item2 < _ids.size() && _ECS->hasEntity(_ids[item2]); ++item2)
+        for (unsigned long long item2 = item1; item2 < _ids.size() && _ECS->hasEntity(_ids[item2]); ++item2)
             checkCollisionTags(_ECS->entity(_ids[item1]), _ECS->entity(_ids[item2]), collisionSystem);
 
     // Updating systems

@@ -43,6 +43,7 @@ void Scenes::HubLoadingScene::remove()
         _ECS->entity(id)->deleteEntity();
     for (unsigned long long id = 0; id < ids.size() && _ECS->hasEntity(ids[id]); ++id)
         pushEntityStack(_ECS->entity(ids[id]), ids[id]);
+    _ECS->clear();
 }
 
 void Scenes::HubLoadingScene::initComponents()
@@ -72,7 +73,8 @@ void Scenes::HubLoadingScene::handleEvent(std::queue<std::pair<int, size_t>> eve
     }
 }
 
-void Scenes::HubLoadingScene::displayPlayer(int playerNb) {
+void Scenes::HubLoadingScene::displayPlayer(int playerNb)
+{
     if (static_cast<unsigned int>(playerNb + 1) <= _playerStat.size()) {
         if (!_playerStat[playerNb].state) {
             if (_ECS->hasComponent(_playerStat[playerNb].ico, ECS::Component::Flags::sprite))

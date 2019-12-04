@@ -14,7 +14,7 @@ std::shared_ptr<ECS::Entity> Game::ShipBeam::createEntity(std::shared_ptr<ECS::E
     auto parentTransform = static_cast<ECS::Component::Transform * >(parent->component(ECS::Component::Flags::transform).get());
 
     std::shared_ptr<ECS::IComponent> audio(new ECS::Component::Audio("bullet.mp3", false));
-    std::shared_ptr<ECS::IComponent> damage(new ECS::Component::Damage(20));
+    std::shared_ptr<ECS::IComponent> damage(new ECS::Component::Damage(1));
     std::shared_ptr<ECS::IComponent> health(new ECS::Component::Health(1));
     std::shared_ptr<ECS::IComponent> script(new ECS::Component::Script(&ShipBeam::IA));
     std::shared_ptr<ECS::IComponent> sprite(new ECS::Component::Sprite("ressources/bullet.png", rect));

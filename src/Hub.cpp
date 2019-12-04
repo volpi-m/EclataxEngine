@@ -27,13 +27,15 @@ void Server::Hub::start()
 {
     Debug::Logger *l = Debug::Logger::getInstance();
     std::string msg("hub number ");
-
     l->generateDebugMessage(Debug::type::INFO , msg + std::to_string(_id) + " is running !" , "Server::Hub::start()");
+
     auto scene = std::shared_ptr<Scenes::IScene>(new Scenes::HubLoadingScene("Hub scene", _engine.ECS(), _players.size()));
     _engine.SceneMachine()->push(scene);
 
     initStatePlayers();
-    while (_engine.SceneMachine()->run() != false && !_stoped) {
+    while (!_stoped) {
+
+        _engine.SceneMachine()->run();
         std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
         std::stack<Network::Entity> &entities = _engine.SceneMachine()->getCurrentSceneEntityStack();
         while (!entities.empty()) {
@@ -47,46 +49,48 @@ void Server::Hub::start()
         std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
         std::this_thread::sleep_for(std::chrono::milliseconds(16 - std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count()));
         if (allIsReady()) {
-            std::stack<Network::Entity> &entities = _engine.SceneMachine()->getCurrentSceneEntityStack();
-            while (!entities.empty())
-                entities.pop();
             _engine.SceneMachine()->remove();
+            std::stack<Network::Entity> &entities = _engine.SceneMachine()->getCurrentSceneEntityStack();
             while (!entities.empty()) {
                 sendEntity(entities.top());
                 entities.pop();
             }
-            _engine.ECS()->clear();
             startGame();
+            _engine.SceneMachine()->clear();
+            auto newHub = std::shared_ptr<Scenes::IScene>(new Scenes::HubLoadingScene("Hub scene", _engine.ECS(), _players.size()));
+            _engine.SceneMachine()->push(newHub);
         }
     }
 }
 
 void Server::Hub::stop()
 {
-    _stoped = true;    
+    std::unique_lock<std::mutex> lock(_mutex);
     Network::headerUdp data;
-    data.code = Network::CLIENT_ERROR;
     char msg[20] = "Server was stopped";
+
+    _stoped = true;
+    data.code = Network::CLIENT_ERROR;
+
     std::memcpy(data.data, &msg, sizeof(msg));
     sendToAllPlayer(&data, sizeof(data));
-    std::unique_lock<std::mutex> lock(_mutex);
     _players.clear();
 }
 
 void Server::Hub::startGame()
 {
     _isPlaying = true;
-    Debug::Logger *l = Debug::Logger::getInstance(".log");
+    Debug::Logger *l = Debug::Logger::getInstance();
     std::string msg("Hub number ");
     l->generateDebugMessage(Debug::type::INFO , "Starting the game", msg + std::to_string(_id));
-    std::unique_lock lock(_mutex);
+    Scenes::IScene *newScene = nullptr;
+
     auto scene = std::shared_ptr<Scenes::IScene>(new Scenes::Level1Scene("level1Scene", _engine.ECS(), _players.size()));
-    lock.unlock();
 
     _engine.SceneMachine()->push(scene);
 
-    while (_engine.SceneMachine()->name() != "Hub scene" && !_players.empty() && !_stoped) {
-        _engine.SceneMachine()->run();
+    while (!_players.empty() && !_stoped) {
+        newScene = _engine.SceneMachine()->run();
         // Calculatin time of execution
         std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
 
@@ -96,10 +100,21 @@ void Server::Hub::startGame()
             sendEntity(entities.top());
             entities.pop();
         }
-        // // send event to scene
+
+        if (_engine.SceneMachine()->isToPop() && !newScene) {
+            if (_engine.SceneMachine()->name() == "Hub scene" && _engine.SceneMachine()->isToSwap())
+                _engine.SceneMachine()->pop("Hub scene");
+            else
+                _engine.SceneMachine()->pop();
+            break;
+        } else if (newScene) {
+            std::shared_ptr<Scenes::IScene> s(newScene);
+            _engine.SceneMachine()->push(s);
+        }
+        // send event to scene
         _engine.SceneMachine()->sendEventsToCurrentScene(_event);
 
-        // // update event stack
+        // update event stack
         while (!_event.empty())
             _event.pop();
 
@@ -109,18 +124,14 @@ void Server::Hub::startGame()
     }
     _isPlaying = false;
     l->generateDebugMessage(Debug::type::INFO , "Ending the game", msg + std::to_string(_id));
-    _engine.SceneMachine()->remove();
-    _engine.SceneMachine()->pop("Hub scene");
-    if (!_stoped)
-        start();
+    initStatePlayers();
 }
 
 bool Server::Hub::allIsReady()
 {
-    for (auto &i : _players) {
+    for (auto &i : _players)
         if (i.isReady == false)
             return false;
-    }
     if (_players.size() != 0)
         return true;
     else
@@ -141,14 +152,13 @@ bool Server::Hub::removeMember(const std::string &ip)
 {
     bool rm = false;
     std::unique_lock<std::mutex> lock(_mutex);
-    for (unsigned int i = 0; i < _players.size(); i++) {
+
+    for (unsigned int i = 0; i < _players.size(); i++)
         if (_players[i].ip == ip) {
             _players.erase(_players.begin() + i);
             rm = true;
         }
-    }
     return (rm);
-    // _players.remove_if([&] (Player &p) { return(p.ip == ip); });
 }
 
 bool Server::Hub::isOpen()
@@ -162,19 +172,17 @@ bool Server::Hub::isOpen()
 
 bool Server::Hub::isInHub(const std::string &ip)
 {
-    for (auto &i : _players) {
+    for (auto &i : _players)
         if (i.ip == ip)
             return true;
-    }
     return false;
 }
 
 void Server::Hub::setPlayerReady(const std::string &ip, bool state)
 {
     for (auto &i : _players)
-        if (i.ip == ip) {
+        if (i.ip == ip)
             i.isReady = state;            
-        }
 }
 
 void Server::Hub::sendToAllPlayer(void *msg, const std::size_t size)
@@ -198,11 +206,9 @@ void Server::Hub::addEvent(Server::UdpNetwork *socket, Network::headerUdp *packe
     std::lock_guard<std::mutex> lock(_mutex);
 
     int nb = -1;
-    for (unsigned int i = 0; i != _players.size(); i++) {
-        if (_players[i].ip == socket->remoteIp()) {
+    for (unsigned int i = 0; i != _players.size(); i++)
+        if (_players[i].ip == socket->remoteIp())
             nb = i;
-        }
-    }
     if (nb != -1) {
         size_t event;
         std::memcpy(&event, packet->data, sizeof(size_t));
@@ -231,9 +237,8 @@ void Server::Hub::sendEntity(Network::Entity &e)
 void Server::Hub::initStatePlayers()
 {
     std::unique_lock<std::mutex> lock(_mutex);
-    for (auto &i : _players) {
+    for (auto &i : _players)
         i.isReady = false;
-    }
 }
 
 void Server::Hub::handleEvent()

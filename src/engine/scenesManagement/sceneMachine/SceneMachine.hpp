@@ -71,7 +71,7 @@ namespace Module {
             bool isToSwap() const;
 
             /// \brief starts the machine
-            bool run();
+            Scenes::IScene *run();
 
             /// \brief get the entity stack to send to clients
             /// \return a reference to the stack

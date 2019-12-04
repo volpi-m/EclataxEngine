@@ -50,12 +50,13 @@ Scenes::IScene *Scenes::Level2Scene::run()
         _pop = true;
         _swap = true;
         _name = "Hub scene";
+        _ECS->clear();
         return nullptr;
     }
 
     // Checking collisions
     for (unsigned long long item1 = 0; item1 < _ids.size() && _ECS->hasEntity(_ids[item1]); ++item1)
-        for (unsigned long long item2 = 0; item2 < _ids.size() && _ECS->hasEntity(_ids[item2]); ++item2)
+        for (unsigned long long item2 = item1; item2 < _ids.size() && _ECS->hasEntity(_ids[item2]); ++item2)
             checkCollisionTags(_ECS->entity(_ids[item1]), _ECS->entity(_ids[item2]), collisionSystem);
 
     // Updating systems
