@@ -207,7 +207,7 @@ void Server::Mediator::dispHelp()
 {
     std::cout << "Available commandes:\n" << std::endl;
     std::cout << "-shutdown / quit \tshutdown the server" << std::endl;
-    std::cout << "-hub \t\t\tdisplay hubs informations" << std::endl;
+    std::cout << "-hubs \t\t\tdisplay hubs informations" << std::endl;
     std::cout << "-kick [ip] \t\tskick the ip from the server" << std::endl;
     std::cout << "-help \t\t\tdisplay the help" << std::endl;
 }
