@@ -63,6 +63,10 @@ namespace Server {
             int id() const { return _id; };
             /// \brief get the number of player in the hub
             int size() const { return _players.size(); };
+            /// \brief get the number of player in the hub
+            bool isRunning() const { return !_stoped; };
+            /// \brief get the number of player in the hub
+            bool gameState() const { return _isPlaying; };
 
             /// \param ip : ip of the removed member
             /// \return true or false if the player is remove or not

@@ -7,17 +7,18 @@
 
 #pragma once
 
-namespace ECS {
-
+namespace ECS
+{
     using flagType = int;
 
     /// \namespace Component
     /// \brief Used for all the Component subclasses
-    namespace Component {
-        
+    namespace Component
+    {
         /// \namespace Flags
         /// \brief Flags for components
-        namespace Flags {
+        namespace Flags
+        {
             typedef enum e_flags {transform = 1,
                                   audio = 2,
                                   physic = 4,
@@ -39,7 +40,11 @@ namespace ECS {
         }
     }
 
-    class IComponent {
+    /// \class IComponent
+    /// \brief virtual class used to story all component in an entity in a single
+    /// container class
+    class IComponent
+    {
     public:
         virtual ~IComponent() = default;
     };

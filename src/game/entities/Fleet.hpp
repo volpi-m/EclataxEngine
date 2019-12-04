@@ -14,8 +14,8 @@
 
 namespace Game {
 
-    /// \class Ship
-    /// \brief ennemy that tries to shot the player
+    /// \class Fleet
+    /// \brief A battle fleet composed of Ship entities
 	class Fleet : public IEnnemy {
 		public:
             /// \brief constructor
