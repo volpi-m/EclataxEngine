@@ -1,5 +1,10 @@
 # EclataxEngine
-R-Type
+
+Game Engine made with C++ based on a server (Boost::Asio). The client side olds the rendering coded with SFML.
+
+A lots of new features are yet to come.
+
+To do : write a proper README.
 
 # Install
 ```
