@@ -25,7 +25,8 @@ Client::Menu::Menu(sf::RenderWindow &window, sf::View &view) : _window(window), 
     std::array<std::function<void(Menu &)>, 3> callbacks = {&Menu::callbackStart, &Menu::callbackOptions, &Menu::callbackQuit};
 
     // Creating sprites and assigning the texture
-    for (unsigned int i = 0; i < 3; ++i) {
+    for (unsigned int i = 0; i < 3; ++i)
+    {
         createMenuElement(rect, pos, callbacks[i]);
         rect.left += 200;
         pos.y += windowSize.y / 3;
@@ -34,12 +35,12 @@ Client::Menu::Menu(sf::RenderWindow &window, sf::View &view) : _window(window), 
 
 void Client::Menu::processEvents()
 {
-    while (_window.pollEvent(_events)) {
+    while (_window.pollEvent(_events))
+    {
 
         // The window has been closed
-        if (_events.type == sf::Event::Closed) {
+        if (_events.type == sf::Event::Closed)
             _window.close();
-        }
     }
 }
 
@@ -59,9 +60,11 @@ void Client::Menu::display()
 bool Client::Menu::run()
 {
     _start = false;
-    while (_window.isOpen() && !_start) {
+    while (_window.isOpen() && !_start)
+    {
 
-        while (_window.pollEvent(_events)) {
+        while (_window.pollEvent(_events))
+        {
 
             // The window has been closed
             if (_events.type == sf::Event::Closed)
@@ -84,18 +87,17 @@ void Client::Menu::analyseEvents()
 {
     auto translated_pos = _window.mapPixelToCoords(sf::Mouse::getPosition(_window));
     
-    for (auto &it : _sprites) {
+    for (auto &it : _sprites)
+    {
         if (it.second.getGlobalBounds().contains(translated_pos))
             it.second.setColor((sf::Color) {255, 255, 255, 255});
         else
             it.second.setColor((sf::Color) {255, 255, 255, 150});
     }
-    if (_events.type == sf::Event::MouseButtonPressed) {
-        for (auto &it : _sprites) {
+    if (_events.type == sf::Event::MouseButtonPressed)
+        for (auto &it : _sprites)
             if (it.second.getGlobalBounds().contains(translated_pos))
                 it.first(*this);
-        }
-    }
 }
 
 void Client::Menu::callbackStart()

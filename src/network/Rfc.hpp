@@ -11,7 +11,7 @@
 /// \brief Namespace used both in client and server for communication
 namespace Network
 {
-    /// \def ADK_FOR_HUB
+    /// \def ASK_FOR_HUB
     /// \brief rfc code for a client asking a hub
     constexpr auto const ASK_FOR_HUB = 201;
 
@@ -34,6 +34,14 @@ namespace Network
     /// \def CLIENT_REQUIRE_KEYS
     /// \brief rfc code when a client require all key used during the game
     constexpr auto const CLIENT_REQUIRE_KEY = 206;
+
+    /// \def ASK_FOR_HUB_CREATION
+    /// \brief rfc code for a client asking the server to create a hub
+    constexpr auto const ASK_FOR_HUB_CREATION = 207;
+
+    /// \def ASK_FOR_HUB_CREATION
+    /// \brief rfc code for a client asking the server to create a hub
+    constexpr auto const ASK_TO_JOIN_HUB = 208;
 
     /// \def CLIENT_DEBUG
     /// \brief rfc code use for debuging client

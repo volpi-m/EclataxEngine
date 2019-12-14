@@ -22,7 +22,8 @@ namespace Client
 {
     /// \class Menu
     /// \brief Create the menu
-    class Menu {
+    class Menu
+    {
     public:
         /// \brief Constructor
         /// \param window : window of the graphical client
