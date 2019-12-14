@@ -19,7 +19,8 @@ void Client::ClientMediator::run()
 
     // If the client has been connected, we can start to loop
     // cf. RFC to understand the gameloop
-    while (w.isOpen()) {
+    while (w.isOpen())
+    {
 
         // Launching menu if the player isn't in a hub
         if (!_hub && _graph.menu().run())
@@ -48,12 +49,14 @@ void Client::ClientMediator::requireKeyMap()
 
     _tcp.send(data, sizeof(Network::headerTcp));
 
-    while (data->code != Network::SERVER_END_OF_EVENT) {
+    while (data->code != Network::SERVER_END_OF_EVENT)
+    {
         data->code = 0;
         data->hubNbr = 0;
         std::memset(data->data, 0, sizeof(Network::TCP_BUF_SIZE));
         char *response = _tcp.receive();
-        if (response) {
+        if (response)
+        {
             std::memcpy(data, response, sizeof(Network::headerTcp));
             char *comment = data->data;
             std::cout << comment << std::endl;
@@ -135,7 +138,8 @@ void Client::ClientMediator::readNetwork()
 {
     void *packet = _udp.receive();
 
-    while (packet) {
+    while (packet)
+    {
         _graph.parsePackets(packet);
         packet = _udp.receive();
     }
