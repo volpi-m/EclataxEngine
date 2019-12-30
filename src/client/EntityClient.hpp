@@ -23,10 +23,6 @@ namespace Client {
     /// \brief Entity class, create an entity in the game world
     class Entity {
         public:
-            /// \brief constructor
-            /// Create an entity with an empty texture
-            /// \param texture : the empty texture of the entity
-            Entity(sf::Texture &texture);
 
             /// \brief constructor
             /// Create an entity with an empty texture

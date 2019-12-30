@@ -36,10 +36,6 @@ namespace Client
 
         /// \brief create a new entity and store it
         /// \param id : the id of the new entity
-        void createEntity(std::size_t id);
-
-        /// \brief create a new entity and store it
-        /// \param id : the id of the new entity
         /// \param txtId : the id to the texture
         void createEntity(std::size_t id, std::size_t txtId);
 
@@ -48,9 +44,9 @@ namespace Client
         void createMultipleEntities(std::vector<std::size_t> &ids);
 
         /// \brief adds a texture to the client
-        /// \param filepath : filepath to the teture
+        /// \param entity : the object that contains data about the texture
         /// \return an index to the texture
-        std::size_t addTexture(const std::string &filepath);
+        std::size_t addTexture(Network::Entity *entity);
 
         /// \brief parse an udp packet
         /// \param packet : a pointer to the packet

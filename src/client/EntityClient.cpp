@@ -11,11 +11,6 @@
 
 #include "EntityClient.hpp"
 
-Client::Entity::Entity(sf::Texture &texture) : _deleted(false), _visible(true), _textureIdx(0)
-{
-    _sprite.setTexture(texture);
-}
-
 Client::Entity::Entity(sf::Texture &texture, std::size_t textureIdx) : _deleted(false), _visible(true), _textureIdx(textureIdx)
 {
     _sprite.setTexture(texture);

@@ -16,19 +16,24 @@ Client::GraphicalModule::GraphicalModule()
     _trackEvent(0), _menu(Client::Menu(_window, _view))
 {
     _window.setFramerateLimit(60);
-    sf::Texture artefact;
     auto size = sf::VideoMode::getDesktopMode();
- 
-     // Creating an artefact texture
-    artefact.create(50, 50);
-    _textures.emplace(0, std::make_pair("artefact", artefact));
- 
-    generateBitmaskList();
-
-    // Set a view to render entities 
+  
+    // Set a view to render entities .
     _view.setCenter((float)size.width / 2, (float)size.height / 2);
     _view.setSize((sf::Vector2f) {(float)size.width, (float)size.height});
     _window.setView(_view);
+
+    // Creating an artifact texture
+    sf::Texture artifact;
+    sf::Image artifactImage;
+
+    artifactImage.create(size.width, size.height, sf::Color::White);
+
+    artifact.create(size.width, size.height);
+    artifact.update(artifactImage);
+    _textures.emplace(0, std::make_pair("", artifact));
+
+    generateBitmaskList();
 
     _evtList.push_back({sf::Keyboard::Key::Z, "Move Up"});
     _evtList.push_back({sf::Keyboard::Key::S, "Move Down"});
@@ -44,43 +49,37 @@ const sf::RenderWindow &Client::GraphicalModule::window() const
     return _window;
 }
 
-void Client::GraphicalModule::createEntity(std::size_t id)
-{
-    if (_entities.find(id) != _entities.end())
-        return;
-
-    std::shared_ptr<Client::Entity> entity(new Client::Entity(_textures[0].second));
-
-    _entities.emplace(id, entity);
-}
-
 void Client::GraphicalModule::createEntity(std::size_t id, std::size_t txtId)
 {
+    // checking if the entity already exists, if so update the texture.
     if (_entities.find(id) != _entities.end()) {
-        if (_entities[id]->textureIdx() != txtId)
-            _entities[id]->setTextureIdx(txtId, _textures[txtId].second);
+        _entities[id]->setTextureIdx(txtId, _textures[txtId].second);
         return;
     }
 
+    // creatying a new entity.
     std::shared_ptr<Client::Entity> entity(new Client::Entity(_textures[txtId].second, txtId));
 
+    // Adding it to the list.
     _entities.emplace(id, entity);
 }
 
-std::size_t Client::GraphicalModule::addTexture(const std::string &filepath)
+std::size_t Client::GraphicalModule::addTexture(Network::Entity *entity)
 {
-    // Checking if the texture already exists
+    // Checking if the texture already exists.
     for (auto &it : _textures)
-        if (it.second.first == filepath)
+        if (it.second.first == entity->texture)
             return it.first;
 
-    // If not, adding it to our unordered map
+    // If not, adding it to our unordered map.
     sf::Texture newTexture;
 
-    // Checking if the texture can be loaded
-    if (!newTexture.loadFromFile(filepath))
+    // Checking if the texture can be loaded.
+    if (!newTexture.loadFromFile(entity->texture))
         return 0;
-    _textures.emplace(_textures.size() + 1, std::make_pair(filepath, newTexture));
+
+    // Adding the texture.
+    _textures.emplace(_textures.size() + 1, std::make_pair(entity->texture, newTexture));
     return _textures.size();
 }
 
@@ -89,20 +88,26 @@ void Client::GraphicalModule::parsePackets(void *packet)
     Network::headerUdp *packetHeader = static_cast<Network::headerUdp *>(packet);
     Network::Entity *entity = nullptr;
 
-    // The server sent data about an entity
+    // The server sent data about an entity.
     if (packetHeader->code == Network::SERVER_TICK)
         entity = getEntityParams(packetHeader);
+    
+    // Creating a new entity.
     if (entity) {
-        
+
+        // Need to delete the entity.
         if (entity->deleted) {
             _entities.erase(entity->id);
             return;
         }
-        // Creating the entity and eventualy the texture
-        std::size_t id = addTexture((char *)entity->texture);
-        createEntity(entity->id, id);
 
-        // Setting entity position and rectangle
+        // Creating the entity and eventualy the texture.
+        if (!(_entities.find(entity->id) != _entities.end() && !_entities.find(entity->id)->second->textureIdx())) {
+            std::size_t id = addTexture(entity);
+            createEntity(entity->id, id);
+        }
+
+        // Setting entity position and rectangle.
         _entities[entity->id]->setPosition(entity->x, entity->y, entity->z);
         _entities[entity->id]->setTextureRect(entity->top, entity->left, entity->width, entity->height);
     }
@@ -110,11 +115,11 @@ void Client::GraphicalModule::parsePackets(void *packet)
 
 Network::Entity *Client::GraphicalModule::getEntityParams(Network::headerUdp *packetHeader)
 {
-    // getting the length of the path of the texture
+    // getting the length of the path of the texture.
     unsigned int len = Network::UDP_BUF_SIZE - (sizeof(unsigned long long) + sizeof(char) + sizeof(float) * 7);
     Network::Entity *packetEntity = new Network::Entity;
 
-    // Copying all packet data into the structure
+    // Copying all packet data into the structure.
     std::memcpy(&(packetEntity->id), (unsigned long long *)packetHeader->data, sizeof(unsigned long long));
     std::memcpy(&(packetEntity->x), (float *)(packetHeader->data + sizeof(unsigned long long)), sizeof(float));
     std::memcpy(&(packetEntity->y), (float *)(packetHeader->data + sizeof(unsigned long long) + sizeof(float)), sizeof(float));
@@ -144,7 +149,7 @@ void Client::GraphicalModule::processEvents()
 {
     while (_window.pollEvent(_events)) {
 
-        // The window has been closed
+        // The window has been closed.
         if (_events.type == sf::Event::Closed) {
             _window.close();
         }
@@ -159,14 +164,14 @@ void Client::GraphicalModule::processEvents()
 
 void Client::GraphicalModule::display()
 {
-    // Clear the screen
+    // Clear the screen.
     _window.clear();
 
-    // Draw all entities
+    // Draw all entities.
     for (auto &it : _entities)
         _window.draw(it.second->sprite());
 
-    // Display all drawings
+    // Display all drawings.
     _window.display();
 }
 

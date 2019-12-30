@@ -102,6 +102,7 @@ void Client::Menu::analyseEvents()
 
 void Client::Menu::callbackStart()
 {
+    // The client is ready
     _start = true;
 
     // sf::Vector2u wSize = _window.getSize();
