@@ -59,7 +59,7 @@ TEST(EntityTests, deleteEntity)
     ASSERT_EQ(first.deleted(), true);
 }
 
-TEST(EntityTests, deleteEntityAndChildren)
+TEST(EntityTests, deleteEntityWithChildren)
 {
     ECS::Entity first(std::string("entity from string"));
     std::shared_ptr<ECS::Entity> second(new ECS::Entity(std::string("entity from char")));
@@ -71,5 +71,5 @@ TEST(EntityTests, deleteEntityAndChildren)
     ASSERT_EQ(second->deleted(), false);
     first.deleteEntity();
     ASSERT_EQ(first.deleted(), true);
-    ASSERT_EQ(second->deleted(), true);
+    ASSERT_EQ(second->deleted(), false);
 }
