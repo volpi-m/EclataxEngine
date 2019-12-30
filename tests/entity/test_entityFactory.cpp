@@ -298,8 +298,8 @@ TEST(EntityFactoryTests, createCopyedComponents)
     ASSERT_EQ(scriptC->updateScript, &dummyScript);
     ASSERT_STREQ(spawnerC->createBlueprint(copy)->tag().c_str(), "test");
     ASSERT_EQ(spawnerC->seconds, std::chrono::seconds(4));
-    ASSERT_EQ(speedC->speed, 20);
-    ASSERT_EQ(spriteC->loaded, false);
+    ASSERT_EQ(speedC->speed, 20.5f);
+    ASSERT_EQ(spriteC->loaded, true);
     ASSERT_EQ(spriteC->rect.height, 32);
     ASSERT_EQ(spriteC->rect.width, 32);
     ASSERT_EQ(spriteC->rect.top, 0);
