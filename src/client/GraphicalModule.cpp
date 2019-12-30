@@ -18,13 +18,14 @@ Client::GraphicalModule::GraphicalModule()
     _window.setFramerateLimit(60);
     sf::Texture artefact;
     auto size = sf::VideoMode::getDesktopMode();
-
-    // Creating an artefact texture
+ 
+     // Creating an artefact texture
     artefact.create(50, 50);
     _textures.emplace(0, std::make_pair("artefact", artefact));
-
+ 
     generateBitmaskList();
 
+    // Set a view to render entities 
     _view.setCenter((float)size.width / 2, (float)size.height / 2);
     _view.setSize((sf::Vector2f) {(float)size.width, (float)size.height});
     _window.setView(_view);
@@ -177,4 +178,9 @@ Client::Menu &Client::GraphicalModule::menu()
 void Client::GraphicalModule::addKey(const std::string &comment)
 {
     _evtList.push_back({sf::Keyboard::Key::Unknown, comment});
+}
+
+void Client::GraphicalModule::setDefaultView()
+{
+    _window.setView(_view);
 }

@@ -52,11 +52,13 @@ namespace Client
         void callbackStart();
         void callbackOptions();
         void callbackQuit();
-
+        
         /*! window attribute */
         sf::RenderWindow &_window;
-        /*! window attribute */
+        /*! view of the graphical client */
         sf::View &_view;
+        /*! scrollbar view */
+        sf::View _scroll;
         /*! events attribute */
         sf::Event _events;
         /*! a vector of sprites and their callbacks for the menu */

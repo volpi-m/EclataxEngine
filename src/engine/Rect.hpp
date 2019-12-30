@@ -13,11 +13,13 @@
 
 /// \namespace Game
 /// \brief Used for the game engine components
-namespace Game {
+namespace Game
+{
 
     /// \class Rect
     /// \brief Rect class, data of a rectangle
-    struct Rect {
+    struct Rect
+    {
 
         /// \brief constructor
         Rect() : top(0), left(0), width(0), height(0) {}

@@ -21,10 +21,12 @@ void Client::ClientMediator::run()
     // cf. RFC to understand the gameloop
     while (w.isOpen())
     {
-
         // Launching menu if the player isn't in a hub
         if (!_hub && _graph.menu().run())
+        {
             askForHub();
+            _graph.setDefaultView();
+        }
 
         // Reading packets and process entities to display
         readNetwork();

@@ -72,7 +72,10 @@ namespace Client
 
         /// \brief add a key received from server to usable key on client
         /// \param comment : hint about what the key is used for
-        void addKey(const std::string &);
+        void addKey(const std::string &comment);
+
+        /// \brief sets the default view of the client
+        void setDefaultView();
 
     private:
         /// \brief get an entity from a packet
