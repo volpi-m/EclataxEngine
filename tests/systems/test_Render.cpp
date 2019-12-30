@@ -91,7 +91,7 @@ TEST(RenderSystemTests, setLoaded)
     ASSERT_EQ(ECS.hasComponent(entity, ECS::Component::Flags::sprite), true);
 
     // Testing if texture as been loaded
-    ASSERT_EQ(system.loaded(ECS.entity(entity)), false);
+    ASSERT_EQ(system.loaded(ECS.entity(entity)), true);
     system.setLoaded(ECS.entity(entity));
     ASSERT_EQ(system.loaded(ECS.entity(entity)), true);
 }
