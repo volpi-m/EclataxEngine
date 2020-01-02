@@ -50,46 +50,72 @@ std::stack<Network::Entity> &Scenes::AScene::entityStack()
     return _stack;
 }
 
+void Scenes::AScene::copyAnimation(std::shared_ptr<ECS::Entity> &entity, Network::Entity &top) const
+{
+    auto componentAnimation = static_cast<ECS::Component::Animation2D *>(entity->component(ECS::Component::Flags::animation2D).get());
+    
+    // Copying the animation rect.
+    top.top = componentAnimation->rect.top;
+    top.left = componentAnimation->rect.left;
+    top.width = componentAnimation->rect.width;
+    top.height = componentAnimation->rect.height;
+}
+
+void Scenes::AScene::copySprite(std::shared_ptr<ECS::Entity> &entity, Network::Entity &top) const
+{
+    auto componentSprite = static_cast<ECS::Component::Sprite *>(entity->component(ECS::Component::Flags::sprite).get());
+    
+    // Copying the sprite rect.
+    top.top = componentSprite->rect.top;
+    top.left = componentSprite->rect.left;
+    top.width = componentSprite->rect.width;
+    top.height = componentSprite->rect.height;
+}
+
+void Scenes::AScene::copyTransform(std::shared_ptr<ECS::Entity> &entity, Network::Entity &top) const
+{
+    auto componentTransform = static_cast<ECS::Component::Transform *>(entity->component(ECS::Component::Flags::transform).get());
+    
+    // Copying the transform component.
+    top.x = componentTransform->x;
+    top.y = componentTransform->y;
+    top.z = componentTransform->z;
+}
+
 void Scenes::AScene::pushEntityStack(std::shared_ptr<ECS::Entity> &entity, std::size_t id)
 {
-    if (entity->hasComponent(ECS::Component::Flags::animation2D) && entity->hasComponent(ECS::Component::Flags::sprite) && entity->hasComponent(ECS::Component::Flags::transform)) {
+    // If the entity hasn't been updated, we don't need to add it to the stack.
+    if (!entity->updated() && !entity->deleted())
+        return;
 
+    // If there is at minimum a sprite to render and a transform, update the entity on the client.
+    if (entity->hasComponent(ECS::Component::Flags::sprite) && entity->hasComponent(ECS::Component::Flags::transform)) {
+
+        // Creating the entity at the top of the stack
         _stack.emplace(Network::Entity());
 
         // Getting the necessary components 
-        auto componentAnimation = static_cast<ECS::Component::Animation2D *>(entity->component(ECS::Component::Flags::animation2D).get());
-        auto componentTransform = static_cast<ECS::Component::Transform *>(entity->component(ECS::Component::Flags::transform).get());
         auto componentSprite = static_cast<ECS::Component::Sprite *>(entity->component(ECS::Component::Flags::sprite).get());
 
-        // Copying parameters of the compnent into the network entity
+        // Copying parameters of the component into the network entity.
         _stack.top().id = id;
-        _stack.top().top = componentAnimation->rect.top;
-        _stack.top().left = componentAnimation->rect.left;
-        _stack.top().width = componentAnimation->rect.width;
-        _stack.top().height = componentAnimation->rect.height;
-        std::memcpy(_stack.top().texture, componentSprite->texture.c_str(), componentSprite->texture.length());
-        _stack.top().x = componentTransform->x;
-        _stack.top().y = componentTransform->y;
-        _stack.top().z = componentTransform->z;
+        
+        // Copying the animation rect component if there is one, sprite rect otherwise. 
+        if (entity->hasComponent(ECS::Component::Flags::animation2D))
+            copyAnimation(entity, _stack.top());
+        else
+            copySprite(entity, _stack.top());
+
+        // Copying the transform component.
+        copyTransform(entity, _stack.top());
+        
+        // check updated and deleted fields
         _stack.top().deleted = entity->deleted() || !componentSprite->loaded ? 1 : 0;
-    } else if (entity->hasComponent(ECS::Component::Flags::sprite) && entity->hasComponent(ECS::Component::Flags::transform)) {
 
-        _stack.emplace(Network::Entity());
-
-        // Getting the necessary components 
-        auto componentTransform = static_cast<ECS::Component::Transform *>(entity->component(ECS::Component::Flags::transform).get());
-        auto componentSprite = static_cast<ECS::Component::Sprite *>(entity->component(ECS::Component::Flags::sprite).get());
-
-        // Copying parameters of the compnent into the network entity
-        _stack.top().id = id;
-        _stack.top().top = componentSprite->rect.top;
-        _stack.top().left = componentSprite->rect.left;
-        _stack.top().width = componentSprite->rect.width;
-        _stack.top().height = componentSprite->rect.height;
+        // copy texture
         std::memcpy(_stack.top().texture, componentSprite->texture.c_str(), componentSprite->texture.length());
-        _stack.top().x = componentTransform->x;
-        _stack.top().y = componentTransform->y;
-        _stack.top().z = componentTransform->z;
-        _stack.top().deleted = entity->deleted() || !componentSprite->loaded ? 1 : 0;
     }
+
+    // Reset the update field.
+    entity->update(false);
 }

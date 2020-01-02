@@ -104,6 +104,22 @@ namespace Scenes
             virtual void handleEvent(std::queue<std::pair<int, size_t>> events) = 0;
 
         protected:
+
+            /// \param entity : entity that we want to copy
+            /// \param top : network entity
+            /// \brief copy the animation rect of the entity to the network entity
+            void copyAnimation(std::shared_ptr<ECS::Entity> &entity, Network::Entity &top) const;
+
+            /// \param entity : entity that we want to copy
+            /// \param top : network entity
+            /// \brief copy the sprite rect of the entity to the network entity
+            void copySprite(std::shared_ptr<ECS::Entity> &entity, Network::Entity &top) const;
+
+            /// \param entity : entity that we want to copy
+            /// \param top : network entity
+            /// \brief copy the transform of the entity to the network entity
+            void copyTransform(std::shared_ptr<ECS::Entity> &entity, Network::Entity &top) const;
+
             /*! name of the scene */
             std::string _name;
             /*! ECS instance */
