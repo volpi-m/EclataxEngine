@@ -47,9 +47,6 @@ namespace ECS {
             /// Destroy the Entity class
             ~Entity() = default;
 
-            /// \brief Updates the Entity content
-            void update();
-
             /// \param child : the Entity object that will be the current instance's child
             /// \brief Attach an entity to another
             void addChild(std::shared_ptr<Entity> &child);
@@ -100,6 +97,14 @@ namespace ECS {
             /// \brief Check if the entity is deleted
             bool deleted() const;
 
+            /// \return a boolean, true if the entity has been updated, false otherwise
+            /// \brief Check if the entity has been updated
+            bool updated() const;
+
+            /// \brief mark the current entity as updated or not.
+            /// \param status : a boolean parameter to set the update field.
+            void update(bool status);
+
         private:
 
             /*! tag of the entity */
@@ -112,5 +117,7 @@ namespace ECS {
             bool _deleted;
             /*! is the entity visible */
             bool _visible;
+            /*! has the entity been updated */
+            bool _updated;
     };
 }

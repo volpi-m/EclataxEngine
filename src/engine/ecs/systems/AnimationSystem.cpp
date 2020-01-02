@@ -27,6 +27,9 @@ void ECS::System::AnimationSystem::update(std::unordered_map<unsigned long long,
                     component->rect.left += component->offset;
                 else
                     component->rect.left = 0;
+
+                // The entity has been updated.
+                entity.second->update(true);
             }
         }
 }

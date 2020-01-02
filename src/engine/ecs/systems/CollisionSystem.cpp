@@ -63,5 +63,9 @@ void ECS::System::CollisionSystem::onCollideDamage2D(std::shared_ptr<Entity> &fi
 
             HealthFirst->health -= DamageSecond->damage;
             HealthSecond->health -= DamageFirst->damage;
+
+            // Entities have been updated.
+            first->update(true);
+            second->update(true);
     }
 }

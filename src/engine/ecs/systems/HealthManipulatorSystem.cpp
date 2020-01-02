@@ -26,6 +26,9 @@ void ECS::System::HealthManipulator::subHealth(std::shared_ptr<Entity> &entity, 
 
     // Substracting healt
     component->health = component->health < health ? 0 : component->health - health;
+
+    // The entity has been updated.
+    entity->update(true);
 }
 
 void ECS::System::HealthManipulator::addHealth(std::shared_ptr<Entity> &entity, int health)
@@ -35,6 +38,9 @@ void ECS::System::HealthManipulator::addHealth(std::shared_ptr<Entity> &entity, 
 
     // Adding healt
     component->health = component->health + health > component->healthLimit && component->healthLimit ? component->healthLimit : component->health + health;
+
+    // The entity has been updated.
+    entity->update(true);
 }
 
 void ECS::System::HealthManipulator::setHealth(std::shared_ptr<Entity> &entity, int health)
@@ -44,6 +50,9 @@ void ECS::System::HealthManipulator::setHealth(std::shared_ptr<Entity> &entity, 
 
     // setting health
     component->health = health > component->healthLimit && component->healthLimit ? component->healthLimit : health;
+
+    // The entity has been updated.
+    entity->update(true);
 }
 
 void ECS::System::HealthManipulator::setHealthLimit(std::shared_ptr<Entity> &entity, int health)
@@ -54,6 +63,9 @@ void ECS::System::HealthManipulator::setHealthLimit(std::shared_ptr<Entity> &ent
     // setting health limit + rejusting health just in case
     component->healthLimit = health;
     component->health = component->health > component->healthLimit && component->healthLimit ? component->healthLimit : component->health;
+
+    // The entity has been updated.
+    entity->update(true);
 }
 
 int ECS::System::HealthManipulator::health(std::shared_ptr<Entity> &entity) const

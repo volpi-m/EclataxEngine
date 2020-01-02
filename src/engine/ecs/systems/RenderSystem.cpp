@@ -26,6 +26,9 @@ void ECS::System::RenderSystem::setTexture(std::shared_ptr<ECS::Entity> &entity,
 
     // Setting the new texture file
     component->texture = texture;
+
+    // The entity has been updated.
+    entity->update(true);
 }
 
 void ECS::System::RenderSystem::setLoaded(std::shared_ptr<ECS::Entity> &entity)
@@ -33,8 +36,11 @@ void ECS::System::RenderSystem::setLoaded(std::shared_ptr<ECS::Entity> &entity)
     // Casting the correct component
     auto component = static_cast<ECS::Component::Sprite *>(entity->component(Component::Flags::sprite).get());
 
-    // the sprite as been loaded
+    // the sprite has been loaded
     component->loaded = true;
+
+    // The entity has been updated.
+    entity->update(true);
 }
 
 bool ECS::System::RenderSystem::loaded(const std::shared_ptr<ECS::Entity> &entity) const
@@ -43,4 +49,7 @@ bool ECS::System::RenderSystem::loaded(const std::shared_ptr<ECS::Entity> &entit
 
     // getting the current value of the loaded attribute
     return component->loaded;
+
+    // The entity has been updated.
+    entity->update(true);
 }

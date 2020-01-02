@@ -28,11 +28,21 @@ const std::string& ECS::System::TextSystem::font(std::shared_ptr<Entity> &entity
 void ECS::System::TextSystem::setText(std::shared_ptr<Entity> &entity, const std::string &newText)
 {
     auto component = static_cast<ECS::Component::Text *>(entity->component(Component::Flags::text).get());
+
+    // Changing the current text.
     component->text = newText;
+
+    // The entity has been updated.
+    entity->update(true);
 }
 
 void ECS::System::TextSystem::setFont(std::shared_ptr<Entity> &entity, const std::string &newFont)
 {
     auto component = static_cast<ECS::Component::Text *>(entity->component(Component::Flags::text).get());
+    
+    // Updating the font.
     component->font = newFont;
+
+    // The entity has been updated.
+    entity->update(true);
 }

@@ -11,16 +11,11 @@
 
 #include "Entity.hpp"
 
-ECS::Entity::Entity(const std::string &tag) : _tag(tag), _deleted(false), _visible(true) {}
+ECS::Entity::Entity(const std::string &tag) : _tag(tag), _deleted(false), _visible(true), _updated(true) {}
 
-ECS::Entity::Entity(const char *tag) : _tag(tag), _deleted(false), _visible(true) {}
+ECS::Entity::Entity(const char *tag) : _tag(tag), _deleted(false), _visible(true), _updated(true) {}
 
-ECS::Entity::Entity(const ECS::Entity &entity) : _tag(entity.tag()), _components({}), _children(entity.children()), _deleted(entity.deleted()), _visible(entity.isVisible()) {}
-
-void ECS::Entity::update()
-{
-
-}
+ECS::Entity::Entity(const ECS::Entity &entity) : _tag(entity.tag()), _components({}), _children(entity.children()), _deleted(entity.deleted()), _visible(entity.isVisible()), _updated(entity.updated()) {}
 
 void ECS::Entity::addChild(std::shared_ptr<Entity> &child)
 {
@@ -80,4 +75,14 @@ bool ECS::Entity::deleted() const
 void ECS::Entity::deleteEntity()
 {
     _deleted = true;
+}
+
+bool ECS::Entity::updated() const
+{
+    return _updated;
+}
+
+void ECS::Entity::update(bool status)
+{
+    _updated = status;
 }

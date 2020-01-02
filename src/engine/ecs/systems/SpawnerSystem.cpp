@@ -30,6 +30,9 @@ void ECS::System::SpawnerSystem::update(std::unordered_map<unsigned long long, s
                     newId = entity.first >= newId ? entity.first + 1 : newId;
                 entities.emplace(newId, child);
                 entity.second->addChild(child);
+
+                // The entity has been updated.
+                entity.second->update(true);
             }
         }
 }
@@ -44,4 +47,7 @@ void ECS::System::SpawnerSystem::spawn(std::shared_ptr<Entity> &entity, std::sha
     
     ECS->addEntity(child);
     entity->addChild(child);
+
+    // The entity has been updated.
+    entity->update(true);
 }
