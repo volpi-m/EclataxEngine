@@ -12,8 +12,6 @@ TEST(EntityTests, EntityInstance)
     ECS::Entity second(std::string("entity from char"));
     ECS::Entity third(second);
 
-    first.update();
-    second.update();
     ASSERT_STREQ(first.tag().c_str(), "entity from string");
     ASSERT_STREQ(second.tag().c_str(), "entity from char");
     ASSERT_STREQ(second.tag().c_str(), "entity from char");
