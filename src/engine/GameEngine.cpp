@@ -25,6 +25,12 @@ std::shared_ptr<Module::EntityComponentSystem> &Game::GameEngine::ECS()
     return _ecs;
 };
 
+std::shared_ptr<Utils::LibraryLoader> &Game::GameEngine::LibLoader()
+{
+    return _libraryLoader;
+};
+
+
 std::shared_ptr<Module::SceneMachine> &Game::GameEngine::SceneMachine()
 {
     return _sceneMachine;

@@ -9,6 +9,7 @@
 /// \author Lucas T.
 /// \brief Header file for the GameEngine class
 
+#include "LibraryLoader.hpp"
 #include "SceneMachine.hpp"
 #include "ECS.hpp"
 
@@ -40,7 +41,7 @@ namespace Game {
 
         /// \brief get the LibLoader instance
         /// \return a shared poiner of the LibLoader module
-        // LibLoader &LibLoader() {return _libLoader;};
+        std::shared_ptr<Utils::LibraryLoader> &LibLoader();
 
         /// \brief get the SceneMachine instance
         /// \return a shared poiner of the SceneMachine module
@@ -51,7 +52,7 @@ namespace Game {
         /*! ECS instance */
         std::shared_ptr<Module::EntityComponentSystem> _ecs;
         /*! LibLoader instance */
-        // LibLoader _libLoader;
+        std::shared_ptr<Utils::LibraryLoader> _libraryLoader;
         /*! SceneMachine instance */
         std::shared_ptr<Module::SceneMachine> _sceneMachine;
         /*! iniialisation value */
