@@ -15,7 +15,6 @@
 
 #include "ISystem.hpp"
 #include "Entity.hpp"
-#include "Logger.hpp"
 #include "TextComponent.hpp"
 
 /// \namespace ECS

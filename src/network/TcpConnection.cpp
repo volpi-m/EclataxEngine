@@ -59,13 +59,9 @@ void Server::TcpConnection::handleRead(const boost::system::error_code &error, [
 
 void Server::TcpConnection::disconnect(const boost::system::error_code &error)
 {
-    Debug::Logger *log = Debug::Logger::getInstance(".log");
-    log->generateDebugMessage(Debug::type::INFO, "Disconnect client with ip: " + _ip, "TcpConnection::disconnect");
-
-    if (error.value() != 2) {
-        log->generateDebugMessage(Debug::type::ERROR, "Error: " + error.message());
+    if (error.value() != 2)
         std::cerr << "Error: " << error.message() << std::endl;
-    }
+
     _connected = false;
     _callBack(this);
     _socket.close();

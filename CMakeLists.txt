@@ -5,10 +5,13 @@ project(rtype)
 include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
 conan_basic_setup(TARGETS)
 
+## Compiling APCPPLib static library
+add_subdirectory(APCPPLib)
+
 # Adding valgrind flags
 if (MSVC)
     add_compile_options(/W4 /WX)
-else()
+elseif(UNIX)
     add_compile_options(-g)
 endif()
 
@@ -22,16 +25,6 @@ find_package(Threads)
 find_package(GTest REQUIRED)
 
 find_package(Boost 1.67 REQUIRED)
-
-## Lib sources
-set(LIB
-    lib/src/Exception/Exception.cpp
-    lib/src/Exception/MissingFileException.cpp
-    lib/src/Exception/ConfigFileException.cpp
-    lib/src/Exception/TcpSocketException.cpp
-    lib/src/Log/Logger.cpp
-    lib/src/Benchmarking/Breakpoint.cpp
-)
 
 set(ENTITY_ASTEROID
     ${CMAKE_CURRENT_SOURCE_DIR}/src/engine/ecs/entities/Entity.cpp
@@ -128,7 +121,6 @@ set (INCLUDE_GAME
 ## Client sources
 
 set (SRC_CLIENT
-    ${LIB}
     src/client/GraphicalModule.cpp
     src/client/ClientMediator.cpp
     src/client/UdpConnection.cpp
@@ -139,21 +131,27 @@ set (SRC_CLIENT
 
 ## Include headers to program
 include_directories(
-  include
-  lib/src/Benchmarking
-  lib/src/Exception
-  lib/src/Log
-  src/engine/scenesManagement/sceneMachine
-  src/engine/scenesManagement/scenes
-  src/engine/ecs/components
-  src/engine/ecs/entities
-  src/engine/ecs/systems
-  src/engine/ecs
-  src/engine
-  src/network
-  src/client
-  src
-  ${INCLUDE_GAME}
+
+    # APCPP Library
+    APCPPLib/include
+    APCPPLib/lib/src/Exception
+    APCPPLib/lib/src/Benchmarking
+    APCPPLib/lib/src/Log
+    APCPPLib/lib/src/Maths
+    APCPPLib/lib/src/Utils
+
+    # Sources
+    src/engine/scenesManagement/sceneMachine
+    src/engine/scenesManagement/scenes
+    src/engine/ecs/components
+    src/engine/ecs/entities
+    src/engine/ecs/systems
+    src/engine/ecs
+    src/engine
+    src/network
+    src/client
+    src
+    ${INCLUDE_GAME}
 )
 
 ## Creating Librairies
@@ -175,7 +173,6 @@ add_library(parallaxalt SHARED ${ENTITY_PARALLAXALT})
 
 ## Creating server executable
 add_executable(r-type_server
-  ${LIB}
   ${SRC}
   ${SRC_SERVER}
   ${SRC_GAME}
@@ -186,20 +183,14 @@ add_executable(r-type_server
 add_executable(r-type_client
     ${SRC}
     ${SRC_CLIENT}
-    ${LIB}
     src/client/main.cpp
 )
 
 set (SRC_TEST
     tests/main.cpp
-    tests/Exception/test_exception.cpp
-    tests/Log/test_logger.cpp
     tests/network/test_tcp.cpp
     tests/main.cpp
-    tests/Exception/test_exception.cpp
-    tests/Log/test_logger.cpp
     tests/sceneMachine/test_sceneMachine.cpp
-    tests/Benchmarking/test_breakpoints.cpp
     tests/ecs/test_ecs.cpp
     tests/entity/test_entity.cpp
     tests/entity/test_entityFactory.cpp
@@ -225,11 +216,12 @@ set (SRC_TEST
     ${CMAKE_CURRENT_SOURCE_DIR}/tests/Game/test_hub.cpp
 )
 
-## Creating executable of unit tests
+## including google test library
 include(GoogleTest)
 set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ../tests)
+
+## Creating executable of unit tests
 add_executable(unit_tests
-  ${LIB}
   ${SRC_SERVER}
   ${SRC_GAME}
   ${SRC}
@@ -239,6 +231,7 @@ add_executable(unit_tests
 
 ## Linking libraries
 target_link_libraries(r-type_server
+    APCPPLib
     CONAN_PKG::sfml
     CONAN_PKG::boost_system
     CONAN_PKG::boost_asio
@@ -247,10 +240,12 @@ target_link_libraries(r-type_server
 )
 
 target_link_libraries(r-type_client
+    APCPPLib
     CONAN_PKG::sfml
 )
 
 target_link_libraries(unit_tests PUBLIC
+    APCPPLib
     CONAN_PKG::gtest
     pthread
     CONAN_PKG::boost_system

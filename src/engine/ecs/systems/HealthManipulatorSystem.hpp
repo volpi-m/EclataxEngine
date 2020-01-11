@@ -18,7 +18,6 @@
 
 #include "ISystem.hpp"
 #include "Entity.hpp"
-#include "Logger.hpp"
 #include "HealthComponent.hpp"
 
 /// \namespace ECS

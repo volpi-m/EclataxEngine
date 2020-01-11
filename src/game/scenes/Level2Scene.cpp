@@ -9,9 +9,6 @@
 
 Scenes::Level2Scene::Level2Scene(const std::string &name, std::shared_ptr<Module::EntityComponentSystem> &ECS, int player) : AScene(name, ECS, player)
 {
-    Debug::Logger *l = Debug::Logger::getInstance();
-    l->generateDebugMessage(Debug::type::INFO , "Starting Level 2", "Level2Scene::constructor()");
-
     _waves.push_back(&Level2Scene::waveOne);
     _waves.push_back(&Level2Scene::waveTwo);
     _waves.push_back(&Level2Scene::waveThree);
@@ -22,9 +19,6 @@ Scenes::Level2Scene::Level2Scene(const std::string &name, std::shared_ptr<Module
 
 Scenes::Level2Scene::Level2Scene(const char *name, std::shared_ptr<Module::EntityComponentSystem> &ECS, int player) : AScene(name, ECS, player)
 {
-    Debug::Logger *l = Debug::Logger::getInstance();
-    l->generateDebugMessage(Debug::type::INFO , "Starting Level 2", "Level2Scene::constructor()");
-
     _waves.push_back(&Level2Scene::waveOne);
     _waves.push_back(&Level2Scene::waveTwo);
     _waves.push_back(&Level2Scene::waveThree);
@@ -84,12 +78,8 @@ void Scenes::Level2Scene::changeWave()
 
     // Changing wave
     _currentWave += 1;
-    if (_currentWave <= _MaxWaves) {
-        Debug::Logger *log = Debug::Logger::getInstance();
-
-        log->generateDebugMessage(Debug::INFO, "Player are currently on wave " + std::to_string(_currentWave), "Scenes::Level2Scene::changeWave");
+    if (_currentWave <= _MaxWaves)
         _waves.at(_currentWave)(*this);
-    }
     _ids = _ECS->ids();
 }
 

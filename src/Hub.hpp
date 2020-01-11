@@ -10,18 +10,18 @@
 #include <list>
 #include <string>
 #include <cstring>
-#include <boost/asio.hpp>
 #include <optional>
+#include <boost/asio.hpp>
 
+#include "Rfc.hpp"
+#include "AScene.hpp"
 #include "Logger.hpp"
 #include "GameEngine.hpp"
 #include "UdpNetwork.hpp"
-#include "Rfc.hpp"
-#include "AScene.hpp"
+#include "GameEngine.hpp"
 #include "Level1Scene.hpp"
 #include "SplashScene.hpp"
 #include "HubLoadingScene.hpp"
-#include "GameEngine.hpp"
 
 constexpr auto const HUBLIMIT = 4;
 
@@ -53,9 +53,6 @@ namespace Server {
             /// \brief constructor
             /// Initialize Hub class
             Hub(int newId, const std::string &creator, boost::asio::io_context &ioContext);
-            /// \brief destructor
-            /// Destroy Hub class
-            ~Hub();
 
             /// \brief get port of the hub
             int port() const { return _port; };

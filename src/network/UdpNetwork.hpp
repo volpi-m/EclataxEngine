@@ -30,7 +30,7 @@ namespace Server
 {
     /// \class UdpNetwork
     /// \brief UdpNetwork class, receive all udp connection
-    class UdpNetwork    {
+    class UdpNetwork {
 
         public:
             /// \param io : io_context used by every I/O object of boost

@@ -53,12 +53,8 @@ unsigned long long Module::EntityComponentSystem::createEntityFromLibrary(const 
     ECS::Entity *ptr = _loader.getInstance<ECS::Entity>(filepath);
 
     // Checking if the library exists
-    if (!ptr) {
-        auto log = Debug::Logger::getInstance();
-
-        log->generateDebugMessage(Debug::WARNING, "Couldn't load an entity from a dynamic library.", "Module::EntityComponentSystem::createEntityFromLibrary");
+    if (!ptr)
         return 0;
-    }
 
     // Creating an new id for a new entity
     std::shared_ptr<ECS::Entity> newEntity(ptr);
@@ -74,12 +70,8 @@ unsigned long long Module::EntityComponentSystem::createEntityFromLibrary(const 
     ECS::Entity *ptr = _loader.getInstance<ECS::Entity>(filepath);
 
     // Checking if the library exists
-    if (!ptr) {
-        auto log = Debug::Logger::getInstance();
-
-        log->generateDebugMessage(Debug::WARNING, "Couldn't load an entity from a dynamic library.", "Module::EntityComponentSystem::createEntityFromLibrary");
+    if (!ptr)
         return 0;
-    }
 
     // Creating an new id for a new entity
     std::shared_ptr<ECS::Entity> newEntity(ptr);
@@ -95,7 +87,6 @@ void Module::EntityComponentSystem::deleteEntity(unsigned long long id)
     if (_entities.find(id) != _entities.end())
         _entities.erase(id);
 }
-        
 
 void Module::EntityComponentSystem::addComponentToEntity(unsigned long long id, ECS::flagType flag, std::shared_ptr<ECS::IComponent> &component)
 {

@@ -11,8 +11,6 @@ Server::Mediator::Mediator() : _reader(CONF_FILE_PATH), _tcp (_ioContext,
     std::function<void(Server::TcpConnection *)>(std::bind(&Server::Mediator::processTcpMessage, this, std::placeholders::_1))), 
     _isRunning(true)
 {
-    Debug::Logger *l = Debug::Logger::getInstance();
-    l->generateDebugMessage(Debug::type::INFO , "Create Mediator", "Mediator ctor");
     _boostThread = std::thread(&Server::Mediator::launchBoost, this);
     readEventFile();
     _actions[Network::ASK_FOR_HUB] = std::bind(&Server::Mediator::askHub, this, std::placeholders::_1, std::placeholders::_2);
@@ -153,8 +151,6 @@ void Server::Mediator::setPlayerReady(Server::TcpConnection *socket, Network::he
     if (_hubs[packet->hubNbr - 1])
         _hubs[packet->hubNbr - 1].get()->setPlayerReady(socket->ip(), true);
     else {
-        Debug::Logger *l = Debug::Logger::getInstance();
-        l->generateDebugMessage(Debug::type::ERROR , "Invalid number of hub", "Server::Mediator::setPlayerReady");
         Network::headerTcp *toSend = new Network::headerTcp;
         toSend->code = Network::SERVER_END_OF_EVENT;
         std::memcpy(toSend->data, &"Can't find the hub", 19);
@@ -167,8 +163,6 @@ void Server::Mediator::setPlayerNotReady(Server::TcpConnection *socket, Network:
     if (_hubs[packet->hubNbr - 1])
         _hubs[packet->hubNbr - 1].get()->setPlayerReady(socket->ip(), false);
     else {
-        Debug::Logger *l = Debug::Logger::getInstance();
-        l->generateDebugMessage(Debug::type::ERROR , "Invalid number of hub", "Server::Mediator::setPlayerReady");
         Network::headerTcp *toSend = new Network::headerTcp;
         toSend->code = Network::SERVER_END_OF_EVENT;
         std::memcpy(toSend->data, &"Can't find the hub", 19);

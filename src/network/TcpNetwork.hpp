@@ -16,7 +16,6 @@
 #include <boost/asio.hpp>
 #include <boost/shared_ptr.hpp>
 #include "TcpConnection.hpp"
-#include "Logger.hpp"
 #include "Rfc.hpp"
 
 /// \namespace Server

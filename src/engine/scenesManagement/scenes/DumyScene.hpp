@@ -22,7 +22,6 @@
 #include "SpawnerSystem.hpp"
 #include "IASystem.hpp"
 #include "IScene.hpp"
-#include "Logger.hpp"
 
 /// \namespace Scenes
 /// \brief Used for all scenes components

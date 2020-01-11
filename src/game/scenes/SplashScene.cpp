@@ -11,8 +11,6 @@ Scenes::SplashScene::SplashScene(const std::string &name, std::shared_ptr<Module
 
 Scenes::SplashScene::SplashScene(const char *name, std::shared_ptr<Module::EntityComponentSystem> &ECS, int players) : AScene(name, ECS, players)
 {
-    Debug::Logger *l = Debug::Logger::getInstance();
-    l->generateDebugMessage(Debug::type::INFO , "Let's build a wall !", "SplashScene::constructor()");
     initComponents();
 }
 

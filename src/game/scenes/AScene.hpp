@@ -15,7 +15,6 @@
 #include "TransformComponent.hpp"
 #include "SpriteComponent.hpp"
 #include "IScene.hpp"
-#include "Logger.hpp"
 
 /// \namespace Scenes
 /// \brief Used for all scenes

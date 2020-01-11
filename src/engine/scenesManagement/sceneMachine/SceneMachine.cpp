@@ -5,7 +5,6 @@
 ** SceneMachine class
 */
 
-#include "Logger.hpp"
 #include "SceneMachine.hpp"
 
 Module::SceneMachine::SceneMachine() {}

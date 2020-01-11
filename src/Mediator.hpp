@@ -15,7 +15,6 @@
 
 #include "TcpNetwork.hpp"
 #include "UdpNetwork.hpp"
-#include "Logger.hpp"
 #include "Hub.hpp"
 #include "Rfc.hpp"
 #include "ConfReader.hpp"

@@ -15,8 +15,6 @@
 #include <iostream>
 #include <vector>
 
-#include "Logger.hpp"
-
 namespace Client {
 
     /// \class Entity

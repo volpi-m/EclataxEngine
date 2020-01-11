@@ -80,10 +80,10 @@ void Client::ClientMediator::askForHub()
 
     // Displaying the code
     {
-        Debug::Logger *log = Debug::Logger::getInstance();
-        std::string format = "The client is currently connected to the hub n°";
+        // Debug::Logger *log = Debug::Logger::getInstance();
+        // std::string format = "The client is currently connected to the hub n°";
 
-        log->generateDebugMessage(Debug::INFO, format + std::to_string(header->hubNbr), "Client::ClientMediator::askForHub");
+        // log->generateDebugMessage(Debug::INFO, format + std::to_string(header->hubNbr), "Client::ClientMediator::askForHub");
     }
 
     // Assigning the hub to the current client
@@ -96,10 +96,6 @@ void Client::ClientMediator::askForHub()
 void Client::ClientMediator::playerIsReady()
 {
     sendEmptyTcpHeader(Network::CLIENT_IS_READY);
-
-    // Client is ready
-    Debug::Logger *log = Debug::Logger::getInstance();
-    log->generateDebugMessage(Debug::INFO, "The client is ready.", "Client::ClientMediator::playerIsReady");
 }
 
 Network::headerTcp *Client::ClientMediator::sendEmptyTcpHeader(std::size_t code)

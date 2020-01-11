@@ -19,7 +19,6 @@
 #include "ISystem.hpp"
 #include "Entity.hpp"
 #include "DLLoader.hpp"
-#include "Logger.hpp"
 
 /// \namespace Module
 /// \brief Used for all GameEngine modules
@@ -130,7 +129,7 @@ namespace Module {
         void clearEntities();
 
         // Not implemented
-        unsigned long long createChildEntity(unsigned long long id, const std::string &tag = "");
+        // unsigned long long createChildEntity(unsigned long long id, const std::string &tag = "");
     private:
         /*! Module initialisation method */
         void init() override;

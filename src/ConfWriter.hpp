@@ -12,11 +12,11 @@
 #pragma once
 
 #include <unordered_map>
-#include <string>
 #include <iostream>
+#include <fstream>
+#include <string>
 
 #include "MissingFileException.hpp"
-#include "Logger.hpp"
 
 namespace Common
 {

@@ -13,21 +13,25 @@ Server::Hub::Hub(int newId, const std::string &creator, boost::asio::io_context 
 {
     _actions[Network::CLIENT_TICK] = std::bind(&Server::Hub::addEvent, this, std::placeholders::_1, std::placeholders::_2);
     _actions[Network::CLIENT_ERROR] = std::bind(&Server::Hub::playerError, this, std::placeholders::_1, std::placeholders::_2);
-    std::string msg("create hub with : ");
-    Debug::Logger *l = Debug::Logger::getInstance(".log");
-    l->generateDebugMessage(Debug::type::INFO , msg + creator, "hub constructor");
     addMember(creator);
 }
 
-Server::Hub::~Hub()
-{
-}
+// void Server::Hub::start()
+// {
+//     // Creating the entry point for scenes.
+//     auto scene = std::shared_ptr<Scenes::IScene>(new Scenes::HubLoadingScene("Hub scene", _engine.ECS(), _players.size()));
+
+//     // Pushing the scene to the scene machine.
+//     _engine.SceneMachine()->push(scene);
+
+//     initStatePlayers();
+
+// }
+
 
 void Server::Hub::start()
 {
-    Debug::Logger *l = Debug::Logger::getInstance();
-    std::string msg("hub number ");
-    l->generateDebugMessage(Debug::type::INFO , msg + std::to_string(_id) + " is running !" , "Server::Hub::start()");
+    Debug::Logger::printDebug(Debug::type::INFO , "hub number " + std::to_string(_id) + " is running !" , "Server::Hub::start()");
 
     auto scene = std::shared_ptr<Scenes::IScene>(new Scenes::HubLoadingScene("Hub scene", _engine.ECS(), _players.size()));
     _engine.SceneMachine()->push(scene);
@@ -84,9 +88,6 @@ void Server::Hub::stop()
 void Server::Hub::startGame()
 {
     _isPlaying = true;
-    Debug::Logger *l = Debug::Logger::getInstance();
-    std::string msg("Hub number ");
-    l->generateDebugMessage(Debug::type::INFO , "Starting the game", msg + std::to_string(_id));
     Scenes::IScene *newScene = nullptr;
  
     auto scene = std::shared_ptr<Scenes::IScene>(new Scenes::Level1Scene("level1Scene", _engine.ECS(), _players.size()));
@@ -130,7 +131,6 @@ void Server::Hub::startGame()
         std::this_thread::sleep_for(std::chrono::milliseconds(16 - std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count()));
     }
     _isPlaying = false;
-    l->generateDebugMessage(Debug::type::INFO , "Ending the game", msg + std::to_string(_id));
     initStatePlayers();
 }
 
@@ -226,9 +226,7 @@ void Server::Hub::addEvent(Server::UdpNetwork *socket, Network::headerUdp *packe
 void Server::Hub::playerError(Server::UdpNetwork *socket, Network::headerUdp *packet)
 {
     std::string ip = socket->remoteIp();
-    Debug::Logger *l = Debug::Logger::getInstance(".log");
 
-    l->generateDebugMessage(Debug::type::ERROR , "Error with the player" + ip + "\nError detail: " + packet->data, "Server::Hub::playerError");
     removeMember(ip);
 }
 

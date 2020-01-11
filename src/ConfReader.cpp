@@ -6,7 +6,6 @@
 */
 
 #include "ConfReader.hpp"
-#include "Logger.hpp"
 
 Common::ConfReader::ConfReader()
 {
@@ -48,12 +47,8 @@ void Common::ConfReader::readFile(const std::string &file)
     while (std::getline(ifs, line)) {
         auto pos = line.find(":");
 
-        if (pos == std::string::npos) {
-            Debug::Logger *log = Debug::Logger::getInstance(Debug::STANDARD, Debug::Flags::fatal_off);
-            log->generateDebugMessage(Debug::WARNING, "invalid line in configuration file",
-                "Common::ConfReader::readFile");
+        if (pos == std::string::npos)
             continue;
-        }
 
         // Reading configuration and storing it
         std::string key = line.substr(0, pos);
