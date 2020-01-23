@@ -9,20 +9,23 @@
 /// \author Lucas T.
 /// \brief Header file for the GameEngine class
 
+#include "SceneStateMachine.hpp"
 #include "LibraryLoader.hpp"
-#include "SceneMachine.hpp"
 #include "ECS.hpp"
 
 #pragma once
 
 /// \namespace Game
 /// \brief Used for the game engine components
-namespace Game {
+namespace Game
+{
 
     /// \class GameEngine
     /// \brief GameEngine class, get all modules of the engine
-    class GameEngine {
+    class GameEngine
+    {
     public:
+
         /// \brief constructor
         /// Initialize GameEngine class
         GameEngine();
@@ -43,9 +46,9 @@ namespace Game {
         /// \return a shared poiner of the LibLoader module
         std::shared_ptr<Utils::LibraryLoader> &LibLoader();
 
-        /// \brief get the SceneMachine instance
-        /// \return a shared poiner of the SceneMachine module
-        std::shared_ptr<Module::SceneMachine> &SceneMachine();
+        /// \brief get the SceneStateMachine instance
+        /// \return a shared poiner of the SceneStateMachine module
+        std::shared_ptr<Module::SceneStateMachine> &SceneStateMachine();
     private:
         void init();
 
@@ -53,8 +56,8 @@ namespace Game {
         std::shared_ptr<Module::EntityComponentSystem> _ecs;
         /*! LibLoader instance */
         std::shared_ptr<Utils::LibraryLoader> _libraryLoader;
-        /*! SceneMachine instance */
-        std::shared_ptr<Module::SceneMachine> _sceneMachine;
+        /*! SceneStateMachine instance */
+        std::shared_ptr<Module::SceneStateMachine> _sceneStateMachine;
         /*! iniialisation value */
         bool _initialised;
     };

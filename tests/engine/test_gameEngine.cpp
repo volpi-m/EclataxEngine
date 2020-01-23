@@ -23,7 +23,7 @@ TEST(GameEngineTests, SceneMachineInstance)
 {
     Game::GameEngine engine;
 
-    ASSERT_NE(engine.SceneMachine(), nullptr);
+    ASSERT_NE(engine.SceneStateMachine(), nullptr);
 }
 
 TEST(GameEngineTests, InitialisedMethod)

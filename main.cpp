@@ -16,7 +16,7 @@
 #include "TcpNetwork.hpp"
 #include "UdpNetwork.hpp"
 #include "GameEngine.hpp"
-#include "DumyScene.hpp"
+#include "MainScene.hpp"
 #include "Breakpoint.hpp"
 
 /// \brief main function
@@ -32,13 +32,4 @@ int main()
     {
         e.debugErrorMessage();
     }
-    // Game::GameEngine engine;
-    // auto scene = std::shared_ptr<Scenes::IScene>(new Scenes::DumyScene("Dummy scene", engine.ECS()));
-
-    // engine.SceneMachine()->push(scene);
-    // while (engine.SceneMachine()->run());
-
-    // Server::UdpNetwork network();
-
-    // network.write("127.0.0.1", , sizeof());
 }

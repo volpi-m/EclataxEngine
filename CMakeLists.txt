@@ -70,6 +70,11 @@ set(ENTITY_PARALLAXALT
     ${CMAKE_CURRENT_SOURCE_DIR}/src/game/entities/Parallax2.cpp
 )
 
+set(SCENE_MAIN
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/engine/scenesManagement/scenes/MainScene.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/engine/scenesManagement/scenes/AScene.cpp
+)
+
 ## General sources
 set(SRC
     src/ConfReader.cpp
@@ -84,7 +89,8 @@ set(SRC_SERVER
     ${CMAKE_CURRENT_SOURCE_DIR}/src/network/UdpNetwork.cpp
     src/engine/DLLoader.cpp
     src/engine/ecs/ECS.cpp
-    src/engine/scenesManagement/sceneMachine/SceneMachine.cpp
+    src/engine/scenesManagement/sceneMachine/SceneStateMachine.cpp
+    src/engine/scenesManagement/scenes/AScene.cpp
     src/engine/ecs/ECS.cpp
     src/engine/ecs/entities/Entity.cpp
     src/engine/ecs/entities/EntityFactory.cpp
@@ -104,11 +110,10 @@ set(SRC_SERVER
 ## Game sources
 
 set (SRC_GAME
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/game/scenes/Level1Scene.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/game/scenes/Level2Scene.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/game/scenes/SplashScene.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/game/scenes/AScene.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/game/scenes/HubLoadingScene.cpp
+#    ${CMAKE_CURRENT_SOURCE_DIR}/src/game/scenes/Level1Scene.cpp
+#    ${CMAKE_CURRENT_SOURCE_DIR}/src/game/scenes/Level2Scene.cpp
+#    ${CMAKE_CURRENT_SOURCE_DIR}/src/game/scenes/SplashScene.cpp
+#    ${CMAKE_CURRENT_SOURCE_DIR}/src/game/scenes/HubLoadingScene.cpp
 )
 
 ## Game include location
@@ -171,6 +176,8 @@ add_library(parallax SHARED ${ENTITY_PARALLAX})
 
 add_library(parallaxalt SHARED ${ENTITY_PARALLAXALT})
 
+add_library(mainscene SHARED ${SCENE_MAIN})
+
 ## Creating server executable
 add_executable(r-type_server
   ${SRC}
@@ -190,7 +197,7 @@ set (SRC_TEST
     tests/main.cpp
     tests/network/test_tcp.cpp
     tests/main.cpp
-    tests/sceneMachine/test_sceneMachine.cpp
+    # tests/sceneMachine/test_sceneMachine.cpp
     tests/ecs/test_ecs.cpp
     tests/entity/test_entity.cpp
     tests/entity/test_entityFactory.cpp

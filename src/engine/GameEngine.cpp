@@ -11,7 +11,7 @@
 
 #include "GameEngine.hpp"
 
-Game::GameEngine::GameEngine() : _ecs(new Module::EntityComponentSystem), _sceneMachine(new Module::SceneMachine), _initialised(true) {}
+Game::GameEngine::GameEngine() : _ecs(new Module::EntityComponentSystem), _libraryLoader(new Utils::LibraryLoader), _sceneStateMachine(new Module::SceneStateMachine), _initialised(true) {}
 
 Game::GameEngine::~GameEngine() {}
 
@@ -31,7 +31,7 @@ std::shared_ptr<Utils::LibraryLoader> &Game::GameEngine::LibLoader()
 };
 
 
-std::shared_ptr<Module::SceneMachine> &Game::GameEngine::SceneMachine()
+std::shared_ptr<Module::SceneStateMachine> &Game::GameEngine::SceneStateMachine()
 {
-    return _sceneMachine;
+    return _sceneStateMachine;
 };

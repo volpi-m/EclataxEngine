@@ -45,15 +45,17 @@ namespace Utils
             // Found error.
             if ((error = dlerror()))
             {
-                std::cout << "error : " << error << std::endl;
+                std::cerr << "error : " << error << std::endl;
                 return nullptr;
             }
 
             // Creating the desired object via the entry point.
             obj = func();
+            std::cout << "PASSED " << _handles.size() << std::endl;
 
             // Saving the handle.
             _handles.push_back(handle);
+            std::cout << "PUSHING BACK" << std::endl;
             
             return obj;
         }
