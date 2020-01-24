@@ -27,14 +27,20 @@ Server::Mediator::Mediator() : _reader(CONF_FILE_PATH), _tcp (_ioContext,
 
 Server::Mediator::~Mediator()
 {
+    std::cout << "POKOKOKOK" << std::endl;
     _ioContext.stop();
+    std::cout << "WOOW" << std::endl;
     _boostThread.join();
+    std::cout << "FUCKU" << std::endl;
     for (auto &i : _hubs) {
+        std::cout << "FUCK OFF" << std::endl;
         i.get()->stop();
     }
     for (auto &i : _threads) {
+        std::cout << "PASSED" << std::endl;
         i.join();
     }
+    std::cout << "DONE" << std::endl;
 }
 
 void Server::Mediator::launchBoost()
@@ -54,7 +60,8 @@ void Server::Mediator::readEventFile()
 
 void Server::Mediator::start()
 {
-    std::string input("input");
+    std::string input;
+
     while (_isRunning)
     {
         // Displaying the prompt and getting the input from the user.
@@ -82,10 +89,10 @@ void Server::Mediator::hubs(const std::string &command)
     std::cout << "Debuging hubs : " << std::endl;
     
     // Displaying useful data of all hubs.
-    for (auto &i : _hubs) {
-        std::cout << "Hub n " << i.get()->id() << std::endl;
-        std::cout << "Port: " << i.get()->port() << std::endl;
-        std::cout << "Number of player: " << i.get()->size() << std::endl;
+    for (auto &hub : _hubs) {
+        std::cout << "Hub n " << hub->id() << std::endl;
+        std::cout << "Port: " << hub->port() << std::endl;
+        std::cout << "Number of player: " << hub->size() << std::endl;
     }
 }
 
@@ -98,13 +105,13 @@ void Server::Mediator::kick(const std::string &command)
     std::string kick = command.substr(pos + 1, command.size());
 
     // Searching for the player in all hubs. Maybe add the hub number ?
-    for (auto &i : _hubs)
+    for (auto &hub : _hubs)
     {
         // Check if the player is in the current hub.
-        if (i.get()->isInHub(kick) == true)
+        if (hub->isInHub(kick) == true)
         {
             // Removing the player from the match.
-            i.get()->removeMember(kick);
+            hub->removeMember(kick);
         }
     }
 }
@@ -135,12 +142,15 @@ int Server::Mediator::hubNumber()
 
 int Server::Mediator::assignHub(std::string ip)
 {
-    for (auto &i : _hubs) {
-        if ((*i).isOpen()) {
-            (*i).addMember(ip);
-            return ((*i).id());
+    for (auto &hub : _hubs)
+    {
+        if (hub->isOpen())
+        {
+            hub->addMember(ip);
+            return (hub->id());
         }
     }
+    
     createHub(ip);
     _threads.emplace_back(std::bind(&Server::Hub::start, _hubs.back().get()));
     return _hubs.size();
@@ -154,9 +164,9 @@ void Server::Mediator::processTcpMessage(Server::TcpConnection *socket)
             _actions[h->code](socket, h);
         }
     } else {
-        for (auto &i : _hubs) {
-            if (i.get()->isInHub(socket->ip())) {
-                i.get()->removeMember(socket->ip());
+        for (auto &hub : _hubs) {
+            if (hub->isInHub(socket->ip())) {
+                hub->removeMember(socket->ip());
             }
         }
     }
