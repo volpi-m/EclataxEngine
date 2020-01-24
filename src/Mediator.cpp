@@ -19,6 +19,7 @@ Server::Mediator::Mediator() : _reader(CONF_FILE_PATH), _tcp (_ioContext,
     _actions[Network::CLIENT_REQUIRE_KEY] = std::bind(&Server::Mediator::sendEvent, this, std::placeholders::_1, std::placeholders::_2);
     _actions[Network::CLIENT_REQUEST_SPRITE] = std::bind(&Server::Mediator::sendSprite, this, std::placeholders::_1, std::placeholders::_2);
 
+    // Adding commands for the shell module.
     _commands.emplace("exit", std::bind(&Mediator::exit, this, std::placeholders::_1));
     _commands.emplace("hubs", std::bind(&Mediator::hubs, this, std::placeholders::_1));
     _commands.emplace("kick", std::bind(&Mediator::kick, this, std::placeholders::_1));
@@ -27,20 +28,17 @@ Server::Mediator::Mediator() : _reader(CONF_FILE_PATH), _tcp (_ioContext,
 
 Server::Mediator::~Mediator()
 {
-    std::cout << "POKOKOKOK" << std::endl;
+    // Stop boost::asio.
     _ioContext.stop();
-    std::cout << "WOOW" << std::endl;
     _boostThread.join();
-    std::cout << "FUCKU" << std::endl;
-    for (auto &i : _hubs) {
-        std::cout << "FUCK OFF" << std::endl;
-        i.get()->stop();
-    }
-    for (auto &i : _threads) {
-        std::cout << "PASSED" << std::endl;
-        i.join();
-    }
-    std::cout << "DONE" << std::endl;
+
+    // Stoping hubs.
+    for (auto &hub : _hubs)
+        hub->stop();
+
+    // Joining threads.
+    for (auto &thread : _threads)
+        thread.join();
 }
 
 void Server::Mediator::launchBoost()
@@ -52,6 +50,7 @@ void Server::Mediator::readEventFile()
 {
     int value = 1;
     auto i = _reader.conf(std::to_string(value));
+
     for (auto i = _reader.conf(std::to_string(value)); i.has_value(); i = _reader.conf(std::to_string(value))) {
         _eventTemplate[value] = i.value();
         value <<= 1;

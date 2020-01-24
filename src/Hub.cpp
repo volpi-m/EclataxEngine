@@ -86,7 +86,7 @@ void Server::Hub::start()
 
 void Server::Hub::stop()
 {
-    std::unique_lock<std::mutex> lock(_mutex);
+    std::lock_guard<std::mutex> lock(_mutex);
     Network::headerUdp data;
     char msg[20] = "Server was stopped";
 
@@ -207,9 +207,8 @@ void Server::Hub::setPlayerReady(const std::string &ip, bool state)
 
 void Server::Hub::sendToAllPlayer(void *msg, const std::size_t size)
 {
-    std::unique_lock<std::mutex> lock(_mutex);
-    for (auto &i : _players)
-        _udp.write(i.ip, msg, size);
+    for (auto &player : _players)
+        _udp.write(player.ip, msg, size);
 }
 
 
