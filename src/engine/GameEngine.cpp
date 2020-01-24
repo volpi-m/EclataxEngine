@@ -11,7 +11,7 @@
 
 #include "GameEngine.hpp"
 
-Game::GameEngine::GameEngine() : _ecs(new Module::EntityComponentSystem), _libraryLoader(new Utils::LibraryLoader), _sceneStateMachine(new Module::SceneStateMachine), _initialised(true) {}
+Game::GameEngine::GameEngine() : _ecs(new Module::EntityComponentSystem), _libraryLoader(new Utils::LibraryLoader), _sceneStateMachine(new Module::SceneStateMachine(_ecs)), _initialised(true) {}
 
 Game::GameEngine::~GameEngine() {}
 

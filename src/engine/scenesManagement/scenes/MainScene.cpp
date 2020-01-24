@@ -20,11 +20,8 @@ Scenes::MainScene::MainScene(const std::string &name, std::shared_ptr<Module::En
 
 void Scenes::MainScene::update(float deltaTime) 
 {
-	(void) deltaTime;
-	Debug::Logger::printDebug(Debug::INFO, "The MainScene is being updated, poping the scene.", "MainScene::update()");
-
-	// calling the mediator for the sake of the example.
-	_mediator->notify(this, Module::POP, nullptr);
+	Debug::Logger::printDebug(Debug::INFO, "The MainScene is being updated.", "MainScene::update()");
+	Debug::Logger::printDebug(Debug::INFO, "Current deltaTime: " + std::to_string(deltaTime) + ".", "MainScene::update()");
 }
 
 void Scenes::MainScene::onCreate() 

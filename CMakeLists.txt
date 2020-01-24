@@ -71,6 +71,7 @@ set(ENTITY_PARALLAXALT
 )
 
 set(SCENE_MAIN
+    ${CMAKE_CURRENT_SOURCE_DIR}/APCPPLib/lib/src/Log/Logger.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/engine/scenesManagement/scenes/MainScene.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/engine/scenesManagement/scenes/AScene.cpp
 )
@@ -159,7 +160,7 @@ include_directories(
     ${INCLUDE_GAME}
 )
 
-## Creating Librairies
+## Creating dynamic librairies
 add_library(asteroid SHARED ${ENTITY_ASTEROID})
 
 add_library(ship SHARED ${ENTITY_SHIP})
@@ -176,6 +177,7 @@ add_library(parallax SHARED ${ENTITY_PARALLAX})
 
 add_library(parallaxalt SHARED ${ENTITY_PARALLAXALT})
 
+## Creating the main scene dynamic library
 add_library(mainscene SHARED ${SCENE_MAIN})
 
 ## Creating server executable
@@ -220,7 +222,7 @@ set (SRC_TEST
     tests/systems/test_healthManipulator.cpp
     tests/configfile/config_test.cpp
     tests/client/test_EntityClient.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/tests/Game/test_hub.cpp
+    tests/Game/test_hub.cpp
 )
 
 ## including google test library
@@ -252,12 +254,12 @@ target_link_libraries(r-type_client
 )
 
 target_link_libraries(unit_tests PUBLIC
-    APCPPLib
-    CONAN_PKG::gtest
     pthread
+    APCPPLib
+    CONAN_PKG::sfml
+    CONAN_PKG::gtest
     CONAN_PKG::boost_system
     CONAN_PKG::boost_asio
-    CONAN_PKG::sfml
     ${CMAKE_THREAD_LIBS_INIT}
     ${CMAKE_DL_LIBS}
 )

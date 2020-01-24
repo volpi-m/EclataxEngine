@@ -51,7 +51,7 @@ namespace Module
          * @brief SceneStateMachine
          * Constructor That initialize callbacks
          */
-        SceneStateMachine();
+        SceneStateMachine(std::shared_ptr<EntityComponentSystem> &ECS);
 
         /** 
          * @brief SceneStateMachine
@@ -61,32 +61,34 @@ namespace Module
 
         // Interface
         /** 
-         * @brief notify the mediator that a scenes changed it's state
+         * @brief notify the mediator that a scenes changed it's state.
          * @param sender : the scene that called the notify method.
-         * @param state : state of the scene
-         * @param new_scene : potential new scene to push in case of a swap
+         * @param state : state of the scene.
+         * @param new_scene : potential new scene to push in case of a swap.
          */
         void notify(Scenes::IScene *sender, scene_state state, Scenes::IScene *new_scene) override;
 
         // Running
         /** 
-         * @brief Updates the scene on top of the stack
-         * @return true if the action was successful, false otherwise
+         * @brief Updates the scene on top of the stack.
+         * @return true if the action was successful, false otherwise.
          */
         bool update();
 
         // Memory modification        
         /** 
-         * @brief Push a scene onto the stack 
-         * @param scene : the scene to push
+         * @brief Push a scene onto the stack.
+         * @param name : the name of the scene.
+         * @param scene : the scene to push.
          */
-        void push(std::shared_ptr<Scenes::IScene> &scene);
+        void push(const std::string &name, std::shared_ptr<Scenes::IScene> &scene);
         
         /** 
          * @brief Swap the scene on top of the stack with the scene passed as parameter.
+         * @param name : the name of the new scene.
          * @param scene : the scene that will be on top of the stack.
          */
-        void swap(std::shared_ptr<Scenes::IScene> &scene);
+        void swap(const std::string &name, std::shared_ptr<Scenes::IScene> &scene);
 
         /** 
          * @brief Pop scenes until the scene name has been reached.
@@ -157,6 +159,9 @@ namespace Module
 
         /*! using callbacks via the states of the scenes */
         std::unordered_map<scene_state, std::function<void(SceneStateMachine &, Scenes::IScene *, Scenes::IScene *)>> _callbacks;
+
+        /*! a reference to the ecs */
+        std::shared_ptr<EntityComponentSystem> &_ECS;
 
         /*! time since execution */
         float _deltaTime;

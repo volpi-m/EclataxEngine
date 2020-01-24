@@ -18,32 +18,30 @@ Server::Hub::Hub(int newId, const std::string &creator, boost::asio::io_context 
 
 void Server::Hub::start()
 {
-    std::shared_ptr<Module::IMediator> mediator(_engine.SceneStateMachine());
-
     // Creating the entry point for scenes.
-    auto lib = _engine.LibLoader()->openLibrary<Scenes::IScene>("lib/libmainscene.so");
+    std::shared_ptr<Scenes::IScene> lib(_engine.LibLoader()->openLibrary<Scenes::IScene>("lib/libmainscene.so"));
 
-    // if (!lib)
-    // {
-    //     Debug::Logger::printDebug(Debug::FATAL, "Couldn't load main scene", "Server::Hub::start()");
-    //     return;
-    // }
-    // std::shared_ptr<Scenes::IScene> scene(lib);
+    if (!lib.get())
+    {
+        Debug::Logger::printDebug(Debug::FATAL, "Couldn't load main scene", "Server::Hub::start()");
+        return;
+    }
 
     // Pushing the scene to the scene machine.
-    // _engine.SceneStateMachine()->push(scene);
+    std::shared_ptr<Scenes::IScene> scene(lib);
+    _engine.SceneStateMachine()->push("MainScene", scene);
 
     // Initialise available players
-    // initStatePlayers();
+    initStatePlayers();
 
-    // while (!_stoped)
-    // {
-    //     // Computing framerate
-    //     std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
+    while (!_stoped)
+    {
+        // Computing framerate
+        std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
         
-    //     // Running the current scene behaviour
-    //     _engine.SceneStateMachine()->update();
-    // }
+        // Running the current scene behaviour
+        _engine.SceneStateMachine()->update();
+    }
 }
 
 
