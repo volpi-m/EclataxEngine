@@ -160,7 +160,7 @@ namespace Module
         std::stack<std::shared_ptr<Scenes::IScene>> _scenes;
 
         /*! using callbacks via the states of the scenes */
-        std::unordered_map<scene_state, std::function<void(SceneStateMachine &, Scenes::IScene *, const std::string &, Scenes::IScene *)>> _callbacks;
+        std::unordered_map<scene_state, std::function<void(Scenes::IScene *, const std::string &, Scenes::IScene *)>> _callbacks;
 
         /*! a reference to the ecs */
         std::shared_ptr<EntityComponentSystem> &_ECS;

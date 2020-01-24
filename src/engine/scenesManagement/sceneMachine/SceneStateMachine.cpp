@@ -6,9 +6,9 @@
 
 Module::SceneStateMachine::SceneStateMachine(std::shared_ptr<EntityComponentSystem> &ECS) : _ECS(ECS), _deltaTime(std::chrono::high_resolution_clock::now().time_since_epoch().count())
 {
-    _callbacks.emplace(POP, &SceneStateMachine::popCallback);
-    _callbacks.emplace(SWAP, &SceneStateMachine::swapCallback);
-    _callbacks.emplace(PUSH, &SceneStateMachine::pushCallback);
+    _callbacks.emplace(POP, std::bind(&SceneStateMachine::popCallback, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
+    _callbacks.emplace(SWAP, std::bind(&SceneStateMachine::swapCallback, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
+    _callbacks.emplace(PUSH, std::bind(&SceneStateMachine::pushCallback, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
 }
 
 Module::SceneStateMachine::~SceneStateMachine()
@@ -18,7 +18,7 @@ Module::SceneStateMachine::~SceneStateMachine()
 
 void Module::SceneStateMachine::notify(Scenes::IScene *sender, Module::scene_state state, const std::string &name, Scenes::IScene *new_scene)
 {
-    _callbacks[state](*this, sender, name, new_scene);
+    _callbacks[state](sender, name, new_scene);
 }
 
 bool Module::SceneStateMachine::update()

@@ -18,6 +18,11 @@ Server::Mediator::Mediator() : _reader(CONF_FILE_PATH), _tcp (_ioContext,
     _actions[Network::CLIENT_IS_NOT_READY] = std::bind(&Server::Mediator::setPlayerNotReady, this, std::placeholders::_1, std::placeholders::_2);
     _actions[Network::CLIENT_REQUIRE_KEY] = std::bind(&Server::Mediator::sendEvent, this, std::placeholders::_1, std::placeholders::_2);
     _actions[Network::CLIENT_REQUEST_SPRITE] = std::bind(&Server::Mediator::sendSprite, this, std::placeholders::_1, std::placeholders::_2);
+
+    _commands.emplace("exit", std::bind(&Mediator::exit, this, std::placeholders::_1));
+    _commands.emplace("hubs", std::bind(&Mediator::hubs, this, std::placeholders::_1));
+    _commands.emplace("kick", std::bind(&Mediator::kick, this, std::placeholders::_1));
+    _commands.emplace("help", std::bind(&Mediator::help, this, std::placeholders::_1));
 }
 
 Server::Mediator::~Mediator()
@@ -50,30 +55,70 @@ void Server::Mediator::readEventFile()
 void Server::Mediator::start()
 {
     std::string input("input");
-    while (_isRunning && !input.empty()) {
+    while (_isRunning)
+    {
+        // Displaying the prompt and getting the input from the user.
         std::cout << "$> ";
         std::getline(std::cin, input);
-        if (input == "shutdown" || input == "quit")
-            _isRunning = false;
-        else if (input == "hubs") {
-            std::cout << "Debuging hubs : " << std::endl;
-            for (auto &i : _hubs) {
-                std::cout << "Hub n " << i.get()->id() << std::endl;
-                std::cout << "Port: " << i.get()->port() << std::endl;
-                std::cout << "Number of player: " << i.get()->size() << std::endl;
-            }
-        } else if (input.find("kick") != std::string::npos) {
-            auto pos = input.find(" ");
-            std::string kick = input.substr(pos + 1, input.size());
-            for (auto &i : _hubs) {
-                if (i.get()->isInHub(kick) == true) {
-                    i.get()->removeMember(kick);
-                    std::cout << "Kicked !" << std::endl;
-                }
-            }
-        } else if (input == "help")
-            dispHelp();
+
+        // Needs better string formating.
+        if (_commands.find(input.substr(0, input.find(' '))) != _commands.end())
+            _commands[input.substr(0, input.find(' '))](input);
     }
+}
+
+void Server::Mediator::exit(const std::string &command)
+{
+    (void) command;
+
+    // Stopping the server.
+    _isRunning = false;
+}
+
+void Server::Mediator::hubs(const std::string &command)
+{
+    (void) command;
+
+    std::cout << "Debuging hubs : " << std::endl;
+    
+    // Displaying useful data of all hubs.
+    for (auto &i : _hubs) {
+        std::cout << "Hub n " << i.get()->id() << std::endl;
+        std::cout << "Port: " << i.get()->port() << std::endl;
+        std::cout << "Number of player: " << i.get()->size() << std::endl;
+    }
+}
+
+void Server::Mediator::kick(const std::string &command)
+{
+    // Needs care.
+    auto pos = command.find(" ");
+
+    // Getting the player to kick. Needs care. 
+    std::string kick = command.substr(pos + 1, command.size());
+
+    // Searching for the player in all hubs. Maybe add the hub number ?
+    for (auto &i : _hubs)
+    {
+        // Check if the player is in the current hub.
+        if (i.get()->isInHub(kick) == true)
+        {
+            // Removing the player from the match.
+            i.get()->removeMember(kick);
+        }
+    }
+}
+
+void Server::Mediator::help(const std::string &command)
+{
+    (void) command;
+
+    // Displaying help.
+    std::cout << "Available commandes:\n" << std::endl;
+    std::cout << "-shutdown / quit \tshutdown the server" << std::endl;
+    std::cout << "-hubs \t\t\tdisplay hubs informations" << std::endl;
+    std::cout << "-kick [ip] \t\tskick the ip from the server" << std::endl;
+    std::cout << "-help \t\t\tdisplay the help" << std::endl;
 }
 
 void Server::Mediator::createHub(std::string ip)
@@ -195,13 +240,4 @@ void Server::Mediator::sendEvent(Server::TcpConnection *socket, [[maybe_unused]]
     socket->write(static_cast<void *>(toSend), sizeof(*toSend));
     delete toSend;
     std::cout << "End !" << std::endl;
-}
-
-void Server::Mediator::dispHelp()
-{
-    std::cout << "Available commandes:\n" << std::endl;
-    std::cout << "-shutdown / quit \tshutdown the server" << std::endl;
-    std::cout << "-hubs \t\t\tdisplay hubs informations" << std::endl;
-    std::cout << "-kick [ip] \t\tskick the ip from the server" << std::endl;
-    std::cout << "-help \t\t\tdisplay the help" << std::endl;
 }

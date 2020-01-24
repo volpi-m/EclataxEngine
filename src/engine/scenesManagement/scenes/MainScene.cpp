@@ -20,8 +20,7 @@ Scenes::MainScene::MainScene(const std::string &name, std::shared_ptr<Module::En
 
 void Scenes::MainScene::update(float deltaTime) 
 {
-	Debug::Logger::printDebug(Debug::INFO, "The MainScene is being updated.", "MainScene::update()");
-	Debug::Logger::printDebug(Debug::INFO, "Current deltaTime: " + std::to_string(deltaTime) + ".", "MainScene::update()");
+	(void) deltaTime;
 }
 
 void Scenes::MainScene::onCreate() 

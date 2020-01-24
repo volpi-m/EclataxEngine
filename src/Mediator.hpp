@@ -15,9 +15,9 @@
 
 #include "TcpNetwork.hpp"
 #include "UdpNetwork.hpp"
+#include "ConfReader.hpp"
 #include "Hub.hpp"
 #include "Rfc.hpp"
-#include "ConfReader.hpp"
 
 /// \namespace Server
 /// \brief Used for the all server classes
@@ -68,6 +68,15 @@ namespace Server {
 
             /*! Map of all events need in the game */
             std::unordered_map<int, std::string> _eventTemplate;
+
+            /*! list of shell commands */
+            std::unordered_map<std::string, std::function<void(const std::string &)>> _commands;
+
+            // COMMANDS
+            void exit(const std::string &command);
+            void hubs(const std::string &command);
+            void kick(const std::string &command);
+            void help(const std::string &command);
 
             /// \brief read the conf file for the game
             /// The conf file is specified in Server::CONF_FILE_PATH
