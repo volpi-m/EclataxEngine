@@ -36,9 +36,6 @@ void Server::Hub::start()
 
     while (!_stoped)
     {
-        // Computing framerate
-        std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
-        
         // Running the current scene behaviour
         _engine.SceneStateMachine()->update();
     }

@@ -16,9 +16,9 @@ Module::SceneStateMachine::~SceneStateMachine()
     clear();
 }
 
-void Module::SceneStateMachine::notify(Scenes::IScene *sender, Module::scene_state state, Scenes::IScene *new_scene)
+void Module::SceneStateMachine::notify(Scenes::IScene *sender, Module::scene_state state, const std::string &name, Scenes::IScene *new_scene)
 {
-    _callbacks[state](*this, sender, new_scene);
+    _callbacks[state](*this, sender, name, new_scene);
 }
 
 bool Module::SceneStateMachine::update()
@@ -120,15 +120,16 @@ bool Module::SceneStateMachine::empty() const
     return _scenes.empty();
 }
 
-void Module::SceneStateMachine::popCallback(Scenes::IScene *sender, Scenes::IScene *scene)
+void Module::SceneStateMachine::popCallback(Scenes::IScene *sender, const std::string &name, Scenes::IScene *scene)
 {
-    (void) scene;
     (void) sender;
+    (void) name;
+    (void) scene;
 
     pop();
 }
 
-void Module::SceneStateMachine::swapCallback(Scenes::IScene *sender, Scenes::IScene *scene)
+void Module::SceneStateMachine::swapCallback(Scenes::IScene *sender, const std::string &name, Scenes::IScene *scene)
 {
     (void) sender;
 
@@ -137,15 +138,15 @@ void Module::SceneStateMachine::swapCallback(Scenes::IScene *sender, Scenes::ISc
 
     // Transforming pointer into a shared one.
     std::shared_ptr<Scenes::IScene> ptr(scene);
-    swap(scene->name(), ptr);
+    swap(name, ptr);
 }
 
-void Module::SceneStateMachine::pushCallback(Scenes::IScene *sender, Scenes::IScene *scene)
+void Module::SceneStateMachine::pushCallback(Scenes::IScene *sender, const std::string &name, Scenes::IScene *scene)
 {
     if (!sender || !scene)
         return;
 
     // Transforming pointer into a shared one.
     std::shared_ptr<Scenes::IScene> ptr(scene);
-    push(scene->name(), ptr);
+    push(name, ptr);
 }

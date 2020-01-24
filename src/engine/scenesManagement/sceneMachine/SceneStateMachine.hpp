@@ -34,12 +34,13 @@ namespace Module
     {
     public:
         /** 
-         * @brief notify the mediator that a scenes changed it's state
+         * @brief notify the mediator that a scenes changed it's state.
          * @param sender : the scene that called the notify method.
-         * @param state : state of the scene
-         * @param new_scene : potential new scene to push in case of a swap
+         * @param state : state of the scene.
+         * @param name : name of the new scene.
+         * @param new_scene : potential new scene to push in case of a swap.
          */
-        virtual void notify(Scenes::IScene *sender, scene_state state, Scenes::IScene *new_scene) = 0;
+        virtual void notify(Scenes::IScene *sender, scene_state state, const std::string &name, Scenes::IScene *new_scene) = 0;
     };
 
     class SceneStateMachine : public IMediator
@@ -48,13 +49,13 @@ namespace Module
 
         // Ctor / Dtor
         /** 
-         * @brief SceneStateMachine
-         * Constructor That initialize callbacks
+         * @brief SceneStateMachine.
+         * Constructor That initialize callbacks.
          */
         SceneStateMachine(std::shared_ptr<EntityComponentSystem> &ECS);
 
         /** 
-         * @brief SceneStateMachine
+         * @brief SceneStateMachine.
          * Destructor that deletes the content of the scene stack.
          */
         ~SceneStateMachine();
@@ -64,9 +65,10 @@ namespace Module
          * @brief notify the mediator that a scenes changed it's state.
          * @param sender : the scene that called the notify method.
          * @param state : state of the scene.
+         * @param name : name of the new scene.
          * @param new_scene : potential new scene to push in case of a swap.
          */
-        void notify(Scenes::IScene *sender, scene_state state, Scenes::IScene *new_scene) override;
+        void notify(Scenes::IScene *sender, scene_state state, const std::string &name, Scenes::IScene *new_scene) override;
 
         // Running
         /** 
@@ -138,27 +140,27 @@ namespace Module
          * @param sender : the scene that notified the mediator.
          * @param scene : Unused parameter.
          */
-        void popCallback(Scenes::IScene *sender, Scenes::IScene *scene);
+        void popCallback(Scenes::IScene *sender, const std::string &name, Scenes::IScene *scene);
 
         /** 
          * @brief When the mediator is notified via the SWAP state, swaps the scene on top of the stack.
          * @param sender : the scene that notified the mediator.
          * @param scene : the scene to swap.
          */
-        void swapCallback(Scenes::IScene *sender, Scenes::IScene *scene);
+        void swapCallback(Scenes::IScene *sender, const std::string &name, Scenes::IScene *scene);
 
         /** 
          * @brief When the mediator is notified via the PUSH state, push a new scene on top of the stack an deactivate the sender.
          * @param sender : the scene that notified the mediator.
          * @param scene : the scene to swap.
          */
-        void pushCallback(Scenes::IScene *sender, Scenes::IScene *scene);
+        void pushCallback(Scenes::IScene *sender, const std::string &name, Scenes::IScene *scene);
 
         /*! the stack of scenes */
         std::stack<std::shared_ptr<Scenes::IScene>> _scenes;
 
         /*! using callbacks via the states of the scenes */
-        std::unordered_map<scene_state, std::function<void(SceneStateMachine &, Scenes::IScene *, Scenes::IScene *)>> _callbacks;
+        std::unordered_map<scene_state, std::function<void(SceneStateMachine &, Scenes::IScene *, const std::string &, Scenes::IScene *)>> _callbacks;
 
         /*! a reference to the ecs */
         std::shared_ptr<EntityComponentSystem> &_ECS;
