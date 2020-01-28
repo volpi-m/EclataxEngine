@@ -3,6 +3,7 @@
 # Skip if conan is installed and install it otherwise
 
 if ! [ -x "$(command -v conan)" ]; then
+
     # Install conan
     sudo pip install conan --upgrade
 
@@ -18,8 +19,6 @@ fi
 
 # Build if needed, make otherwise
 
-mkdir -p logs
-
 if [ ! -d "./build" ] || [ "$1" == "-b" ] || [ "$1" == "--build" ]
 then
     conan remote update conan_center https://api.bintray.com/conan/conan/conan-center
@@ -33,4 +32,5 @@ then
 else
     #  Make
     cd build && cmake --build . -- -j 4 && cd ..
+    ./tests/unit_tests
 fi
