@@ -5,6 +5,8 @@
 ** Mediator definition
 */
 
+constexpr auto const DEFAULT_SHELL_PROMPT = "$> ";
+
 #include "Mediator.hpp"
 
 Server::Mediator::Mediator() : _reader(CONF_FILE_PATH), _tcp (_ioContext, 
@@ -57,6 +59,8 @@ void Server::Mediator::readEventFile()
     }
 }
 
+std::vector<std::string> parseCommand(const std::string &command);
+
 void Server::Mediator::start()
 {
     std::string input;
@@ -64,16 +68,46 @@ void Server::Mediator::start()
     while (_isRunning)
     {
         // Displaying the prompt and getting the input from the user.
-        std::cout << "$> ";
+        std::cout << DEFAULT_SHELL_PROMPT;
         std::getline(std::cin, input);
 
-        // Needs better string formating.
-        if (_commands.find(input.substr(0, input.find(' '))) != _commands.end())
-            _commands[input.substr(0, input.find(' '))](input);
+        // Getting commands
+        auto command_parameters = parseCommand(input);
+
+        // Checking if the command exists.
+        if (!command_parameters.empty() && _commands.find(command_parameters.at(0)) != _commands.end())
+            _commands[command_parameters.at(0)](command_parameters);
     }
 }
 
-void Server::Mediator::exit(const std::string &command)
+std::vector<std::string> Server::Mediator::parseCommand(const std::string &command)
+{
+    std::vector<std::string> split;
+    std::size_t idx = 0;
+
+    // Skipping first non-command characters.
+    for (; !command.empty() && command[idx] <= ' '; ++idx);
+
+    // Getting command arguments.
+    for (std::size_t start = idx; command[idx]; ++idx)
+    {
+        for (; command[idx] > ' '; ++idx);
+
+        // Getting the command.
+        auto tmp = command.substr(start, idx - start);
+
+        // Pushing it back to our vector.
+        split.push_back(tmp);
+
+        // Skipping non-command characters.
+        for (; command[idx] && command[idx] <= ' '; ++idx);
+        start = idx--;
+    }
+
+    return split;
+}
+
+void Server::Mediator::exit(const std::vector<std::string> &command)
 {
     (void) command;
 
@@ -81,41 +115,40 @@ void Server::Mediator::exit(const std::string &command)
     _isRunning = false;
 }
 
-void Server::Mediator::hubs(const std::string &command)
+void Server::Mediator::hubs(const std::vector<std::string> &command)
 {
     (void) command;
 
     std::cout << "Debuging hubs : " << std::endl;
     
     // Displaying useful data of all hubs.
-    for (auto &hub : _hubs) {
+    for (auto &hub : _hubs)
+    {
         std::cout << "Hub n " << hub->id() << std::endl;
         std::cout << "Port: " << hub->port() << std::endl;
         std::cout << "Number of player: " << hub->size() << std::endl;
     }
 }
 
-void Server::Mediator::kick(const std::string &command)
+void Server::Mediator::kick(const std::vector<std::string> &command)
 {
-    // Needs care.
-    auto pos = command.find(" ");
-
-    // Getting the player to kick. Needs care. 
-    std::string kick = command.substr(pos + 1, command.size());
+    // Checking arguments
+    if (command.size() != 2)
+        return;
 
     // Searching for the player in all hubs. Maybe add the hub number ?
     for (auto &hub : _hubs)
     {
         // Check if the player is in the current hub.
-        if (hub->isInHub(kick) == true)
+        if (hub->isInHub(command.at(1)) == true)
         {
             // Removing the player from the match.
-            hub->removeMember(kick);
+            hub->removeMember(command.at(1));
         }
     }
 }
 
-void Server::Mediator::help(const std::string &command)
+void Server::Mediator::help(const std::vector<std::string> &command)
 {
     (void) command;
 

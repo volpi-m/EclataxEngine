@@ -70,20 +70,27 @@ namespace Server {
             std::unordered_map<int, std::string> _eventTemplate;
 
             /*! list of shell commands */
-            std::unordered_map<std::string, std::function<void(const std::string &)>> _commands;
+            std::unordered_map<std::string, std::function<void(const std::vector<std::string> &)>> _commands;
 
-            // COMMANDS
-            void exit(const std::string &command);
-            void hubs(const std::string &command);
-            void kick(const std::string &command);
-            void help(const std::string &command);
+            /// \param command : the command to parse
+            /// \brief get all commands separeted without non-command characters.
+            /// \return a vector of command strings.
+            std::vector<std::string> parseCommand(const std::string &command);
+
+            // POSSIBLE COMMANDS
+            void exit(const std::vector<std::string> &command);
+            void kick(const std::vector<std::string> &command);
+            void help(const std::vector<std::string> &command);
+            void hubs(const std::vector<std::string> &command);
 
             /// \brief read the conf file for the game
             /// The conf file is specified in Server::CONF_FILE_PATH
             void readEventFile();
+
             /// \param ip ip of the hub creator
             /// \brief method for creating a new hub
             void createHub(std::string ip);
+
             /// \brief Launch Boost librairire
             void launchBoost();
 
@@ -91,26 +98,32 @@ namespace Server {
             /// \return return number of the assigned hub
             /// \brief assign a hub to the current ip. If no hub is available, it create a thread with the new hub inside.
             int assignHub(std::string ip);
+
             /// \param socket pointer to the received socket
             /// \param packet packet send by client
             /// \brief method call when client ask a hub
             void askHub(Server::TcpConnection *socket, Network::headerTcp *packet);
+
             /// \param socket pointer to the received socket
             /// \param packet packet send by client
             /// \brief method call when client is ready
             void setPlayerReady(Server::TcpConnection *socket, Network::headerTcp *packet);
+
             /// \param socket pointer to the received socket
             /// \param packet packet send by client
             /// \brief method call when client is ready
             void setPlayerNotReady(Server::TcpConnection *socket, Network::headerTcp *packet);
+
             /// \param socket pointer to the received socket
             /// \param packet packet send by client
             /// \brief method call when client ask for sprite list
             void sendSprite(Server::TcpConnection *socket, Network::headerTcp *packet);
+
             /// \param socket pointer to the received socket
             /// \param packet packet send by client
             /// \brief method call when client ask for event list
             void sendEvent(Server::TcpConnection *socket, Network::headerTcp *packet);
+
             /// \brief display shell help
             void dispHelp();
     };

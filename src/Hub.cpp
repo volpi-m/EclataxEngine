@@ -192,8 +192,8 @@ bool Server::Hub::isOpen()
 
 bool Server::Hub::isInHub(const std::string &ip)
 {
-    for (auto &i : _players)
-        if (i.ip == ip)
+    for (auto &player : _players)
+        if (player.ip == ip)
             return true;
     return false;
 }
