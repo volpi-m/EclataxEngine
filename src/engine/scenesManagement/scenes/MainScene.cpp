@@ -18,7 +18,7 @@ extern "C" Scenes::IScene *entryPoint()
 
 Scenes::MainScene::MainScene(const std::string &name, std::shared_ptr<Module::EntityComponentSystem> &ECS, std::shared_ptr<Module::IMediator> &mediator) : AScene(name, ECS, mediator) {}
 
-void Scenes::MainScene::update(float deltaTime) 
+void Scenes::MainScene::onUpdate(float deltaTime) 
 {
 	(void) deltaTime;
 }

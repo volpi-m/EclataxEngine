@@ -18,7 +18,8 @@ Server::Hub::Hub(int newId, const std::string &creator, boost::asio::io_context 
 
 void Server::Hub::start()
 {
-    // Creating the entry point for scenes.
+    // TODO
+    // Creating the entry point for scenes. To be replaced with rtype.conf content.
     std::shared_ptr<Scenes::IScene> lib(_engine.LibLoader()->openLibrary<Scenes::IScene>("lib/libmainscene.so"));
 
     if (!lib.get())
@@ -29,12 +30,12 @@ void Server::Hub::start()
 
     // Pushing the scene to the scene machine.
     std::shared_ptr<Scenes::IScene> scene(lib);
-    _engine.SceneStateMachine()->push("MainScene", scene);
+    _engine.SceneStateMachine()->push(scene);
 
     // Initialise available players
     initStatePlayers();
 
-    while (!_stoped)
+    while (!_stoped && !_players.empty())
     {
         // Running the current scene behaviour
         _engine.SceneStateMachine()->update();
@@ -194,6 +195,7 @@ bool Server::Hub::isInHub(const std::string &ip)
 {
     for (auto &player : _players)
         if (player.ip == ip)
+
             return true;
     return false;
 }

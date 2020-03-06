@@ -37,7 +37,7 @@ namespace Scenes
 
             virtual void onDeactivate() = 0;
 
-            virtual void update(float deltaTime) = 0;
+            virtual void onUpdate(float deltaTime) = 0;
 
             virtual void setName(const std::string &name) = 0;
 

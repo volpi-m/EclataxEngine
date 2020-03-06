@@ -1,9 +1,12 @@
-/*
-** EPITECH PROJECT, 2019
-** Rtype
-** File description:
-** Mediator definition
-*/
+/**
+ *  @file     src/engine/scenesManagement/sceneMachine/SceneStateMachine.cpp
+ *  @author   tabis on the 2020-01-22
+ *  @date     2020-01-22
+ * 
+ *  project: EclataxEngine
+ * 
+ */
+
 
 constexpr auto const DEFAULT_SHELL_PROMPT = "$> ";
 

@@ -27,7 +27,7 @@ namespace Scenes
 
         MainScene(const std::string &name, std::shared_ptr<Module::EntityComponentSystem> &ECS, std::shared_ptr<Module::IMediator> &mediator);
 
-    	void update(float deltaTime) override;
+    	void onUpdate(float deltaTime) override;
 
         void onCreate() override;
 
