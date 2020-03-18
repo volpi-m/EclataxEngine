@@ -12,9 +12,10 @@ constexpr auto const DEFAULT_SHELL_PROMPT = "$> ";
 
 #include "Mediator.hpp"
 
-Server::Mediator::Mediator() : _reader(CONF_FILE_PATH), _tcp (_ioContext, 
-    std::function<void(Server::TcpConnection *)>(std::bind(&Server::Mediator::processTcpMessage, this, std::placeholders::_1))), 
-    _isRunning(true)
+Server::Mediator::Mediator()
+    : _reader    { CONF_FILE_PATH                                                                                                                         }
+    , _tcp       { _ioContext, std::function<void(Server::TcpConnection *)>(std::bind(&Server::Mediator::processTcpMessage, this, std::placeholders::_1)) }
+    , _isRunning { true                                                                                                                                   }
 {
     _boostThread = std::thread(&Server::Mediator::launchBoost, this);
     readEventFile();
@@ -56,7 +57,8 @@ void Server::Mediator::readEventFile()
     int value = 1;
     auto i = _reader.conf(std::to_string(value));
 
-    for (auto i = _reader.conf(std::to_string(value)); i.has_value(); i = _reader.conf(std::to_string(value))) {
+    for (auto i = _reader.conf(std::to_string(value)); i.has_value(); i = _reader.conf(std::to_string(value)))
+    {
         _eventTemplate[value] = i.value();
         value <<= 1;
     }
@@ -166,7 +168,7 @@ void Server::Mediator::help(const std::vector<std::string> &command)
 void Server::Mediator::createHub(std::string ip)
 {
     _mut.lock();
-    _hubs.emplace_back(std::make_unique<Server::Hub>(_hubs.size() + 1, ip, _ioContext));
+    _hubs.emplace_back(std::make_unique<Server::Hub>(_hubs.size() + 1, ip, _ioContext, "test"));
     _mut.unlock();
 }
 

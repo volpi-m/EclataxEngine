@@ -7,9 +7,13 @@
 
 #include "Hub.hpp"
 
-Server::Hub::Hub(int newId, const std::string &creator, boost::asio::io_context &ioContext) : _stoped(false), _isPlaying(false),
-    _udp(ioContext, std::bind(&Server::Hub::processUdpMessage, this, std::placeholders::_1)),
-    _id(newId), _port(_udp.port())
+Server::Hub::Hub(int newId, const std::string &creator, boost::asio::io_context &ioContext, const std::string &startingScene)
+    : _stoped        { false                                                                              }
+    , _isPlaying     { false                                                                              }
+    , _udp           { ioContext, std::bind(&Server::Hub::processUdpMessage, this, std::placeholders::_1) }
+    , _id            { newId                                                                              }
+    , _port          { _udp.port()                                                                        }
+    , _startingScene { _startingScene                                                                     }
 {
     _actions[Network::CLIENT_TICK] = std::bind(&Server::Hub::addEvent, this, std::placeholders::_1, std::placeholders::_2);
     _actions[Network::CLIENT_ERROR] = std::bind(&Server::Hub::playerError, this, std::placeholders::_1, std::placeholders::_2);

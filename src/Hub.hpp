@@ -45,12 +45,14 @@ namespace Server {
     class Hub {
 
         public:
-            /// \param newId : id of the hub
-            /// \param creator : ip of the first Hub's member
-            /// \param ioContexte : io contexte for boost
+
+            /// \param newId : id of the hub.
+            /// \param creator : ip of the first Hub's member.
+            /// \param ioContexte : io contexte for boost.
+            /// \param startingScene : the scene that will be launched first.
             /// \brief constructor
             /// Initialize Hub class
-            Hub(int newId, const std::string &creator, boost::asio::io_context &ioContext);
+            Hub(int newId, const std::string &creator, boost::asio::io_context &ioContext, const std::string &startingScene);
 
             /// \brief get port of the hub
             int port() const { return _port; };
@@ -113,6 +115,8 @@ namespace Server {
             std::queue<std::pair<int, size_t>> _event;
             /*! Map of all actions when you received a udp message from client */
             std::unordered_map<int, std::function<void(Server::UdpNetwork *socket, Network::headerUdp *packet)>> _actions;
+            /*! The fisrt scene that will be launched. */
+            std::string _startingScene;
 
             /// \brief method for starting a game
             void startGame();
