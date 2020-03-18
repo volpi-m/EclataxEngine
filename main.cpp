@@ -23,13 +23,13 @@
 int main()
 {
     std::srand(std::time(nullptr));
+    Server::Mediator m;
 
     try
     {
-        Server::Mediator m;
         m.start();
     }
-    catch(const Debug::Exception& e)
+    catch(const Debug::Exception &e)
     {
         e.debugErrorMessage();
     }

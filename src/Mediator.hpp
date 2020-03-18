@@ -25,6 +25,7 @@ namespace Server {
 
     /// \def path for the file containing all event declaration for the game
     constexpr auto const CONF_FILE_PATH = "ressources/r-type-event.conf";
+    constexpr auto const SCENE_CONF_FILE_PATH = "ressources/rtype.conf";
 
     /// \class Mediator
     /// \brief Encapsulate interaction between all elements of rType game
@@ -51,8 +52,6 @@ namespace Server {
             boost::asio::io_context _ioContext;
             /*! Mediator mutex */
             std::mutex _mut;
-            /*! Thread for running boost */
-            std::thread _boostThread;
             /*! reader */
             Common::ConfReader _reader;
             /*! Object handling tcp dialogue */
@@ -63,6 +62,8 @@ namespace Server {
             std::vector<std::unique_ptr<Server::Hub>> _hubs;
             /*! state of the server */
             bool _isRunning;
+            /*! Thread for running boost */
+            std::thread _boostThread;
             /*! Map of all actions when you received a tcp message from client */
             std::unordered_map<int, void (Mediator::*)(Server::TcpConnection *socket, Network::headerTcp *packet)> _actions;
 

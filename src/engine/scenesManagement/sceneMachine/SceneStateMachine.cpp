@@ -14,7 +14,7 @@ Module::SceneStateMachine::SceneStateMachine(std::shared_ptr<Module::EntityCompo
 
 Module::SceneStateMachine::~SceneStateMachine()
 {
-    clear();
+    // clear();
 }
 
 void Module::SceneStateMachine::notify(Scenes::IScene *sender, Module::scene_state state, Scenes::IScene *new_scene)

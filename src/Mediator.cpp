@@ -13,12 +13,13 @@ constexpr auto const DEFAULT_SHELL_PROMPT = "$> ";
 #include "Mediator.hpp"
 
 Server::Mediator::Mediator()
-    : _reader    { CONF_FILE_PATH                                                                                                                         }
-    , _tcp       { _ioContext, std::function<void(Server::TcpConnection *)>(std::bind(&Server::Mediator::processTcpMessage, this, std::placeholders::_1)) }
-    , _isRunning { true                                                                                                                                   }
+    : _reader      { CONF_FILE_PATH                                                                                                                         }
+    , _tcp         { _ioContext, std::function<void(Server::TcpConnection *)>(std::bind(&Server::Mediator::processTcpMessage, this, std::placeholders::_1)) }
+    , _isRunning   { true                                                                                                                                   }
+    , _boostThread { std::thread(&Server::Mediator::launchBoost, this)                                                                                      }
 {
-    _boostThread = std::thread(&Server::Mediator::launchBoost, this);
     readEventFile();
+    _reader = Common::ConfReader(SCENE_CONF_FILE_PATH);
     _actions.emplace(Network::ASK_FOR_HUB, &Server::Mediator::askHub);
     _actions.emplace(Network::CLIENT_IS_READY, &Server::Mediator::setPlayerReady);
     _actions.emplace(Network::CLIENT_IS_NOT_READY, &Server::Mediator::setPlayerNotReady);
@@ -167,8 +168,15 @@ void Server::Mediator::help(const std::vector<std::string> &command)
 
 void Server::Mediator::createHub(std::string ip)
 {
+    auto main_scene = _reader.conf("main_scene");
+
+    if (!main_scene.has_value())
+    {
+        Debug::Logger::printDebug(Debug::ERROR, "Couldn't create the main scene, config not found.", "Server::Mediator::createHub");
+        return;
+    }
     _mut.lock();
-    _hubs.emplace_back(std::make_unique<Server::Hub>(_hubs.size() + 1, ip, _ioContext, "test"));
+    _hubs.emplace_back(std::make_unique<Server::Hub>(_hubs.size() + 1, ip, _ioContext, main_scene.value()));
     _mut.unlock();
 }
 

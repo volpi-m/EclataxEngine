@@ -24,7 +24,7 @@ void Server::Hub::start()
 {
     // TODO
     // Creating the entry point for scenes. To be replaced with rtype.conf content.
-    std::shared_ptr<Scenes::IScene> lib(_engine.LibLoader()->openLibrary<Scenes::IScene>("lib/libmainscene.so"));
+    std::shared_ptr<Scenes::IScene> lib(_engine.LibLoader()->openLibrary<Scenes::IScene>(_startingScene));
 
     if (!lib.get())
     {
