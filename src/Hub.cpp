@@ -13,10 +13,10 @@ Server::Hub::Hub(int newId, const std::string &creator, boost::asio::io_context 
     , _udp           { ioContext, std::bind(&Server::Hub::processUdpMessage, this, std::placeholders::_1) }
     , _id            { newId                                                                              }
     , _port          { _udp.port()                                                                        }
-    , _startingScene { _startingScene                                                                     }
+    , _startingScene { startingScene                                                                     }
 {
-    _actions[Network::CLIENT_TICK] = std::bind(&Server::Hub::addEvent, this, std::placeholders::_1, std::placeholders::_2);
-    _actions[Network::CLIENT_ERROR] = std::bind(&Server::Hub::playerError, this, std::placeholders::_1, std::placeholders::_2);
+    _actions.emplace(Network::CLIENT_TICK, &Server::Hub::addEvent);
+    _actions.emplace(Network::CLIENT_ERROR, &Server::Hub::playerError);
     addMember(creator);
 }
 
@@ -221,7 +221,7 @@ void Server::Hub::sendToAllPlayer(void *msg, const std::size_t size)
 void Server::Hub::processUdpMessage(Server::UdpNetwork *socket)
 {
     Network::headerUdp *h = static_cast<Network::headerUdp *>((void *)socket->buffer().data());
-    _actions[h->code](socket, h);
+    (this->*_actions[h->code])(socket, h);
 }
 
 void Server::Hub::addEvent(Server::UdpNetwork *socket, Network::headerUdp *packet)

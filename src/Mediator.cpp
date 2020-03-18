@@ -19,11 +19,11 @@ Server::Mediator::Mediator()
 {
     _boostThread = std::thread(&Server::Mediator::launchBoost, this);
     readEventFile();
-    _actions[Network::ASK_FOR_HUB] = std::bind(&Server::Mediator::askHub, this, std::placeholders::_1, std::placeholders::_2);
-    _actions[Network::CLIENT_IS_READY] = std::bind(&Server::Mediator::setPlayerReady, this, std::placeholders::_1, std::placeholders::_2);
-    _actions[Network::CLIENT_IS_NOT_READY] = std::bind(&Server::Mediator::setPlayerNotReady, this, std::placeholders::_1, std::placeholders::_2);
-    _actions[Network::CLIENT_REQUIRE_KEY] = std::bind(&Server::Mediator::sendEvent, this, std::placeholders::_1, std::placeholders::_2);
-    _actions[Network::CLIENT_REQUEST_SPRITE] = std::bind(&Server::Mediator::sendSprite, this, std::placeholders::_1, std::placeholders::_2);
+    _actions.emplace(Network::ASK_FOR_HUB, &Server::Mediator::askHub);
+    _actions.emplace(Network::CLIENT_IS_READY, &Server::Mediator::setPlayerReady);
+    _actions.emplace(Network::CLIENT_IS_NOT_READY, &Server::Mediator::setPlayerNotReady);
+    _actions.emplace(Network::CLIENT_REQUIRE_KEY, &Server::Mediator::sendEvent);
+    _actions.emplace(Network::CLIENT_REQUEST_SPRITE, &Server::Mediator::sendSprite);
 
     // Adding commands for the shell module.
     _commands.emplace("exit", std::bind(&Mediator::exit, this, std::placeholders::_1));
@@ -195,12 +195,14 @@ int Server::Mediator::assignHub(std::string ip)
 
 void Server::Mediator::processTcpMessage(Server::TcpConnection *socket)
 {
-    if (socket->state()) {
+    if (socket->state())
+    {
         Network::headerTcp *h = static_cast<Network::headerTcp *>((void *)socket->buffer().data());
-        if (_actions.find(h->code) != _actions.end()) {
-            _actions[h->code](socket, h);
-        }
-    } else {
+        if (_actions.find(h->code) != _actions.end())
+            (this->*_actions[h->code])(socket, h);
+    }
+    else
+    {
         for (auto &hub : _hubs) {
             if (hub->isInHub(socket->ip())) {
                 hub->removeMember(socket->ip());

@@ -114,7 +114,8 @@ namespace Server {
             /*! queue of all event get in the hub */
             std::queue<std::pair<int, size_t>> _event;
             /*! Map of all actions when you received a udp message from client */
-            std::unordered_map<int, std::function<void(Server::UdpNetwork *socket, Network::headerUdp *packet)>> _actions;
+            // std::unordered_map<int, std::function<void(Server::UdpNetwork *socket, Network::headerUdp *packet)>> _actions;
+            std::unordered_map<int, void (Hub::*)(Server::UdpNetwork *socket, Network::headerUdp *packet)> _actions;
             /*! The fisrt scene that will be launched. */
             std::string _startingScene;
 

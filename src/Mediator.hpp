@@ -64,7 +64,7 @@ namespace Server {
             /*! state of the server */
             bool _isRunning;
             /*! Map of all actions when you received a tcp message from client */
-            std::unordered_map<int, std::function<void(Server::TcpConnection *socket, Network::headerTcp *packet)>> _actions;
+            std::unordered_map<int, void (Mediator::*)(Server::TcpConnection *socket, Network::headerTcp *packet)> _actions;
 
             /*! Map of all events need in the game */
             std::unordered_map<int, std::string> _eventTemplate;
