@@ -198,7 +198,7 @@ set (SRC_TEST
     tests/main.cpp
     tests/network/test_tcp.cpp
     tests/main.cpp
-    # tests/sceneMachine/test_sceneMachine.cpp
+    tests/sceneMachine/test_sceneMachine.cpp
     tests/ecs/test_ecs.cpp
     tests/entity/test_entity.cpp
     tests/entity/test_entityFactory.cpp

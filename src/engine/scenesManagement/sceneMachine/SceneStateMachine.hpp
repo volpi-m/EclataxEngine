@@ -62,7 +62,7 @@ namespace Module
          * @brief SceneStateMachine
          * Destructor that deletes the content of the scene stack.
          */
-        ~SceneStateMachine();
+        // ~SceneStateMachine();
 
         // Interface
         /** 
@@ -168,5 +168,5 @@ namespace Module
 
         /*! ECS instance */
         std::shared_ptr<Module::EntityComponentSystem> _ECS;
-   };
+    };
 }

@@ -1,20 +1,16 @@
 //
 // Created by tabis on 09/10/2019.
 //
+
 #include "SceneStateMachine.hpp"
 
-Module::SceneStateMachine::SceneStateMachine(std::shared_ptr<Module::EntityComponentSystem> &ECS) :
-        _deltaTime(std::chrono::high_resolution_clock::now().time_since_epoch().count()),
-        _ECS(ECS)
+Module::SceneStateMachine::SceneStateMachine(std::shared_ptr<Module::EntityComponentSystem> &ECS)
+    : _deltaTime { std::chrono::high_resolution_clock::now().time_since_epoch().count() }
+    , _ECS       { ECS                                                                  }
 {
     _callbacks.emplace(POP, &SceneStateMachine::popCallback);
     _callbacks.emplace(SWAP, &SceneStateMachine::swapCallback);
     _callbacks.emplace(PUSH, &SceneStateMachine::pushCallback);
-}
-
-Module::SceneStateMachine::~SceneStateMachine()
-{
-    // clear();
 }
 
 void Module::SceneStateMachine::notify(Scenes::IScene *sender, Module::scene_state state, Scenes::IScene *new_scene)
@@ -39,13 +35,13 @@ void Module::SceneStateMachine::push(std::shared_ptr<Scenes::IScene> &scene)
     // Deactivating the last scene before pushing a new one.
     if (!empty())
         _scenes.top()->onDeactivate();
-
-    // Getting the mediator instance of this object.
-    std::shared_ptr<Module::IMediator> mediator(this);
+    
+    // Getting a reference to the object, but only in the form of the IMediator interface, to restrain access to the mediators methods.
+    IMediator *self(this);
 
     // Pushing the new scene and call the onCreate() method.
     _scenes.push(scene);
-    _scenes.top()->onInit(scene->name(), _ECS, mediator);
+    _scenes.top()->onInit(scene->name(), _ECS, self);
     _scenes.top()->onCreate();
 }
 
@@ -127,7 +123,7 @@ void Module::SceneStateMachine::popCallback(Scenes::IScene *sender, Scenes::ISce
 
 void Module::SceneStateMachine::swapCallback(Scenes::IScene *sender, Scenes::IScene *scene)
 {
-    if (!scene)
+    if (!sender || !scene)
         return;
 
     // Transforming pointer into a shared one.

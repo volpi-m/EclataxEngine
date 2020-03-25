@@ -27,7 +27,7 @@ namespace Scenes
 
             virtual ~IScene() = default;
 
-            virtual void onInit(const std::string &name, std::shared_ptr<Module::EntityComponentSystem> &ECS, std::shared_ptr<Module::IMediator> &mediator) = 0;
+            virtual void onInit(const std::string &name, std::shared_ptr<Module::EntityComponentSystem> &ECS, Module::IMediator *mediator) = 0;
 
             virtual void onCreate() = 0;
 

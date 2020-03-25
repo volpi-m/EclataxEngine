@@ -22,8 +22,7 @@ Server::Hub::Hub(int newId, const std::string &creator, boost::asio::io_context 
 
 void Server::Hub::start()
 {
-    // TODO
-    // Creating the entry point for scenes. To be replaced with rtype.conf content.
+    // Creating the entry point for scenes, replaced by the rtype.conf file content.
     std::shared_ptr<Scenes::IScene> lib(_engine.LibLoader()->openLibrary<Scenes::IScene>(_startingScene));
 
     if (!lib.get())

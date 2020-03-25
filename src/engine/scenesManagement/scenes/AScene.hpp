@@ -13,9 +13,9 @@ namespace Scenes
 
             AScene() = default;
 
-            AScene(const std::string &name, std::shared_ptr<Module::EntityComponentSystem> &ECS, std::shared_ptr<Module::IMediator> &mediator);
+            ~AScene() override = default;
 
-            void onInit(const std::string &name, std::shared_ptr<Module::EntityComponentSystem> &ECS, std::shared_ptr<Module::IMediator> &mediator) override;
+            void onInit(const std::string &name, std::shared_ptr<Module::EntityComponentSystem> &ECS, Module::IMediator *mediator) override;
 
             void setName(const std::string &name) override;
 
@@ -25,7 +25,7 @@ namespace Scenes
 
             std::string _name;
 
-            std::shared_ptr<Module::IMediator> _mediator;
+            Module::IMediator *_mediator;
 
             std::shared_ptr<Module::EntityComponentSystem> _ECS;
     };
