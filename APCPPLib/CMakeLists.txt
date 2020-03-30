@@ -9,7 +9,7 @@ else()
     add_compile_options(-g -ldl)
 endif()
 
-set(CMAKE_CXX_FLAGS "-Wall -fprofile-arcs -ftest-coverage")
+set(CMAKE_CXX_FLAGS "-Wall -fprofile-arcs -ftest-coverage") # -fsanitize=address To delete.
 
 # Enable Google test library
 enable_testing()

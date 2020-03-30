@@ -1,25 +1,30 @@
-/*
-** EPITECH PROJECT, 2019
-** Rtype
-** File description:
-** Mediator definition
-*/
+/**
+ *  @file     src/engine/scenesManagement/sceneMachine/SceneStateMachine.cpp
+ *  @author   tabis on the 2020-01-22
+ *  @date     2020-01-22
+ * 
+ *  project: EclataxEngine
+ * 
+ */
+
 
 constexpr auto const DEFAULT_SHELL_PROMPT = "$> ";
 
 #include "Mediator.hpp"
 
-Server::Mediator::Mediator() : _reader(CONF_FILE_PATH), _tcp (_ioContext, 
-    std::function<void(Server::TcpConnection *)>(std::bind(&Server::Mediator::processTcpMessage, this, std::placeholders::_1))), 
-    _isRunning(true)
+Server::Mediator::Mediator()
+    : _reader      { CONF_FILE_PATH                                                                                                                         }
+    , _tcp         { _ioContext, std::function<void(Server::TcpConnection *)>(std::bind(&Server::Mediator::processTcpMessage, this, std::placeholders::_1)) }
+    , _isRunning   { true                                                                                                                                   }
+    , _boostThread { std::thread(&Server::Mediator::launchBoost, this)                                                                                      }
 {
-    _boostThread = std::thread(&Server::Mediator::launchBoost, this);
     readEventFile();
-    _actions[Network::ASK_FOR_HUB] = std::bind(&Server::Mediator::askHub, this, std::placeholders::_1, std::placeholders::_2);
-    _actions[Network::CLIENT_IS_READY] = std::bind(&Server::Mediator::setPlayerReady, this, std::placeholders::_1, std::placeholders::_2);
-    _actions[Network::CLIENT_IS_NOT_READY] = std::bind(&Server::Mediator::setPlayerNotReady, this, std::placeholders::_1, std::placeholders::_2);
-    _actions[Network::CLIENT_REQUIRE_KEY] = std::bind(&Server::Mediator::sendEvent, this, std::placeholders::_1, std::placeholders::_2);
-    _actions[Network::CLIENT_REQUEST_SPRITE] = std::bind(&Server::Mediator::sendSprite, this, std::placeholders::_1, std::placeholders::_2);
+    _reader = Common::ConfReader(SCENE_CONF_FILE_PATH);
+    _actions.emplace(Network::ASK_FOR_HUB, &Server::Mediator::askHub);
+    _actions.emplace(Network::CLIENT_IS_READY, &Server::Mediator::setPlayerReady);
+    _actions.emplace(Network::CLIENT_IS_NOT_READY, &Server::Mediator::setPlayerNotReady);
+    _actions.emplace(Network::CLIENT_REQUIRE_KEY, &Server::Mediator::sendEvent);
+    _actions.emplace(Network::CLIENT_REQUEST_SPRITE, &Server::Mediator::sendSprite);
 
     // Adding commands for the shell module.
     _commands.emplace("exit", std::bind(&Mediator::exit, this, std::placeholders::_1));
@@ -53,7 +58,8 @@ void Server::Mediator::readEventFile()
     int value = 1;
     auto i = _reader.conf(std::to_string(value));
 
-    for (auto i = _reader.conf(std::to_string(value)); i.has_value(); i = _reader.conf(std::to_string(value))) {
+    for (auto i = _reader.conf(std::to_string(value)); i.has_value(); i = _reader.conf(std::to_string(value)))
+    {
         _eventTemplate[value] = i.value();
         value <<= 1;
     }
@@ -162,8 +168,15 @@ void Server::Mediator::help(const std::vector<std::string> &command)
 
 void Server::Mediator::createHub(std::string ip)
 {
+    auto main_scene = _reader.conf("main_scene");
+
+    if (!main_scene.has_value())
+    {
+        Debug::Logger::printDebug(Debug::ERROR, "Couldn't create the main scene, config not found.", "Server::Mediator::createHub");
+        return;
+    }
     _mut.lock();
-    _hubs.emplace_back(std::make_unique<Server::Hub>(_hubs.size() + 1, ip, _ioContext));
+    _hubs.emplace_back(std::make_unique<Server::Hub>(_hubs.size() + 1, ip, _ioContext, main_scene.value()));
     _mut.unlock();
 }
 
@@ -190,12 +203,14 @@ int Server::Mediator::assignHub(std::string ip)
 
 void Server::Mediator::processTcpMessage(Server::TcpConnection *socket)
 {
-    if (socket->state()) {
+    if (socket->state())
+    {
         Network::headerTcp *h = static_cast<Network::headerTcp *>((void *)socket->buffer().data());
-        if (_actions.find(h->code) != _actions.end()) {
-            _actions[h->code](socket, h);
-        }
-    } else {
+        if (_actions.find(h->code) != _actions.end())
+            (this->*_actions[h->code])(socket, h);
+    }
+    else
+    {
         for (auto &hub : _hubs) {
             if (hub->isInHub(socket->ip())) {
                 hub->removeMember(socket->ip());

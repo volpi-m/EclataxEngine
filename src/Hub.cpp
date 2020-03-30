@@ -7,19 +7,23 @@
 
 #include "Hub.hpp"
 
-Server::Hub::Hub(int newId, const std::string &creator, boost::asio::io_context &ioContext) : _stoped(false), _isPlaying(false),
-    _udp(ioContext, std::bind(&Server::Hub::processUdpMessage, this, std::placeholders::_1)),
-    _id(newId), _port(_udp.port())
+Server::Hub::Hub(int newId, const std::string &creator, boost::asio::io_context &ioContext, const std::string &startingScene)
+    : _stoped        { false                                                                              }
+    , _isPlaying     { false                                                                              }
+    , _udp           { ioContext, std::bind(&Server::Hub::processUdpMessage, this, std::placeholders::_1) }
+    , _id            { newId                                                                              }
+    , _port          { _udp.port()                                                                        }
+    , _startingScene { startingScene                                                                     }
 {
-    _actions[Network::CLIENT_TICK] = std::bind(&Server::Hub::addEvent, this, std::placeholders::_1, std::placeholders::_2);
-    _actions[Network::CLIENT_ERROR] = std::bind(&Server::Hub::playerError, this, std::placeholders::_1, std::placeholders::_2);
+    _actions.emplace(Network::CLIENT_TICK, &Server::Hub::addEvent);
+    _actions.emplace(Network::CLIENT_ERROR, &Server::Hub::playerError);
     addMember(creator);
 }
 
 void Server::Hub::start()
 {
-    // Creating the entry point for scenes.
-    std::shared_ptr<Scenes::IScene> lib(_engine.LibLoader()->openLibrary<Scenes::IScene>("lib/libmainscene.so"));
+    // Creating the entry point for scenes, replaced by the rtype.conf file content.
+    std::shared_ptr<Scenes::IScene> lib(_engine.LibLoader()->openLibrary<Scenes::IScene>(_startingScene));
 
     if (!lib.get())
     {
@@ -29,12 +33,12 @@ void Server::Hub::start()
 
     // Pushing the scene to the scene machine.
     std::shared_ptr<Scenes::IScene> scene(lib);
-    _engine.SceneStateMachine()->push("MainScene", scene);
+    _engine.SceneStateMachine()->push(scene);
 
     // Initialise available players
     initStatePlayers();
 
-    while (!_stoped)
+    while (!_stoped && !_players.empty())
     {
         // Running the current scene behaviour
         _engine.SceneStateMachine()->update();
@@ -194,6 +198,7 @@ bool Server::Hub::isInHub(const std::string &ip)
 {
     for (auto &player : _players)
         if (player.ip == ip)
+
             return true;
     return false;
 }
@@ -215,7 +220,7 @@ void Server::Hub::sendToAllPlayer(void *msg, const std::size_t size)
 void Server::Hub::processUdpMessage(Server::UdpNetwork *socket)
 {
     Network::headerUdp *h = static_cast<Network::headerUdp *>((void *)socket->buffer().data());
-    _actions[h->code](socket, h);
+    (this->*_actions[h->code])(socket, h);
 }
 
 void Server::Hub::addEvent(Server::UdpNetwork *socket, Network::headerUdp *packet)

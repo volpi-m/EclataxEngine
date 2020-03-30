@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.13)
 set(CMAKE_CXX_STANDARD 17)
-project(rtype)
+project(EclataxEngine)
 
 include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
 conan_basic_setup(TARGETS)
@@ -8,9 +8,8 @@ conan_basic_setup(TARGETS)
 ## Compiling APCPPLib static library
 add_subdirectory(APCPPLib)
 
-# Adding valgrind flags
 if (MSVC)
-    add_compile_options(/W4 /WX)
+    add_compile_options(/W4 /WX-)
 elseif(UNIX)
     add_compile_options(-g)
 endif()
@@ -199,7 +198,7 @@ set (SRC_TEST
     tests/main.cpp
     tests/network/test_tcp.cpp
     tests/main.cpp
-    # tests/sceneMachine/test_sceneMachine.cpp
+    tests/sceneMachine/test_sceneMachine.cpp
     tests/ecs/test_ecs.cpp
     tests/entity/test_entity.cpp
     tests/entity/test_entityFactory.cpp

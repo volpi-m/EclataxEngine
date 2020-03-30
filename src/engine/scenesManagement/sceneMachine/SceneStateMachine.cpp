@@ -4,21 +4,18 @@
 
 #include "SceneStateMachine.hpp"
 
-Module::SceneStateMachine::SceneStateMachine(std::shared_ptr<EntityComponentSystem> &ECS) : _ECS(ECS), _deltaTime(std::chrono::high_resolution_clock::now().time_since_epoch().count())
+Module::SceneStateMachine::SceneStateMachine(std::shared_ptr<Module::EntityComponentSystem> &ECS)
+    : _deltaTime { std::chrono::high_resolution_clock::now().time_since_epoch().count() }
+    , _ECS       { ECS                                                                  }
 {
-    _callbacks.emplace(POP, std::bind(&SceneStateMachine::popCallback, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
-    _callbacks.emplace(SWAP, std::bind(&SceneStateMachine::swapCallback, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
-    _callbacks.emplace(PUSH, std::bind(&SceneStateMachine::pushCallback, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
+    _callbacks.emplace(POP, &SceneStateMachine::popCallback);
+    _callbacks.emplace(SWAP, &SceneStateMachine::swapCallback);
+    _callbacks.emplace(PUSH, &SceneStateMachine::pushCallback);
 }
 
-Module::SceneStateMachine::~SceneStateMachine()
+void Module::SceneStateMachine::notify(Scenes::IScene *sender, Module::scene_state state, Scenes::IScene *new_scene)
 {
-    clear();
-}
-
-void Module::SceneStateMachine::notify(Scenes::IScene *sender, Module::scene_state state, const std::string &name, Scenes::IScene *new_scene)
-{
-    _callbacks[state](sender, name, new_scene);
+    (this->*_callbacks[state])(sender, new_scene);
 }
 
 bool Module::SceneStateMachine::update()
@@ -27,28 +24,28 @@ bool Module::SceneStateMachine::update()
 
     if (!empty())
     {
-        _scenes.top()->update(_deltaTime);
+        _scenes.top()->onUpdate(_deltaTime);
         return true;
     }
     return false;
 }
 
-void Module::SceneStateMachine::push(const std::string &name, std::shared_ptr<Scenes::IScene> &scene)
+void Module::SceneStateMachine::push(std::shared_ptr<Scenes::IScene> &scene)
 {
     // Deactivating the last scene before pushing a new one.
     if (!empty())
         _scenes.top()->onDeactivate();
+    
+    // Getting a reference to the object, but only in the form of the IMediator interface, to restrain access to the mediators methods.
+    IMediator *self(this);
 
     // Pushing the new scene and call the onCreate() method.
     _scenes.push(scene);
-
-    // Initiate the scene
-    std::shared_ptr<Module::IMediator> mediator(this);
-    _scenes.top()->onInit(name, _ECS, mediator);
+    _scenes.top()->onInit(scene->name(), _ECS, self);
     _scenes.top()->onCreate();
 }
 
-void Module::SceneStateMachine::swap(const std::string &name, std::shared_ptr<Scenes::IScene> &scene)
+void Module::SceneStateMachine::swap(std::shared_ptr<Scenes::IScene> &scene)
 {
     // poping the current scene if the stack isn't empty.
     if (!empty())
@@ -57,10 +54,6 @@ void Module::SceneStateMachine::swap(const std::string &name, std::shared_ptr<Sc
     // Pushing the new scene and call the onCreate() method.
     // We can't use the push() method because it could modify the scene before the one to be swaped.
     _scenes.push(scene);
-
-    // Initiate the scene
-    std::shared_ptr<Module::IMediator> mediator(this);
-    _scenes.top()->onInit(name, _ECS, mediator);
     _scenes.top()->onCreate();
 }
 
@@ -120,33 +113,30 @@ bool Module::SceneStateMachine::empty() const
     return _scenes.empty();
 }
 
-void Module::SceneStateMachine::popCallback(Scenes::IScene *sender, const std::string &name, Scenes::IScene *scene)
+void Module::SceneStateMachine::popCallback(Scenes::IScene *sender, Scenes::IScene *scene)
 {
     (void) sender;
-    (void) name;
     (void) scene;
 
     pop();
 }
 
-void Module::SceneStateMachine::swapCallback(Scenes::IScene *sender, const std::string &name, Scenes::IScene *scene)
-{
-    (void) sender;
-
-    if (!scene)
-        return;
-
-    // Transforming pointer into a shared one.
-    std::shared_ptr<Scenes::IScene> ptr(scene);
-    swap(name, ptr);
-}
-
-void Module::SceneStateMachine::pushCallback(Scenes::IScene *sender, const std::string &name, Scenes::IScene *scene)
+void Module::SceneStateMachine::swapCallback(Scenes::IScene *sender, Scenes::IScene *scene)
 {
     if (!sender || !scene)
         return;
 
     // Transforming pointer into a shared one.
     std::shared_ptr<Scenes::IScene> ptr(scene);
-    push(name, ptr);
+    swap(ptr);
+}
+
+void Module::SceneStateMachine::pushCallback(Scenes::IScene *sender, Scenes::IScene *scene)
+{
+    if (!sender || !scene)
+        return;
+
+    // Transforming pointer into a shared one.
+    std::shared_ptr<Scenes::IScene> ptr(scene);
+    push(ptr);
 }

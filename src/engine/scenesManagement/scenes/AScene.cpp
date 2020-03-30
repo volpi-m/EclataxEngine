@@ -1,9 +1,7 @@
 
 #include "AScene.hpp"
 
-Scenes::AScene::AScene(const std::string &name, std::shared_ptr<Module::EntityComponentSystem> &ECS, std::shared_ptr<Module::IMediator> &mediator) : _name(name), _mediator(mediator), _ECS(ECS) {}
-
-void Scenes::AScene::onInit(const std::string &name, std::shared_ptr<Module::EntityComponentSystem> &ECS, std::shared_ptr<Module::IMediator> &mediator)
+void Scenes::AScene::onInit(const std::string &name, std::shared_ptr<Module::EntityComponentSystem> &ECS, Module::IMediator *mediator)
 {
     _name = name;
     _ECS = ECS;
