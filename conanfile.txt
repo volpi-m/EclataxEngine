@@ -12,4 +12,3 @@ sfml:audio=True
 
 [generators]
 cmake
-compiler.version=9
