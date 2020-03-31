@@ -13,7 +13,7 @@ Server::Hub::Hub(int newId, const std::string &creator, boost::asio::io_context 
     , _udp           { ioContext, std::bind(&Server::Hub::processUdpMessage, this, std::placeholders::_1) }
     , _id            { newId                                                                              }
     , _port          { _udp.port()                                                                        }
-    , _startingScene { startingScene                                                                     }
+    , _startingScene { startingScene                                                                      }
 {
     _actions.emplace(Network::CLIENT_TICK, &Server::Hub::addEvent);
     _actions.emplace(Network::CLIENT_ERROR, &Server::Hub::playerError);
@@ -27,7 +27,6 @@ void Server::Hub::start()
 
     if (!lib.get())
     {
-        Debug::Logger::printDebug(Debug::FATAL, "Couldn't load main scene", "Server::Hub::start()");
         return;
     }
 
@@ -48,7 +47,6 @@ void Server::Hub::start()
 
 // void Server::Hub::start()
 // {
-//     Debug::Logger::printDebug(Debug::type::INFO , "hub number " + std::to_string(_id) + " is running !" , "Server::Hub::start()");
 
 //     auto scene = std::shared_ptr<Scenes::IScene>(new Scenes::HubLoadingScene("Hub scene", _engine.ECS(), _players.size()));
 //     _engine.SceneMachine()->push(scene);
