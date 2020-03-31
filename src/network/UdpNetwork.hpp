@@ -44,9 +44,9 @@ namespace Server
             ~UdpNetwork();
 
             /// \brief return port of socket
-            int port() const { return _socket.local_endpoint().port(); };
+            unsigned short port() const { return _socket.local_endpoint().port(); };
             /// \brief return port of the sender socket
-            int remotePort() const { return _endpoint.port(); };
+            unsigned short remotePort() const { return _endpoint.port(); };
             /// \brief return ip of the sender socket
             std::string remoteIp() const { return _endpoint.address().to_string(); };
             // std::optional<std::string> remoteIp() const { return _remoteIp ? _remoteIp : {}; };

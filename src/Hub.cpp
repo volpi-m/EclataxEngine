@@ -240,7 +240,7 @@ void Server::Hub::addEvent(Server::UdpNetwork *socket, Network::headerUdp *packe
     }
 }
 
-void Server::Hub::playerError(Server::UdpNetwork *socket, Network::headerUdp *packet)
+void Server::Hub::playerError(Server::UdpNetwork *socket, [[maybe_unused]]Network::headerUdp *packet)
 {
     std::string ip = socket->remoteIp();
 
