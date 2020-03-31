@@ -13,7 +13,7 @@
 
 Game::GameEngine::GameEngine()
     : _ecs               { new Module::EntityComponentSystem   }
-    , _libraryLoader     { new Utils::LibraryLoader            }
+    , _libraryLoader     { new Module::LibraryLoader           }
     , _initialised       { true                                }
 {
     _sceneStateMachine = std::make_shared<Module::SceneStateMachine>(_ecs);
@@ -31,7 +31,7 @@ std::shared_ptr<Module::EntityComponentSystem> &Game::GameEngine::ECS()
     return _ecs;
 };
 
-std::shared_ptr<Utils::LibraryLoader> &Game::GameEngine::LibLoader()
+std::shared_ptr<Module::LibraryLoader> &Game::GameEngine::LibraryLoader()
 {
     return _libraryLoader;
 };

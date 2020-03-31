@@ -32,10 +32,10 @@ constexpr auto const LIB_ENTRYPOINT = "entryPoint";
     constexpr auto const LIB_EXTENSION = ".so";
 #endif
 
-/// \namespace zia
-/// base namespace for zia project
-namespace ECL
-{
+/// \namespace Module
+/// Module namespace for EclataxEngine project
+namespace Module {
+
     /// \class LibraryLoader
     /// \brief templated class used to load shared library
     class LibraryLoader

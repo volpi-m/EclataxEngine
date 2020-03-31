@@ -1,20 +1,53 @@
 //
 // EPITECH PROJECT, 2020
-// R-type
+// Module
 // File description:
 // class for lib loader
 //
 
-#include "DLLoader.hpp"
+#include <iostream>
+#include "LibraryLoader.hpp"
 
-ECL::LibraryLoader::~DLLoader()
+Module::LibraryLoader::~LibraryLoader()
 {
-    for (auto &it : _ptr)
-        dlclose(it);
-    this->_ptr.clear();
+    clear();
 }
 
-void ECL::LibraryLoader::disp_error() const
+#if WIN32
+
+void Module::LibraryLoader::clear()
 {
-    std::cout << dlerror() << std::endl;
+    // Terminating all handlers.
+    for (auto& it : _loadedLib)
+        FreeLibrary((HMODULE)it.second);
+
+    // Clearing the container.
+    _loadedLib.clear();
 }
+
+#else
+
+void Module::LibraryLoader::clear()
+{
+    for (auto &it : _loadedLib)
+        dlclose(it.second);
+    _loadedLib.clear();    
+}
+
+void *Module::LibraryLoader::loadLibrarie(const std::string &file)
+{
+    void *lib_ptr = nullptr;
+
+    // Opening the dynamic library
+    lib_ptr = dlopen(file.c_str(), RTLD_LAZY);
+
+    // Checking if it has been loaded correctly.
+    if (lib_ptr == nullptr)
+    {
+        return nullptr;
+    }
+
+    return lib_ptr;
+}
+
+#endif

@@ -18,7 +18,7 @@
 #include "IModule.hpp"
 #include "ISystem.hpp"
 #include "Entity.hpp"
-#include "DLLoader.hpp"
+#include "LibraryLoader.hpp"
 
 /// \namespace Module
 /// \brief Used for all GameEngine modules
@@ -142,6 +142,6 @@ namespace Module {
         /*! Entities unordered map (id and instance) */
         std::unordered_map<unsigned long long, std::shared_ptr<ECS::Entity>> _entities;
         /*! library loader */
-        ECS::DLLoader _loader;
+        Module::LibraryLoader _loader;
     };
 }

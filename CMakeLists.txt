@@ -8,27 +8,19 @@ conan_basic_setup(TARGETS)
 if (MSVC)
     add_compile_options(/W4 /WX-)
 elseif(UNIX)
+    find_package(Threads)
     add_compile_options(-g)
 endif()
-
-set(CMAKE_CXX_FLAGS "-W -Wall -fprofile-arcs -ftest-coverage")
 
 ## Enable Google test library
 enable_testing()
 
-## Required packages
-find_package(Threads)
-find_package(GTest REQUIRED)
-
-## General sources
-set(SRC
-    ${ENGINE_SRC}
-)
+set(CMAKE_CXX_FLAGS "-W -Wall -fprofile-arcs -ftest-coverage")
 
 ## Engine sources
 set(ENGINE_SRC
     ${CMAKE_CURRENT_SOURCE_DIR}/src/engine/GameEngine.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/engine/DLLoader.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/engine/LibraryLoader.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/engine/ecs/ECS.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/engine/scenesManagement/sceneMachine/SceneStateMachine.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/engine/scenesManagement/scenes/AScene.cpp
@@ -46,7 +38,13 @@ set(ENGINE_SRC
     ${CMAKE_CURRENT_SOURCE_DIR}/src/engine/ecs/systems/TextSystem.cpp
 )
 
-set (INCLUDE_ENGINE
+## General sources
+set(SRC
+    ${ENGINE_SRC}
+)
+
+## Include headers to program
+include_directories(
     src/engine/scenesManagement/sceneMachine
     src/engine/scenesManagement/scenes
     src/engine/ecs/components
@@ -54,10 +52,6 @@ set (INCLUDE_ENGINE
     src/engine/ecs/systems
     src/engine/ecs
     src/engine
-)
-
-## Include headers to program
-include_directories(
     src
 )
 
@@ -81,10 +75,15 @@ add_executable(unit_tests
     ${SRC_TEST}
 )
 
+## Linking libraries
+target_link_libraries(EclataxEngine-test PUBLIC
+    ${CMAKE_DL_LIBS}
+)
+
 target_link_libraries(unit_tests PUBLIC
-    pthread
-    CONAN_PKG::sfml
+
     CONAN_PKG::gtest
     ${CMAKE_THREAD_LIBS_INIT}
     ${CMAKE_DL_LIBS}
+
 )

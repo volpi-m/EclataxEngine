@@ -42,9 +42,9 @@ namespace Game
         /// \return a shared poiner of the ECS module
         std::shared_ptr<Module::EntityComponentSystem> &ECS();
 
-        /// \brief get the LibLoader instance
-        /// \return a shared poiner of the LibLoader module
-        std::shared_ptr<Utils::LibraryLoader> &LibLoader();
+        /// \brief get the LibraryLoader instance
+        /// \return a shared poiner of the LibraryLoader module
+        std::shared_ptr<Module::LibraryLoader> &LibraryLoader();
 
         /// \brief get the SceneStateMachine instance
         /// \return a shared poiner of the SceneStateMachine module
@@ -54,8 +54,8 @@ namespace Game
 
         /*! ECS instance */
         std::shared_ptr<Module::EntityComponentSystem> _ecs;
-        /*! LibLoader instance */
-        std::shared_ptr<Utils::LibraryLoader> _libraryLoader;
+        /*! LibraryLoader instance */
+        std::shared_ptr<Module::LibraryLoader> _libraryLoader;
         /*! SceneStateMachine instance */
         std::shared_ptr<Module::SceneStateMachine> _sceneStateMachine;
         /*! iniialisation value */
