@@ -172,7 +172,6 @@ void Server::Mediator::createHub(std::string ip)
 
     if (!main_scene.has_value())
     {
-        Debug::Logger::printDebug(Debug::ERROR, "Couldn't create the main scene, config not found.", "Server::Mediator::createHub");
         return;
     }
     _mut.lock();

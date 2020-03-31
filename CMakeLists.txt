@@ -5,9 +5,6 @@ project(EclataxEngine)
 include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
 conan_basic_setup(TARGETS)
 
-## Compiling APCPPLib static library
-add_subdirectory(APCPPLib)
-
 if (MSVC)
     add_compile_options(/W4 /WX-)
 elseif(UNIX)
@@ -88,7 +85,6 @@ add_executable(unit_tests
 
 ## Linking libraries
 # target_link_libraries(r-type_server
-#     APCPPLib
 #     CONAN_PKG::sfml
 #     CONAN_PKG::boost_system
 #     CONAN_PKG::boost_asio

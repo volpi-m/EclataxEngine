@@ -15,8 +15,6 @@
 
 #include "Rfc.hpp"
 #include "AScene.hpp"
-#include "Logger.hpp"
-#include "MainScene.hpp"
 #include "GameEngine.hpp"
 #include "UdpNetwork.hpp"
 #include "GameEngine.hpp"
