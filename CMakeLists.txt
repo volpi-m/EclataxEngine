@@ -27,33 +27,29 @@ find_package(Boost 1.67 REQUIRED)
 
 ## General sources
 set(SRC
+    ${ENGINE_SRC}
 )
 
-## Server sources
-# set(SRC_SERVER
-#     src/engine/GameEngine.cpp
-#     ${CMAKE_CURRENT_SOURCE_DIR}/src/network/TcpConnection.cpp
-#     ${CMAKE_CURRENT_SOURCE_DIR}/src/network/TcpNetwork.cpp
-#     ${CMAKE_CURRENT_SOURCE_DIR}/src/network/UdpNetwork.cpp
-#     src/engine/DLLoader.cpp
-#     src/engine/ecs/ECS.cpp
-#     src/engine/scenesManagement/sceneMachine/SceneStateMachine.cpp
-#     src/engine/scenesManagement/scenes/AScene.cpp
-#     src/engine/ecs/ECS.cpp
-#     src/engine/ecs/entities/Entity.cpp
-#     src/engine/ecs/entities/EntityFactory.cpp
-#     src/engine/ecs/systems/IASystem.cpp
-#     src/engine/ecs/systems/RenderSystem.cpp
-#     src/engine/ecs/systems/SpawnerSystem.cpp
-#     src/engine/ecs/systems/MovementSystem.cpp
-#     src/engine/ecs/systems/LifeSpanSystem.cpp
-#     src/engine/ecs/systems/AnimationSystem.cpp
-#     src/engine/ecs/systems/CollisionSystem.cpp
-#     src/engine/ecs/systems/HealthManipulatorSystem.cpp
-#     ${CMAKE_CURRENT_SOURCE_DIR}/src/engine/ecs/systems/TextSystem.cpp
-#     ${CMAKE_CURRENT_SOURCE_DIR}/src/Mediator.cpp
-#     ${CMAKE_CURRENT_SOURCE_DIR}/src/Hub.cpp
-# )
+## Engine sources
+set(ENGINE_SRC
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/engine/GameEngine.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/engine/DLLoader.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/engine/ecs/ECS.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/engine/scenesManagement/sceneMachine/SceneStateMachine.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/engine/scenesManagement/scenes/AScene.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/engine/ecs/ECS.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/engine/ecs/entities/Entity.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/engine/ecs/entities/EntityFactory.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/engine/ecs/systems/IASystem.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/engine/ecs/systems/RenderSystem.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/engine/ecs/systems/SpawnerSystem.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/engine/ecs/systems/MovementSystem.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/engine/ecs/systems/LifeSpanSystem.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/engine/ecs/systems/AnimationSystem.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/engine/ecs/systems/CollisionSystem.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/engine/ecs/systems/HealthManipulatorSystem.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/engine/ecs/systems/TextSystem.cpp
+)
 
 set (INCLUDE_ENGINE
     src/engine/scenesManagement/sceneMachine
@@ -72,6 +68,7 @@ include_directories(
 
 ## Test executable
 add_executable(EclataxEngine-test
+    ${SRC}
     src/main.cpp
 )
 
