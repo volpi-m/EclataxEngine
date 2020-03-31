@@ -20,8 +20,6 @@ enable_testing()
 find_package(Threads)
 find_package(GTest REQUIRED)
 
-find_package(Boost 1.67 REQUIRED)
-
 ## General sources
 set(SRC
     ${ENGINE_SRC}
@@ -83,21 +81,10 @@ add_executable(unit_tests
     ${SRC_TEST}
 )
 
-## Linking libraries
-# target_link_libraries(r-type_server
-#     CONAN_PKG::sfml
-#     CONAN_PKG::boost_system
-#     CONAN_PKG::boost_asio
-#     ${CMAKE_THREAD_LIBS_INIT}
-#     ${CMAKE_DL_LIBS}
-# )
-
 target_link_libraries(unit_tests PUBLIC
     pthread
     CONAN_PKG::sfml
     CONAN_PKG::gtest
-    CONAN_PKG::boost_system
-    CONAN_PKG::boost_asio
     ${CMAKE_THREAD_LIBS_INIT}
     ${CMAKE_DL_LIBS}
 )
