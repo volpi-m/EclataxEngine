@@ -1,0 +1,182 @@
+#!/usr/bin/env python3
+
+## \@Author         ltabis
+## \@date           31/03/2020
+## \@description    A script that generates a game from sources given.
+
+import os
+import sys
+import subprocess
+
+## Enable colors for windows.
+if sys.platform.lower() == "win32":
+    os.system('color')
+
+## Colors class.
+class style():
+    RESET     = lambda x: '\033[0m'  + str(x)
+    BLACK     = lambda x: '\033[30m' + str(x) + '\033[0m'
+    RED       = lambda x: '\033[31m' + str(x) + '\033[0m'
+    GREEN     = lambda x: '\033[32m' + str(x) + '\033[0m'
+    YELLOW    = lambda x: '\033[33m' + str(x) + '\033[0m'
+    BLUE      = lambda x: '\033[34m' + str(x) + '\033[0m'
+    MAGENTA   = lambda x: '\033[35m' + str(x) + '\033[0m'
+    CYAN      = lambda x: '\033[36m' + str(x) + '\033[0m'
+    WHITE     = lambda x: '\033[37m' + str(x) + '\033[0m'
+    UNDERLINE = lambda x: '\033[4m'  + str(x) + '\033[0m'
+
+## Shell class.
+class Shell:
+
+    ## init class
+    def __init__(self):
+
+        ## Shell commands.
+        self.__commands = {
+            "quit"          : self.quit,
+            "exit"          : self.quit,
+            "sources"       : self.display_sources,
+            "add"           : self.add_source,
+            "help"          : self.help,
+            "compile"       : self.compile_engine,
+            "new"           : self.new_profile,
+            "profiles"      : self.show_profile,
+            "select"        : self.select_profiles
+        }
+
+        ## Profiles available.
+        self.__profiles     = {
+            "default" : []
+        }
+
+        ## Currently selected profile.
+        self.__selected     = "default"
+
+    def try_command(self, cmd):
+
+        ## Checking empty list.
+        if not cmd:
+            return
+
+        ## Lower all args.
+        cmd = [arg.lower() for arg in cmd]
+
+        ## Trying to exectute the command.
+        if cmd[0] in self.__commands.keys():
+            self.__commands[cmd[0]](cmd[1:])
+        else:
+            print(style.YELLOW("The '" + cmd[0] + "' command doesn't exists."))
+
+    ## Quitting the program.
+    def quit(self, cmd):
+        sys.exit(0)
+
+    ## Add a source path to the list.
+    def add_source(self, cmd):
+
+        if len(cmd) < 1:
+            return
+
+        if self.__selected == None:
+            print(style.RED("No profiles were selected."))
+            return
+
+        self.__profiles[self.__selected].append(cmd[0])
+
+    ## Display saved sources paths.
+    def display_sources(self, cmd):
+
+        if not self.__selected:
+            return
+
+        print(f"{style.BLUE('Sources for the ')}{style.GREEN(self.__selected)}{style.BLUE(' profile')}")
+
+        for source in self.__profiles[self.__selected]: 
+            print(source)
+
+    ## Create a new compilation profile
+    def new_profile(self, cmd):
+
+        if len(cmd) < 1:
+            return
+
+        self.__profiles[cmd[0]] = []
+        self.__selected = cmd[0]
+        print(f"profile {style.GREEN(cmd[0])} added.")
+
+    ## Selects an existing profile.
+    def select_profiles(self, cmd):
+
+        if len(cmd) < 1:
+            return
+
+        if cmd[0] in self.__profiles.keys():
+            self.__selected = cmd[0]
+            print(f"{style.GREEN(cmd[0])} profile selected.")
+        else:
+            print(style.YELLOW("The " + cmd[0] + " profile doesn't exists."))
+
+    ## Show all profiles
+    def show_profile(self, cmd):
+        for profile in self.__profiles:
+            print(("$ " if profile == self.__selected else "") + style.GREEN(profile))
+
+    ## Compile the engine into a static library.
+    def compile_engine(self, cmd):
+        if not os.path.isdir("build"):
+            execute_command(["mkdir", "build"])
+        execute_command(["conan", "install", "-if", "build", ".", "--build=missing"])
+        execute_command(["cmake", "-B", "build", "."])
+        execute_command(["make", "-C", "build"])
+
+    ## TODO : Add a description to each commands.
+    ## Display help message.
+    def help(self, cmd):
+        print(style.BLUE("Available commands:"))
+        for command in self.__commands.keys():
+            print(command)
+
+    ## TODO : Add a 'build' project command.
+    ## TODO : Add a select profile command.
+    ## TODO : Add a delete profile command.
+    ## TODO : Add a delete source command.
+
+# Execute a command.
+def execute_command(commandline):
+
+    # Executing command.
+    process = subprocess.Popen(commandline, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+    # Run while the command didn't end.
+    while True:
+        
+        # Reading return code.
+        output = process.stderr.readline()
+
+        if len(output):
+            print(f"error: {output.strip()}")
+
+        returncode = process.poll()
+
+        # Process has finished        
+        if returncode is not None:
+            if returncode:
+                print(f"return code: {returncode}")
+            for output in process.stdout.readlines():
+                print(f"output: {output.strip()}")
+            break
+
+def main():
+
+    shell = Shell()
+
+    ## Running the shell
+    while True:
+
+        ## Getting user input
+        cmd = input("$>")
+        cmd = cmd.split()
+        shell.try_command(cmd)      
+
+if __name__ == "__main__":
+    main()
