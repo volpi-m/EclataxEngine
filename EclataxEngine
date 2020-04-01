@@ -25,6 +25,13 @@ class style():
     WHITE     = lambda x: '\033[37m' + str(x) + '\033[0m'
     UNDERLINE = lambda x: '\033[4m'  + str(x) + '\033[0m'
 
+def try_int(str):
+    try:
+        a = int(str)
+        return True
+    except:
+        return False
+
 ## Shell class.
 class Shell:
 
@@ -41,7 +48,12 @@ class Shell:
             "compile"       : self.compile_engine,
             "new"           : self.new_project,
             "projects"      : self.show_projects,
-            "select"        : self.select_project
+            "pj"            : self.show_projects,
+            "select"        : self.select_project,
+            "delete"        : self.delete_project,
+            "del"           : self.delete_project,
+            "remove"        : self.delete_source,
+            "rm"            : self.delete_source,
         }
 
         ## Projects available.
@@ -80,8 +92,9 @@ class Shell:
             print(style.RED("No projects were selected."))
             return
 
-        self.__projects[self.__selected].append(cmd[0])
-        print(f"{style.BLUE('Source')} {style.GREEN(cmd[0])} {style.BLUE('added to the')} {style.BLUE(self.__selected)} {style.BLUE('project.')}")
+        for arg in cmd:
+            self.__projects[self.__selected].append(arg)
+            print(f"{style.BLUE('Source')} {style.GREEN(arg)} {style.BLUE('added to the')} {style.BLUE(self.__selected)} {style.BLUE('project.')}")
 
     ## Display saved sources paths.
     def display_sources(self, cmd):
@@ -99,10 +112,44 @@ class Shell:
         for source in self.__projects[self.__selected]: 
             print("   - " + source)
 
+    ## Deletes ressources passed as parameter.
+    def delete_source(self, cmd):
+
+        if len(cmd) < 1:
+            print(style.RED("No source to delete found."))
+            return
+
+        if try_int(cmd[0]) == False or (len(cmd) >= 2 and try_int(cmd[1]) == False):
+            print(style.RED("Please give a valid source number."))
+            return
+
+        if int(cmd[0]) <= 0 or (len(cmd) >= 2 and int(cmd[1]) <= 0):
+            print(style.RED("Source number can't be negative."))
+            return
+
+        bound_x = int(cmd[0]) - 1
+        bound_y = bound_x
+
+        if len(cmd) >= 2:
+            bound_y = int(cmd[1]) - 1
+
+        ## Deleting sources
+        while bound_x <= bound_y:
+
+            if len(self.__projects[self.__selected]) <= bound_x:
+                bound_y -= 1
+                continue
+
+            print(f"{style.GREEN(self.__projects[self.__selected][bound_x])} {style.BLUE('has been deleted.')}")
+            del self.__projects[self.__selected][bound_x]
+            bound_y -= 1
+
+
     ## Create a new compilation project.
     def new_project(self, cmd):
 
         if len(cmd) < 1:
+            print(style.RED("No name given for a new project."))
             return
 
         self.__projects[cmd[0]] = []
@@ -113,6 +160,7 @@ class Shell:
     def select_project(self, cmd):
 
         if len(cmd) < 1:
+            print(style.RED("No project to select given."))
             return
 
         if cmd[0] in self.__projects.keys():
@@ -132,6 +180,20 @@ class Shell:
         for project in self.__projects:
             print(("$ " if project == self.__selected else "") + style.GREEN(project))
 
+    ## Deletes a project from the project list
+    def delete_project(self, cmd):
+
+        if len(cmd) < 1:
+            print(style.RED("No project to delete specified."))
+            return
+
+        if cmd[0] in self.__projects.keys():
+            self.__selected = None
+            del self.__projects[cmd[0]]
+            print(f"{style.GREEN(cmd[0])} {style.BLUE('project deleted.')}")
+        else:
+            print(style.YELLOW("The '" + cmd[0] + "' project doesn't exists."))
+
     ## Compile the engine into a static library.
     def compile_engine(self, cmd):
         if not os.path.isdir("build"):
@@ -148,8 +210,8 @@ class Shell:
             print(command)
 
     ## TODO : Add a 'build' project command.
-    ## TODO : Add a delete project command.
     ## TODO : Add a delete source command.
+    ## TODO : Add a include paths command.
 
 # Execute a command.
 def execute_command(commandline):
