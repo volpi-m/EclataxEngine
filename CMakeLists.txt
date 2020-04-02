@@ -38,9 +38,21 @@ set(ENGINE_SRC
     ${CMAKE_CURRENT_SOURCE_DIR}/src/engine/ecs/systems/TextSystem.cpp
 )
 
+## Utils source
+set(UTILS_SRC
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/Utils/Log.cpp
+)
+
+## Lua sources
+set(LUA_SRC
+    
+)
+
 ## General sources
 set(SRC
     ${ENGINE_SRC}
+    ${UTILS_SRC}
+    ${LUA_SRC}
 )
 
 ## Include headers to program
@@ -81,9 +93,7 @@ target_link_libraries(EclataxEngine-test PUBLIC
 )
 
 target_link_libraries(unit_tests PUBLIC
-
     CONAN_PKG::gtest
     ${CMAKE_THREAD_LIBS_INIT}
     ${CMAKE_DL_LIBS}
-
 )
