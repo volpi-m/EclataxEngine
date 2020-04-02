@@ -7,6 +7,10 @@
 import os
 import sys
 import subprocess
+import configparser
+from shutil import copy
+
+DEFAULT_CONFIG_PATH = "/etc/ecl"
 
 ## Enable colors for windows.
 if sys.platform.lower() == "win32":
@@ -25,9 +29,14 @@ class style():
     WHITE     = lambda x: '\033[37m' + str(x) + '\033[0m'
     UNDERLINE = lambda x: '\033[4m'  + str(x) + '\033[0m'
 
+## Crearing a config parser object.
+config = configparser.ConfigParser()
+
+default_config = "[config]\n"
+
 def try_int(str):
     try:
-        a = int(str)
+        int(str)
         return True
     except:
         return False
@@ -40,20 +49,20 @@ class Shell:
 
         ## Shell commands.
         self.__commands = {
-            "quit"          : self.quit,
-            "exit"          : self.quit,
-            "sources"       : self.display_sources,
-            "add"           : self.add_source,
-            "help"          : self.help,
-            "compile"       : self.compile_engine,
-            "new"           : self.new_project,
-            "projects"      : self.show_projects,
-            "pj"            : self.show_projects,
-            "select"        : self.select_project,
-            "delete"        : self.delete_project,
-            "del"           : self.delete_project,
-            "remove"        : self.delete_source,
-            "rm"            : self.delete_source,
+            "quit"          : (self.quit, "Exits the program."),
+            "exit"          : (self.quit, "^"),
+            "sources"       : (self.display_sources, "Display all sources from the current project."),
+            "add"           : (self.add_source, "Add sources to the current profile"),
+            "help"          : (self.help, "Display this help"),
+            "compile"       : (self.compile_engine, "Re-compile the engine to a static library."),
+            "new"           : (self.new_project, "Create a new project."),
+            "projects"      : (self.show_projects, "Show all available projects."),
+            "pj"            : (self.show_projects, "^"),
+            "select"        : (self.select_project, "Select a project."),
+            "delete"        : (self.delete_project, "Delete a project."),
+            "del"           : (self.delete_project, "^"),
+            "remove"        : (self.delete_source, "Delete a sources from the current project (remove [[index_of_source] | [first_source last_source]])"),
+            "rm"            : (self.delete_source, "^"),
         }
 
         ## Projects available.
@@ -74,7 +83,7 @@ class Shell:
 
         ## Trying to exectute the command.
         if cmd[0] in self.__commands.keys():
-            self.__commands[cmd[0]](cmd[1:])
+            self.__commands[cmd[0]][0](cmd[1:])
         else:
             print(style.YELLOW("The '" + cmd[0] + "' command doesn't exists."))
 
@@ -82,6 +91,7 @@ class Shell:
     def quit(self, cmd):
         sys.exit(0)
 
+    ## TODO : needs to check if the path is correct.
     ## Add a source path to the list.
     def add_source(self, cmd):
 
@@ -205,12 +215,16 @@ class Shell:
     ## TODO : Add a description to each commands.
     ## Display help message.
     def help(self, cmd):
+
+        padding = max(map(len, self.__commands.keys()))
+
         print(style.BLUE("Available commands:"))
-        for command in self.__commands.keys():
-            print(command)
+        for (command, (fun, description)) in zip(self.__commands, self.__commands.values()):
+            print(command, end="")
+            print((padding - len(command)) * " ", end="")
+            print(" => " + style.GREEN(description))
 
     ## TODO : Add a 'build' project command.
-    ## TODO : Add a delete source command.
     ## TODO : Add a include paths command.
 
 # Execute a command.
@@ -238,9 +252,47 @@ def execute_command(commandline):
                 print(f"output: {output.strip()}")
             break
 
+## Create a configuration .ini file to store static data.
+def create_config_file(projects_path):
+
+    config.add_section('install')
+    config.set('install', 'projects', 'projects_path')
+
+    # with open('config.ini', 'w') as f:
+    #     config.write(f)
+
+## Setting up all configurations needed for the engine and project.
+def setup_engine():
+
+    print(style.BLUE("No project setup have been found. Setting up the engine ..."))
+
+    ## Creating the project folder.
+    while True:
+        projects_path = input(style.BLUE("Please specify where your projects will be saved: "))
+        os.makedirs(projects_path)
+        break
+
+    ## Adding EclataxEngine binary to list of binaries.
+    while True:
+        user_install = input(style.BLUE("Would you like to install the EclataxEngine project manager for the current user ? (y/n)"))
+
+        ## Copying the EclataxEngine executable to /usr/bin. 
+        ## TODO : Windows implementation.
+        if user_install.tolower() == "y":
+            copy("./EclataxEngine", "/usr/bin/")
+            break
+        elif user_install.tolower() == "n":
+            break
+
+    create_config_file(projects_path)
+
 def main():
 
     shell = Shell()
+
+    ## Creating a new project folder
+    if len(sys.argv) == 2 and (sys.argv[1] == "-i" or sys.argv[1] == "--install"):
+        setup_engine()
 
     ## Running the shell
     while True:
@@ -248,7 +300,10 @@ def main():
         ## Getting user input
         cmd = input("$> ")
         cmd = cmd.split()
-        shell.try_command(cmd)      
+        shell.try_command(cmd)
 
 if __name__ == "__main__":
     main()
+
+## TODO : Uninstall option.
+## TODO : Change project path install.
