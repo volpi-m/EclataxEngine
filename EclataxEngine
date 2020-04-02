@@ -10,7 +10,7 @@ import subprocess
 import configparser
 from shutil import copy
 
-DEFAULT_CONFIG_PATH = "/etc/ecl"
+DEFAULT_CONFIG_PATH = "/etc/ecl/"
 
 ## Enable colors for windows.
 if sys.platform.lower() == "win32":
@@ -212,17 +212,23 @@ class Shell:
         execute_command(["cmake", "-B", "build", "."])
         execute_command(["make", "-C", "build"])
 
-    ## TODO : Add a description to each commands.
     ## Display help message.
     def help(self, cmd):
 
         padding = max(map(len, self.__commands.keys()))
 
         print(style.BLUE("Available commands:"))
+        last_command = self.__commands.values()
         for (command, (fun, description)) in zip(self.__commands, self.__commands.values()):
-            print(command, end="")
+            if last_command != fun:
+                print("")
+            print(style.MAGENTA(command), end="")
             print((padding - len(command)) * " ", end="")
-            print(" => " + style.GREEN(description))
+            if last_command != fun:
+                print(" => " + style.GREEN(description))
+            else:
+                print(" |")
+            last_command = fun
 
     ## TODO : Add a 'build' project command.
     ## TODO : Add a include paths command.
@@ -252,14 +258,22 @@ def execute_command(commandline):
                 print(f"output: {output.strip()}")
             break
 
+## Create a folder at the specified path.
+def create_folder(path):
+
+    if not os.path.isdir(path):
+        os.makedirs(path)
+
 ## Create a configuration .ini file to store static data.
 def create_config_file(projects_path):
 
     config.add_section('install')
-    config.set('install', 'projects', 'projects_path')
+    config.set('install', 'projects', projects_path + "/projects")
 
-    # with open('config.ini', 'w') as f:
-    #     config.write(f)
+    create_folder(DEFAULT_CONFIG_PATH)
+
+    with open(DEFAULT_CONFIG_PATH + 'eclconfig.ini', 'w') as f:
+        config.write(f)
 
 ## Setting up all configurations needed for the engine and project.
 def setup_engine():
@@ -269,7 +283,7 @@ def setup_engine():
     ## Creating the project folder.
     while True:
         projects_path = input(style.BLUE("Please specify where your projects will be saved: "))
-        os.makedirs(projects_path)
+        create_folder(projects_path + "/projects")
         break
 
     ## Adding EclataxEngine binary to list of binaries.
@@ -278,10 +292,10 @@ def setup_engine():
 
         ## Copying the EclataxEngine executable to /usr/bin. 
         ## TODO : Windows implementation.
-        if user_install.tolower() == "y":
+        if user_install.lower() == "y":
             copy("./EclataxEngine", "/usr/bin/")
             break
-        elif user_install.tolower() == "n":
+        elif user_install.lower() == "n":
             break
 
     create_config_file(projects_path)
