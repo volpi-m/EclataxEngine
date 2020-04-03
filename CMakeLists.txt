@@ -73,6 +73,11 @@ add_executable(EclataxEngine-test
     src/main.cpp
 )
 
+## Static library
+add_library(ecl
+    ${SRC}
+)
+
 set (SRC_TEST
     tests/main.cpp
 )
@@ -89,6 +94,10 @@ add_executable(unit_tests
 
 ## Linking libraries
 target_link_libraries(EclataxEngine-test PUBLIC
+    ${CMAKE_DL_LIBS}
+)
+
+target_link_libraries(ecl PUBLIC
     ${CMAKE_DL_LIBS}
 )
 
