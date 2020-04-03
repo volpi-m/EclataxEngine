@@ -440,6 +440,8 @@ def main():
 
     shell = Shell(config["install"]["projects"])
 
+    print(f"{style.BLUE('All set! Welcome to the ECL projetct manager.')}\n{style.BLUE('Start by typing')} {style.GREEN('help')} {style.BLUE('to see what commands are available.')}")
+
     ## Running the shell
     while True:
 
