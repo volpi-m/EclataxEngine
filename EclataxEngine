@@ -2,7 +2,7 @@
 
 ## \@Author         ltabis
 ## \@date           31/03/2020
-## \@description    A script that generates a game from sources given.
+## \@description    A project manager for the EclataxEngine.
 
 import os
 import sys
@@ -32,8 +32,6 @@ class style():
 ## Crearing a config parser object.
 config = configparser.ConfigParser()
 
-default_config = "[config]\n"
-
 def try_int(str):
     try:
         int(str)
@@ -45,32 +43,51 @@ def try_int(str):
 class Shell:
 
     ## init class
-    def __init__(self):
+    def __init__(self, projects_path):
 
         ## Shell commands.
         self.__commands = {
             "quit"          : (self.quit, "Exits the program."),
-            "exit"          : (self.quit, "^"),
+            "exit"          : (self.quit, ""),
             "sources"       : (self.display_sources, "Display all sources from the current project."),
             "add"           : (self.add_source, "Add sources to the current profile"),
             "help"          : (self.help, "Display this help"),
             "compile"       : (self.compile_engine, "Re-compile the engine to a static library."),
             "new"           : (self.new_project, "Create a new project."),
             "projects"      : (self.show_projects, "Show all available projects."),
-            "pj"            : (self.show_projects, "^"),
+            "pj"            : (self.show_projects, ""),
             "select"        : (self.select_project, "Select a project."),
             "delete"        : (self.delete_project, "Delete a project."),
-            "del"           : (self.delete_project, "^"),
+            "del"           : (self.delete_project, ""),
             "remove"        : (self.delete_source, "Delete a sources from the current project (remove [[index_of_source] | [first_source last_source]])"),
-            "rm"            : (self.delete_source, "^"),
+            "rm"            : (self.delete_source, ""),
         }
 
+        self.__projects_path = projects_path
+
         ## Projects available.
-        self.__projects     = {
+        self.__projects = {
         }
 
         ## Currently selected project.
-        self.__selected     = None
+        self.__selected = None
+
+        ## Project configuration reader
+        self.__projectsconfig = configparser.ConfigParser()
+
+        try:
+
+            ## Initializing projects config files.
+            for projectfile in os.listdir(projects_path):
+                tmp = configparser.ConfigParser()
+                tmp.read(f"{projects_path}/{projectfile}")
+                self.__projects[tmp["config"]["name"]] = tmp
+
+        except:
+            print(style.RED(f"Project folder couldn't be found at {projects_path}. Please retry with the --install option."))
+            sys.exit(1)
+
+        print("Debug: " + str(self.__projects))
 
     def try_command(self, cmd):
 
@@ -91,7 +108,16 @@ class Shell:
     def quit(self, cmd):
         sys.exit(0)
 
+    ## Save the current selected config.
+    def save_work(self):
+
+        tmp = self.__projects[self.__selected]
+        
+        with open(f"{self.__projects_path}/{tmp['config']['name']}.ini", 'w') as f:
+            tmp.write(f)
+
     ## TODO : needs to check if the path is correct.
+    ## TODO : replace first if expression with placeholders.
     ## Add a source path to the list.
     def add_source(self, cmd):
 
@@ -102,9 +128,14 @@ class Shell:
             print(style.RED("No projects were selected."))
             return
 
+        numeber_of_sources = len(self.__projects[self.__selected]["sources"]) + 1
+
         for arg in cmd:
-            self.__projects[self.__selected].append(arg)
+            self.__projects[self.__selected].set('sources', str(numeber_of_sources), arg)
+            numeber_of_sources += 1
             print(f"{style.BLUE('Source')} {style.GREEN(arg)} {style.BLUE('added to the')} {style.BLUE(self.__selected)} {style.BLUE('project.')}")
+
+        self.save_work()
 
     ## Display saved sources paths.
     def display_sources(self, cmd):
@@ -113,14 +144,14 @@ class Shell:
             print(style.RED("No projects were selected."))
             return
 
-        if not self.__projects[self.__selected]:
+        if not self.__projects[self.__selected]["sources"]:
             print(style.RED("No sources where found for the " + self.__selected + " project."))
             return
 
         print(f"{style.BLUE('Sources for the ')}{style.GREEN(self.__selected)}{style.BLUE(' project =>')}")
 
-        for source in self.__projects[self.__selected]: 
-            print("   - " + source)
+        for (index, path) in dict(self.__projects[self.__selected].items("sources")).items():
+            print(f"   - {index}: {path}")
 
     ## Deletes ressources passed as parameter.
     def delete_source(self, cmd):
@@ -137,22 +168,20 @@ class Shell:
             print(style.RED("Source number can't be negative."))
             return
 
-        bound_x = int(cmd[0]) - 1
+        bound_x = int(cmd[0])
         bound_y = bound_x
 
         if len(cmd) >= 2:
-            bound_y = int(cmd[1]) - 1
+            bound_y = int(cmd[1])
 
         ## Deleting sources
-        while bound_x <= bound_y:
+        for (source_index, source_name) in self.__projects[self.__selected]["sources"].items():
 
-            if len(self.__projects[self.__selected]) <= bound_x:
-                bound_y -= 1
-                continue
+            if int(source_index) >= bound_x and int(source_index) <= bound_y:
+                self.__projects[self.__selected].remove_option('sources', source_index)
+                print(f"{style.GREEN(source_name)} {style.BLUE('has been deleted.')}")
 
-            print(f"{style.GREEN(self.__projects[self.__selected][bound_x])} {style.BLUE('has been deleted.')}")
-            del self.__projects[self.__selected][bound_x]
-            bound_y -= 1
+        self.save_work()
 
 
     ## Create a new compilation project.
@@ -162,9 +191,16 @@ class Shell:
             print(style.RED("No name given for a new project."))
             return
 
-        self.__projects[cmd[0]] = []
+        self.__projects[cmd[0]] = configparser.ConfigParser()
+        self.__projects[cmd[0]].add_section('config')
+        self.__projects[cmd[0]].add_section('sources')
+        self.__projects[cmd[0]].set('config', 'name', cmd[0])
+
         self.__selected = cmd[0]
         print(f"{style.BLUE('Project')} {style.GREEN(cmd[0])} {style.BLUE('added.')}")
+
+        open(f"{self.__projects_path}/{cmd[0]}.ini", 'a').close()
+        self.save_work()
 
     ## Selects an existing project.
     def select_project(self, cmd):
@@ -310,7 +346,7 @@ def display_help():
 ## Checks if the engine as been installed.
 def check_setup():
 
-    while not os.path.exists(DEFAULT_CONFIG_PATH):
+    while not os.path.exists(DEFAULT_CONFIG_PATH + 'eclconfig.ini'):
         res = input(style.YELLOW("The engine hasn't been setup yet.\nWould you like to do it now ? (y/n) "))
         if res.lower() == "y":
             setup_engine()
@@ -320,8 +356,6 @@ def check_setup():
 
 def main():
 
-    shell = Shell()
-
     ## Creating a new project folder or display help.
     if len(sys.argv) == 2:
         if sys.argv[1] == "-h" or sys.argv[1] == "--help":
@@ -330,6 +364,10 @@ def main():
             setup_engine()
 
     check_setup()
+
+    config.read(DEFAULT_CONFIG_PATH + 'eclconfig.ini')
+
+    shell = Shell(config["install"]["projects"])
 
     ## Running the shell
     while True:
@@ -342,5 +380,6 @@ def main():
 if __name__ == "__main__":
     main()
 
-## TODO : Uninstall option.
+## TODO : Uninstall option. -u --uninstall
 ## TODO : Change project path install.
+## TODO : Replace all string formatings with f""
