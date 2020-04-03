@@ -8,7 +8,6 @@ import os
 import sys
 import subprocess
 import configparser
-from shutil import copy
 
 DEFAULT_CONFIG_PATH = "/etc/ecl/"
 
@@ -314,7 +313,6 @@ class Shell:
                         headers +\
                         ["-ldl", "-lgcov", "--coverage"] +\
                         ["-o", self.__selected])
-    
 
     ## TODO : links must be absolute.
     ## Compile the engine into a static library.
@@ -406,18 +404,6 @@ def setup_engine():
         create_folder(projects_path + "/projects")
         break
 
-    ## Adding EclataxEngine binary to list of binaries.
-    while True:
-        user_install = input(style.BLUE("Would you like to install the EclataxEngine project manager for the current user ? (y/n)"))
-
-        ## Copying the EclataxEngine executable to /usr/bin. 
-        ## TODO : Windows implementation.
-        if user_install.lower() == "y":
-            copy("./EclataxEngine", "/usr/bin/")
-            break
-        elif user_install.lower() == "n":
-            break
-
     create_config_file(projects_path)
     create_conan_file(projects_path)
 
@@ -468,4 +454,3 @@ if __name__ == "__main__":
 ## TODO : Uninstall option. -u --uninstall
 ## TODO : Change project path install.
 ## TODO : Launch project.
-## TODO : Add a include paths command.
