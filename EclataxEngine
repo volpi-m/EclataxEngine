@@ -12,6 +12,17 @@ from shutil import copy
 
 DEFAULT_CONFIG_PATH = "/etc/ecl/"
 
+CONAN_FILE_CONTENT = "[requires]\n"\
+                     "sfml/2.5.1@bincrafters/stable\n"\
+                     "gtest/1.8.1@bincrafters/stable\n\n"\
+                     "[options]\n"\
+                     "sfml:graphics=True\n"\
+                     "sfml:window=True\n"\
+                     "sfml:network=True\n"\
+                     "sfml:audio=True\n\n"\
+                     "[generators]\n"\
+                     "compiler_args\n"\
+
 ## Enable colors for windows.
 if sys.platform.lower() == "win32":
     os.system('color')
@@ -61,6 +72,7 @@ class Shell:
             "del"           : (self.delete_project, ""),
             "remove"        : (self.delete_source, "Delete a sources from the current project (remove [[index_of_source] | [first_source last_source]])"),
             "rm"            : (self.delete_source, ""),
+            "build"         : (self.build_project, "Builds the current project with it's sources."),
         }
 
         self.__projects_path = projects_path
@@ -79,6 +91,8 @@ class Shell:
 
             ## Initializing projects config files.
             for projectfile in os.listdir(projects_path):
+                if projectfile == "conanfile.txt" or os.path.isdir(f"{projects_path}/{projectfile}"):
+                    continue
                 tmp = configparser.ConfigParser()
                 tmp.read(f"{projects_path}/{projectfile}")
                 self.__projects[tmp["config"]["name"]] = tmp
@@ -189,6 +203,10 @@ class Shell:
             print(style.RED("No name given for a new project."))
             return
 
+        if cmd[0] == "conanfile.txt":
+            print(style.RED("You cannot name a project conanfile.txt."))
+            return
+
         self.__projects[cmd[0]] = configparser.ConfigParser()
         self.__projects[cmd[0]].add_section('config')
         self.__projects[cmd[0]].add_section('sources')
@@ -197,7 +215,6 @@ class Shell:
         self.__selected = cmd[0]
         print(f"{style.BLUE('Project')} {style.GREEN(cmd[0])} {style.BLUE('added.')}")
 
-        open(f"{self.__projects_path}/{cmd[0]}.ini", 'a').close()
         self.save_work()
 
     ## Selects an existing project.
@@ -239,6 +256,22 @@ class Shell:
         else:
             print(style.YELLOW(f"The '{cmd[0]}' project doesn't exists."))
 
+    ## TODO : Compiler needs to be generic.
+    ## Build a project with the current sources.
+    def build_project(self, cmd):
+
+        if not self.__selected:
+            print(style.RED("No projects were selected."))
+            return
+
+        values = [val for (_, val) in self.__projects[self.__selected].items('sources')]
+
+        # self.compile_engine(cmd)
+        execute_command(["conan", "install", f"{self.__projects_path}", "-if", f"{self.__projects_path}/build_{self.__selected}", "--build=missing"])
+        execute_command(["g++"] + values + [f"@{self.__projects_path}/build_{self.__selected}/conanbuildinfo.args", "-l", "ecl", "-L", "build/lib/", "-o", self.__selected])
+
+
+    ## TODO : links must be absolute.
     ## Compile the engine into a static library.
     def compile_engine(self, cmd):
         if not os.path.isdir("build"):
@@ -265,9 +298,6 @@ class Shell:
                 print(" |")
             last_command = fun
 
-    ## TODO : Add a 'build' project command.
-    ## TODO : Add a include paths command.
-
 # Execute a command.
 def execute_command(commandline):
 
@@ -281,7 +311,7 @@ def execute_command(commandline):
         output = process.stderr.readline()
 
         if len(output):
-            print(f"error: {output.strip()}")
+            print(output.strip())
 
         returncode = process.poll()
 
@@ -297,7 +327,8 @@ def execute_command(commandline):
 def create_folder(path):
 
     if not os.path.isdir(path):
-        os.makedirs(path)
+        os.mkdir(path)
+        os.chmod(path, 0o777)
 
 ## Create a configuration .ini file to store static data.
 def create_config_file(projects_path):
@@ -309,6 +340,12 @@ def create_config_file(projects_path):
 
     with open(DEFAULT_CONFIG_PATH + 'eclconfig.ini', 'w') as f:
         config.write(f)
+
+## Create a configuration .ini file to store static data.
+def create_conan_file(projects_path):
+
+    with open(f"{projects_path}/projects/conanfile.txt", 'w') as f:
+        f.write(CONAN_FILE_CONTENT)
 
 ## Setting up all configurations needed for the engine and project.
 def setup_engine():
@@ -334,6 +371,7 @@ def setup_engine():
             break
 
     create_config_file(projects_path)
+    create_conan_file(projects_path)
 
 ## Display an help message.
 def display_help():
@@ -381,4 +419,5 @@ if __name__ == "__main__":
 
 ## TODO : Uninstall option. -u --uninstall
 ## TODO : Change project path install.
-## TODO : Replace all string formatings with f""
+## TODO : Launch project.
+## TODO : Add a include paths command.
