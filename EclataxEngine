@@ -87,8 +87,6 @@ class Shell:
             print(style.RED(f"Project folder couldn't be found at {projects_path}. Please retry with the --install option."))
             sys.exit(1)
 
-        print("Debug: " + str(self.__projects))
-
     def try_command(self, cmd):
 
         ## Checking empty list.
@@ -102,7 +100,7 @@ class Shell:
         if cmd[0] in self.__commands.keys():
             self.__commands[cmd[0]][0](cmd[1:])
         else:
-            print(style.YELLOW("The '" + cmd[0] + "' command doesn't exists."))
+            print(style.YELLOW(f"The '{cmd[0]}' command doesn't exists."))
 
     ## Quitting the program.
     def quit(self, cmd):
@@ -145,7 +143,7 @@ class Shell:
             return
 
         if not self.__projects[self.__selected]["sources"]:
-            print(style.RED("No sources where found for the " + self.__selected + " project."))
+            print(style.RED(f"No sources where found for the {self.__selected} project."))
             return
 
         print(f"{style.BLUE('Sources for the ')}{style.GREEN(self.__selected)}{style.BLUE(' project =>')}")
@@ -213,7 +211,7 @@ class Shell:
             self.__selected = cmd[0]
             print(f"{style.GREEN(cmd[0])} {style.BLUE('project selected.')}")
         else:
-            print(style.YELLOW("The " + cmd[0] + " project doesn't exists."))
+            print(style.YELLOW(f"The {cmd[0]} project doesn't exists."))
 
     ## Show all projects
     def show_projects(self, cmd):
@@ -222,9 +220,9 @@ class Shell:
             print(style.RED("No projects found."))
             return
 
-        print(style.BLUE(str(len(self.__projects)) + (" projects" if len(self.__projects) > 1 else " project") + " found."))
+        print(f"{style.BLUE(str(len(self.__projects)))} {'projects' if len(self.__projects) > 1 else 'project'} found.")
         for project in self.__projects:
-            print(("$ " if project == self.__selected else "") + style.GREEN(project))
+            print(f"{'$ ' if project == self.__selected else ''}{style.GREEN(project)}")
 
     ## Deletes a project from the project list
     def delete_project(self, cmd):
@@ -236,9 +234,10 @@ class Shell:
         if cmd[0] in self.__projects.keys():
             self.__selected = None
             del self.__projects[cmd[0]]
+            os.remove(f"{self.__projects_path}/{cmd[0]}.ini")
             print(f"{style.GREEN(cmd[0])} {style.BLUE('project deleted.')}")
         else:
-            print(style.YELLOW("The '" + cmd[0] + "' project doesn't exists."))
+            print(style.YELLOW(f"The '{cmd[0]}' project doesn't exists."))
 
     ## Compile the engine into a static library.
     def compile_engine(self, cmd):
@@ -261,7 +260,7 @@ class Shell:
             print(style.MAGENTA(command), end="")
             print((padding - len(command)) * " ", end="")
             if last_command != fun:
-                print(" => " + style.GREEN(description))
+                print(f" => {style.GREEN(description)}")
             else:
                 print(" |")
             last_command = fun
