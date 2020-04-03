@@ -74,7 +74,7 @@ add_executable(EclataxEngine-test
 )
 
 ## Static library
-add_library(ecl
+add_library(ecl STATIC
     ${SRC}
 )
 

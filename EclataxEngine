@@ -27,6 +27,14 @@ CONAN_FILE_CONTENT = "[requires]\n"\
 if sys.platform.lower() == "win32":
     os.system('color')
 
+
+## TODO : change src folder.
+## all ecl headers directories. 
+ecl_headers_dir = [os.path.join(root, name)
+             for root, dirs, _ in os.walk("src")
+             for name in dirs
+             if name]
+
 ## Colors class.
 class style():
     RESET     = lambda x: '\033[0m'  + str(x)
@@ -60,8 +68,9 @@ class Shell:
         self.__commands = {
             "quit"          : (self.quit, "Exits the program."),
             "exit"          : (self.quit, ""),
-            "sources"       : (self.display_sources, "Display all sources from the current project."),
-            "add"           : (self.add_source, "Add sources to the current profile"),
+            "show"          : (self.display_project_data, "Display data about the current project."),
+            "src"           : (self.add_source, "Add sources to the current project."),
+            "hdr"           : (self.add_header, "Add headers to the current project."),
             "help"          : (self.help, "Display this help"),
             "compile"       : (self.compile_engine, "Re-compile the engine to a static library."),
             "new"           : (self.new_project, "Create a new project."),
@@ -107,12 +116,9 @@ class Shell:
         if not cmd:
             return
 
-        ## Lower all args.
-        cmd = [arg.lower() for arg in cmd]
-
         ## Trying to exectute the command.
-        if cmd[0] in self.__commands.keys():
-            self.__commands[cmd[0]][0](cmd[1:])
+        if cmd[0].lower() in self.__commands.keys():
+            self.__commands[cmd[0].lower()][0](cmd[1:])
         else:
             print(style.YELLOW(f"The '{cmd[0]}' command doesn't exists."))
 
@@ -129,7 +135,7 @@ class Shell:
             tmp.write(f)
 
     ## TODO : needs to check if the path is correct.
-    ## TODO : replace first if expression with placeholders.
+    ## TODO : replace first if expression with placeholders (@).
     ## Add a source path to the list.
     def add_source(self, cmd):
 
@@ -140,29 +146,53 @@ class Shell:
             print(style.RED("No projects were selected."))
             return
 
-        numeber_of_sources = len(self.__projects[self.__selected]["sources"]) + 1
+        number_of_sources = len(self.__projects[self.__selected]["sources"]) + 1
 
         for arg in cmd:
-            self.__projects[self.__selected].set('sources', str(numeber_of_sources), arg)
-            numeber_of_sources += 1
+            self.__projects[self.__selected].set('sources', str(number_of_sources), arg)
+            number_of_sources += 1
             print(f"{style.BLUE('Source')} {style.GREEN(arg)} {style.BLUE('added to the')} {style.BLUE(self.__selected)} {style.BLUE('project.')}")
 
         self.save_work()
 
-    ## Display saved sources paths.
-    def display_sources(self, cmd):
+    ## Add a header path to the list.
+    def add_header(self, cmd):
+
+        if len(cmd) < 1:
+            return
 
         if not self.__selected:
             print(style.RED("No projects were selected."))
             return
 
-        if not self.__projects[self.__selected]["sources"]:
-            print(style.RED(f"No sources where found for the {self.__selected} project."))
+        number_of_headers = len(self.__projects[self.__selected]["headers"]) + 1
+
+        for arg in cmd:
+            self.__projects[self.__selected].set('headers', str(number_of_headers), arg)
+            number_of_headers += 1
+            print(f"{style.BLUE('Header')} {style.GREEN(arg)} {style.BLUE('added to the')} {style.BLUE(self.__selected)} {style.BLUE('project.')}")
+
+        self.save_work()
+
+    ## Display saved sources paths.
+    def display_project_data(self, cmd):
+
+        if not self.__selected:
+            print(style.RED("No projects were selected."))
             return
 
-        print(f"{style.BLUE('Sources for the ')}{style.GREEN(self.__selected)}{style.BLUE(' project =>')}")
+        # if not self.__projects[self.__selected]["sources"]:
+        #     print(style.RED(f"No sources where found for the {self.__selected} project."))
+        #     return
+
+        print(f"{style.BLUE('Sources for the ')}{style.GREEN(self.__selected)}{style.BLUE(' project =>')} {style.RED('None') if not self.__projects[self.__selected]['sources'] else ''}")
 
         for (index, path) in dict(self.__projects[self.__selected].items("sources")).items():
+            print(f"   - {index}: {path}")
+
+        print(f"{style.BLUE('Headers for the ')}{style.GREEN(self.__selected)}{style.BLUE(' project =>')} {style.RED('None') if not self.__projects[self.__selected]['headers'] else ''}")
+
+        for (index, path) in dict(self.__projects[self.__selected].items("headers")).items():
             print(f"   - {index}: {path}")
 
     ## Deletes ressources passed as parameter.
@@ -210,6 +240,7 @@ class Shell:
         self.__projects[cmd[0]] = configparser.ConfigParser()
         self.__projects[cmd[0]].add_section('config')
         self.__projects[cmd[0]].add_section('sources')
+        self.__projects[cmd[0]].add_section('headers')
         self.__projects[cmd[0]].set('config', 'name', cmd[0])
 
         self.__selected = cmd[0]
@@ -264,12 +295,26 @@ class Shell:
             print(style.RED("No projects were selected."))
             return
 
-        values = [val for (_, val) in self.__projects[self.__selected].items('sources')]
+        src_values = [val for (_, val) in self.__projects[self.__selected].items('sources')]
+        hdr_values = [val for (_, val) in self.__projects[self.__selected].items('headers')] + ecl_headers_dir
 
-        # self.compile_engine(cmd)
+        headers = []
+        for hdr in hdr_values:
+            headers.append("-I")
+            headers.append(hdr)
+
+        self.compile_engine(cmd)
         execute_command(["conan", "install", f"{self.__projects_path}", "-if", f"{self.__projects_path}/build_{self.__selected}", "--build=missing"])
-        execute_command(["g++"] + values + [f"@{self.__projects_path}/build_{self.__selected}/conanbuildinfo.args", "-l", "ecl", "-L", "build/lib/", "-o", self.__selected])
-
+        execute_command(["g++"] +\
+                        src_values +\
+                        [f"@{self.__projects_path}/build_{self.__selected}/conanbuildinfo.args",\
+                        "-std=c++17",\
+                        "-l", "ecl",\
+                        "-L", "build/lib/"] +\
+                        headers +\
+                        ["-ldl", "-lgcov", "--coverage"] +\
+                        ["-o", self.__selected])
+    
 
     ## TODO : links must be absolute.
     ## Compile the engine into a static library.
@@ -301,6 +346,8 @@ class Shell:
 # Execute a command.
 def execute_command(commandline):
 
+    print("command line: " + str(commandline))
+
     # Executing command.
     process = subprocess.Popen(commandline, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
@@ -318,9 +365,10 @@ def execute_command(commandline):
         # Process has finished        
         if returncode is not None:
             if returncode:
-                print(f"return code: {returncode}")
+                print(f"{style.RED('return code')}: {returncode}")
+            print("output:")
             for output in process.stdout.readlines():
-                print(f"output: {output.strip()}")
+                print(f"{output.strip()}")
             break
 
 ## Create a folder at the specified path.
