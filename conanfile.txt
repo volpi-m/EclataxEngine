@@ -1,6 +1,4 @@
 [requires]
-boost_asio/1.67.0@bincrafters/stable
-boost_system/1.67.0@bincrafters/stable
 sfml/2.5.1@bincrafters/stable
 gtest/1.8.1@bincrafters/stable
 
