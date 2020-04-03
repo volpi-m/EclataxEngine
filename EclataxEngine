@@ -300,13 +300,36 @@ def setup_engine():
 
     create_config_file(projects_path)
 
+## Display an help message.
+def display_help():
+    print("usage: EclataxEngine [-h | --help] [-i | --install]\n\n"\
+          "help    : Display this help message.\n"\
+          "install : Install and setup the engine.")
+    sys.exit(0)
+
+## Checks if the engine as been installed.
+def check_setup():
+
+    while not os.path.exists(DEFAULT_CONFIG_PATH):
+        res = input(style.YELLOW("The engine hasn't been setup yet.\nWould you like to do it now ? (y/n) "))
+        if res.lower() == "y":
+            setup_engine()
+            break
+        elif res.lower() == "n":
+            sys.exit(0)
+
 def main():
 
     shell = Shell()
 
-    ## Creating a new project folder
-    if len(sys.argv) == 2 and (sys.argv[1] == "-i" or sys.argv[1] == "--install"):
-        setup_engine()
+    ## Creating a new project folder or display help.
+    if len(sys.argv) == 2:
+        if sys.argv[1] == "-h" or sys.argv[1] == "--help":
+            display_help()
+        elif sys.argv[1] == "-i" or sys.argv[1] == "--install":
+            setup_engine()
+
+    check_setup()
 
     ## Running the shell
     while True:
