@@ -104,12 +104,12 @@ namespace Module {
         /// \param type : the type of the system
         /// \return the system
         /// \brief get the system specified by the flag
-        std::shared_ptr<ECS::ISystem> &system(ECS::flagType type);
+        std::shared_ptr<ECS::ISystem> system(ECS::flagType type);
 
         /// \param id : the id of the entity
         /// \return the entity
         /// \brief get the entity specified by the id
-        std::shared_ptr<ECS::Entity> &entity(unsigned long long id);
+        std::shared_ptr<ECS::Entity> entity(unsigned long long id);
 
         /// \param tag : the tag of the entity
         /// \return the entity

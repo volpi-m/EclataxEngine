@@ -128,12 +128,12 @@ std::string Module::EntityComponentSystem::tag(unsigned long long id)
     return _entities[id]->tag();
 }
 
-std::shared_ptr<ECS::ISystem> &Module::EntityComponentSystem::system(ECS::flagType type)
+std::shared_ptr<ECS::ISystem> Module::EntityComponentSystem::system(ECS::flagType type)
 {
     return _systems[type];
 }
 
-std::shared_ptr<ECS::Entity> &Module::EntityComponentSystem::entity(unsigned long long id)
+std::shared_ptr<ECS::Entity> Module::EntityComponentSystem::entity(unsigned long long id)
 {
     return _entities[id];
 }
