@@ -19,7 +19,7 @@ TEST(ScriptComponentsTest, createBasicComponent)
     ECS::Component::Script component(&dummyFunction);
     Module::EntityComponentSystem ECS;
 
-    auto entity = ECS.createEntity("Entity");
+    unsigned long long entity = ECS.createEntity("Entity");
  
     // Checking pointer validity
     ASSERT_EQ(componentDefault.updateScript, nullptr);

@@ -81,6 +81,8 @@ TEST(ECSTests, getEntity)
     // Invalid ref
     auto ref3 = ECS.entity("Invalid.");
     ASSERT_EQ(ref3.get(), nullptr);
+
+    auto ref4 = ECS.entity("45");
 }
 
 TEST(ECSTests, getEntityAndSystem)

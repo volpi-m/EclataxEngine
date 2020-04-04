@@ -5,7 +5,7 @@
 #include "TextComponent.hpp"
 #include <gtest/gtest.h>
 
-TEST(SpriteComponentsTest, createBasicComponent)
+TEST(TextComponentsTest, createBasicComponent)
 {
     ECS::Component::Text componentDefault;
     ECS::Component::Text component("Text value");
