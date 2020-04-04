@@ -8,8 +8,10 @@
 TEST(AccelerationComponentsTest, createBasicComponent)
 {
     ECS::Component::Acceleration component(12);
+    ECS::Component::Acceleration componentNeg(-4);
     ECS::Component::Acceleration componentDefault;
 
     ASSERT_EQ(componentDefault.acceleration, 0);
     ASSERT_EQ(component.acceleration, 12);
+    ASSERT_EQ(componentNeg.acceleration, -4);
 }
