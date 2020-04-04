@@ -14,11 +14,11 @@
 #include <string>
 #include <optional>
 
+#include "LibraryLoader.hpp"
 #include "IComponent.hpp"
 #include "IModule.hpp"
 #include "ISystem.hpp"
 #include "Entity.hpp"
-#include "LibraryLoader.hpp"
 
 /// \namespace Module
 /// \brief Used for all GameEngine modules
@@ -28,7 +28,6 @@ namespace Module {
     /// \brief EntityComponentSystem class module from the game engine
     class EntityComponentSystem : public IModule {
     public:
-        // IMPLEMENTED METHODS
 
         /// \brief constructor
         EntityComponentSystem();
@@ -85,6 +84,11 @@ namespace Module {
         /// \return true of the entity exists, false otherwise
         /// \brief check if the entity exists
         bool hasEntity(unsigned long long id) const;
+
+        /// \param tag : the tag of the entity
+        /// \return true of the entity exists, false otherwise
+        /// \brief check if the entity exists
+        bool hasEntity(const std::string &tag) const;
 
         /// \param id : the id of the entity
         /// \param type : type of the component

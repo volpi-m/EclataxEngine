@@ -32,6 +32,18 @@ TEST(ECSTests, createEntityInEcs)
     ASSERT_STREQ(ECS.tag(second).c_str(), "entity from char");
 }
 
+TEST(ECSTests, hasEntityByTag)
+{
+    Module::EntityComponentSystem ECS;
+
+    ECS.createEntity(std::string("entity from string"));
+    ECS.createEntity("entity from char");
+    ASSERT_EQ(ECS.hasEntity("entity from char"), true);
+    ASSERT_EQ(ECS.hasEntity("entity from string"), true);
+    ASSERT_EQ(ECS.hasEntity(3), false);
+    ASSERT_EQ(ECS.hasEntity(2), true);
+}
+
 TEST(ECSTests, addAComponentToAnEntity)
 {
     Module::EntityComponentSystem ECS;

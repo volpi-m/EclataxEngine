@@ -108,6 +108,16 @@ bool Module::EntityComponentSystem::hasEntity(unsigned long long id) const
     return !(_entities.find(id) == _entities.end());
 }
 
+bool Module::EntityComponentSystem::hasEntity(const std::string &tag) const
+{
+    for (auto &entity : _entities)
+    {
+        if (entity.second->tag() == tag)
+            return true;
+    }
+    return false;
+}
+
 bool Module::EntityComponentSystem::hasComponent(unsigned long long id, ECS::flagType type)
 {
     return _entities[id]->hasComponent(type);

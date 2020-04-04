@@ -79,6 +79,7 @@ add_library(ecl STATIC
 )
 
 set (SRC_TEST
+    tests/ecs/test_ecs.cpp
     tests/main.cpp
 )
 
