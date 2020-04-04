@@ -344,8 +344,6 @@ class Shell:
 # Execute a command.
 def execute_command(commandline):
 
-    print("command line: " + str(commandline))
-
     # Executing command.
     process = subprocess.Popen(commandline, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
@@ -356,7 +354,7 @@ def execute_command(commandline):
         output = process.stderr.readline()
 
         if len(output):
-            print(output.strip())
+            print(style.RED(output.strip()))
 
         returncode = process.poll()
 
