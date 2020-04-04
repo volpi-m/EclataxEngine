@@ -66,6 +66,23 @@ TEST(ECSTests, entityVisibleStates)
     ASSERT_EQ(ECS.isEntityVisible(entity), false);
 }
 
+TEST(ECSTests, getEntity)
+{
+    Module::EntityComponentSystem ECS;
+    auto entity_id = ECS.createEntity("The best entity");
+
+    // Get a reference by id.
+    auto ref1 = ECS.entity(entity_id);
+    // Get a reference by tag.
+    auto ref2 = ECS.entity("The best entity");
+
+    ASSERT_EQ(ref1.get(), ref2.get());
+
+    // Invalid ref
+    auto ref3 = ECS.entity("Invalid.");
+    ASSERT_EQ(ref3.get(), nullptr);
+}
+
 TEST(ECSTests, getEntityAndSystem)
 {
     Module::EntityComponentSystem ECS;

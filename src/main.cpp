@@ -11,6 +11,9 @@
 
 int main(int argc, char const **argv)
 {
+    (void) argc;
+    (void) argv;
+
     Module::EntityComponentSystem ecs;
 
     std::shared_ptr<ECS::Entity> entity = std::make_shared<ECS::Entity>("tag 1");
