@@ -90,9 +90,33 @@ void Module::EntityComponentSystem::deleteEntity(unsigned long long id)
         _entities.erase(id);
 }
 
+void Module::EntityComponentSystem::deleteEntity(const std::string &tag)
+{
+    for (auto &entity : _entities)
+    {
+        if (entity.second->tag() == tag)
+        {
+            _entities.erase(entity.first);
+            return;
+        }
+    }
+}
+
 void Module::EntityComponentSystem::addComponentToEntity(unsigned long long id, ECS::flagType flag, std::shared_ptr<ECS::IComponent> &component)
 {
     _entities[id]->addComponent(flag, component);
+}
+
+void Module::EntityComponentSystem::addComponentToEntity(const std::string &tag, ECS::flagType flag, std::shared_ptr<ECS::IComponent> &component)
+{
+    for (auto &entity : _entities)
+    {
+        if (entity.second->tag() == tag)
+        {
+            entity.second->addComponent(flag, component);
+            return;
+        }
+    }
 }
 
 void Module::EntityComponentSystem::setEntityVisibleState(unsigned long long id, bool state)
@@ -100,9 +124,31 @@ void Module::EntityComponentSystem::setEntityVisibleState(unsigned long long id,
     _entities[id]->setVisible(state);
 }
 
+void Module::EntityComponentSystem::setEntityVisibleState(const std::string &tag, bool state)
+{
+    for (auto &entity : _entities)
+    {
+        if (entity.second->tag() == tag)
+        {
+            entity.second->setVisible(state);
+            return;
+        }
+    }
+}
+
 bool Module::EntityComponentSystem::isEntityVisible(unsigned long long id)
 {
     return _entities[id]->isVisible();
+}
+
+bool Module::EntityComponentSystem::isEntityVisible(const std::string &tag)
+{
+    for (auto &entity : _entities)
+    {
+        if (entity.second->tag() == tag)
+            return entity.second->isVisible();
+    }
+    return false;
 }
 
 bool Module::EntityComponentSystem::hasEntity(unsigned long long id) const
@@ -123,6 +169,16 @@ bool Module::EntityComponentSystem::hasEntity(const std::string &tag) const
 bool Module::EntityComponentSystem::hasComponent(unsigned long long id, ECS::flagType type)
 {
     return _entities[id]->hasComponent(type);
+}
+
+bool Module::EntityComponentSystem::hasComponent(const std::string &tag, ECS::flagType type)
+{
+    for (auto &entity : _entities)
+    {
+        if (entity.second->tag() == tag)
+            return entity.second->hasComponent(type);
+    }
+    return false;
 }
 
 std::string Module::EntityComponentSystem::tag(unsigned long long id)

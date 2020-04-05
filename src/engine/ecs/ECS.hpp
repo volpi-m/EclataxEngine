@@ -63,21 +63,41 @@ namespace Module {
         /// \brief deletes an entity from the ECS
         void deleteEntity(unsigned long long id);
 
+        /// \param tag : the tag of the entity to delete
+        /// \brief deletes an entity from the ECS
+        void deleteEntity(const std::string &tag);
+
         /// \param id : the id of the entity
         /// \param flag : the component flag
         /// \param component : the component to attach to the entity 
         /// \brief add a component to an existing entity
         void addComponentToEntity(unsigned long long id, ECS::flagType flag, std::shared_ptr<ECS::IComponent> &component);
 
+        /// \param tag : the tag of the entity
+        /// \param flag : the component flag
+        /// \param component : the component to attach to the entity 
+        /// \brief add a component to an existing entity
+        void addComponentToEntity(const std::string &tag, ECS::flagType flag, std::shared_ptr<ECS::IComponent> &component);
+
         /// \param id : the id of the entity
         /// \param state : the visible state
         /// \brief set the visible set of an entity
         void setEntityVisibleState(unsigned long long id, bool state);
 
+        /// \param tag : the tag of the entity
+        /// \param state : the visible state
+        /// \brief set the visible set of an entity
+        void setEntityVisibleState(const std::string &tag, bool state);
+
         /// \param id : the id of the entity
         /// \return true of the entity is visible, false otherwise
         /// \brief check if the entity is visibke
         bool isEntityVisible(unsigned long long id);
+
+        /// \param tag : the id of the entity
+        /// \return true of the entity is visible, false otherwise
+        /// \brief check if the entity is visibke
+        bool isEntityVisible(const std::string &tag);
 
         /// \param id : the id of the entity
         /// \return true of the entity exists, false otherwise
@@ -94,6 +114,12 @@ namespace Module {
         /// \return true of the entity has the component, false otherwise
         /// \brief check if the entity has the component
         bool hasComponent(unsigned long long id, ECS::flagType type);
+
+        /// \param tag : the tag of the entity
+        /// \param type : type of the component
+        /// \return true of the entity has the component, false otherwise
+        /// \brief check if the entity has the component
+        bool hasComponent(const std::string &tag, ECS::flagType type);
 
         /// \param id : the id of the entity
         /// \return the tag of the entity
