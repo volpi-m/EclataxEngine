@@ -28,15 +28,15 @@ namespace ECS {
         struct Sprite : public IComponent {
 
             /// \brief constructor
-            Sprite() : texture(""), rect(Game::Rect()), loaded(true) {}
+            Sprite() : texture(""), rect(ECL::Rect()), loaded(true) {}
 
             /// \brief constructor
-            Sprite(const std::string &_texture, const Game::Rect &_rect) : texture(_texture), rect(_rect.top, _rect.left, _rect.width, _rect.height), loaded(true) {}
+            Sprite(const std::string &_texture, const ECL::Rect &_rect) : texture(_texture), rect(_rect.top, _rect.left, _rect.width, _rect.height), loaded(true) {}
 
             /*! texture file attribute */
             std::string texture;
             /*! rect of the texture attribute */
-            Game::Rect rect;
+            ECL::Rect rect;
             /*! is loaded attribute */
             bool loaded;
         };

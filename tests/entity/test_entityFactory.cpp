@@ -203,7 +203,7 @@ TEST(EntityFactoryTests, createCopyedComponents)
 {
     // Creating all components available
     ECS::EntityFactory factory;
-    Game::Rect rect(0, 0, 32, 32);
+    ECL::Rect rect(0, 0, 32, 32);
     std::shared_ptr<ECS::Entity> entity(new ECS::Entity("dummy entity"));
     std::shared_ptr<ECS::IComponent> acceleration(new ECS::Component::Acceleration(5));
     std::shared_ptr<ECS::IComponent> audio(new ECS::Component::Audio("test_file", true));

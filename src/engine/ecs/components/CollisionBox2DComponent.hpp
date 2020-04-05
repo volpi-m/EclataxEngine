@@ -26,13 +26,13 @@ namespace ECS {
         struct CollisionBox2D : public IComponent {
             
             /// \brief constructor
-            CollisionBox2D() : rectangle(Game::Rect(0, 0, 0, 0)) {}
+            CollisionBox2D() : rectangle(ECL::Rect(0, 0, 0, 0)) {}
 
             /// \brief constructor
-            CollisionBox2D(float _top, float _left, float _width, float _height) : rectangle(Game::Rect(_top, _left, _width, _height)) {}
+            CollisionBox2D(float _top, float _left, float _width, float _height) : rectangle(ECL::Rect(_top, _left, _width, _height)) {}
 
             /*! rectangle attribute */
-            Game::Rect rectangle;
+            ECL::Rect rectangle;
         };
     }
 }

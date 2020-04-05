@@ -28,10 +28,10 @@ namespace ECS {
         struct Animation2D : public IComponent {
             
             /// \brief constructor
-            Animation2D() : lastAnimationTime(std::chrono::high_resolution_clock::now()), animationTime(1000), rect(Game::Rect()), maximumLeft(0), offset(0) {}
+            Animation2D() : lastAnimationTime(std::chrono::high_resolution_clock::now()), animationTime(1000), rect(ECL::Rect()), maximumLeft(0), offset(0) {}
 
             /// \brief constructor
-            Animation2D(std::chrono::milliseconds time, Game::Rect &rect, float max, float anim) : lastAnimationTime(std::chrono::high_resolution_clock::now()), animationTime(time), rect(rect), maximumLeft(max), offset(anim) {}
+            Animation2D(std::chrono::milliseconds time, ECL::Rect &rect, float max, float anim) : lastAnimationTime(std::chrono::high_resolution_clock::now()), animationTime(time), rect(rect), maximumLeft(max), offset(anim) {}
 
             /*! animation speed attribute */
             std::chrono::high_resolution_clock::time_point lastAnimationTime;
@@ -40,7 +40,7 @@ namespace ECS {
             std::chrono::milliseconds animationTime;
 
             /*! rectangle attribute */
-            Game::Rect rect;
+            ECL::Rect rect;
 
             /*! maximum spritesheet distance attribute */
             float maximumLeft;

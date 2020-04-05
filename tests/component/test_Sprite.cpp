@@ -8,7 +8,7 @@
 
 TEST(SpriteComponentsTest, createBasicComponent)
 {
-    Game::Rect rect(0, 0, 32, 32);
+    ECL::Rect rect(0, 0, 32, 32);
     ECS::Component::Sprite componentDefault;
     ECS::Component::Sprite component("texture.file", rect);
 

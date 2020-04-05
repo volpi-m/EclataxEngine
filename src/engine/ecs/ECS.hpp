@@ -1,13 +1,12 @@
-/*
-** EPITECH PROJECT, 2019
-** CPP_rtype_2019
-** File description:
-** Game Engine methods
-*/
+/**
+ *  @file     src/engine/ecs/ECS.hpp
+ *  @author   ltabis
+ *  @date     A while ago.
+ * 
+ *  project: EclataxEngine
+ * 
+ */
 
-/// \file ECS.hpp
-/// \author Lucas T.
-/// \brief ECS class declaration
 
 #pragma once
 

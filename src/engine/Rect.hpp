@@ -11,9 +11,9 @@
 
 #pragma once
 
-/// \namespace Game
+/// \namespace ECL
 /// \brief Used for the game engine components
-namespace Game
+namespace ECL
 {
 
     /// \class Rect

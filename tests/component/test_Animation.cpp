@@ -7,7 +7,7 @@
 
 TEST(AnimationComponentsTest, createBasicComponent)
 {
-    Game::Rect rect(10, 10, 10, 10);
+    ECL::Rect rect(10, 10, 10, 10);
     ECS::Component::Animation2D component(std::chrono::milliseconds(10), rect, 50, 32);
     ECS::Component::Animation2D componentDefault;
 
