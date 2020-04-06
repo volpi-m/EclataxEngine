@@ -6,7 +6,7 @@
 #include "ScriptComponent.hpp"
 #include <gtest/gtest.h>
 
-void dummyFunction(std::shared_ptr<ECS::Entity> &entity)
+void dummyFunction(const std::shared_ptr<ECS::Entity> &entity)
 {
     entity->setVisible(false);
 }

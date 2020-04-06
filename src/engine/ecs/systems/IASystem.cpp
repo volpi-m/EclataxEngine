@@ -27,7 +27,7 @@ void ECS::System::IASystem::update(std::unordered_map<unsigned long long, std::s
         }
 }
 
-void ECS::System::IASystem::setScript(std::shared_ptr<Entity> &entity, void (*func)(std::shared_ptr<ECS::Entity> &entity))
+void ECS::System::IASystem::setScript(std::shared_ptr<Entity> &entity, void (*func)(const std::shared_ptr<ECS::Entity> &entity))
 {
     // Casting the script component
     auto component = static_cast<ECS::Component::Script *>(entity->component(Component::Flags::script).get());

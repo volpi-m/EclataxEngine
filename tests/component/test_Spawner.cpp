@@ -6,7 +6,7 @@
 #include "SpawnerComponent.hpp"
 #include <gtest/gtest.h>
 
-std::shared_ptr<ECS::Entity> dummySp(std::shared_ptr<ECS::Entity> &parent)
+std::shared_ptr<ECS::Entity> dummySp(const std::shared_ptr<ECS::Entity> &parent)
 {
     (void)parent;
     return std::shared_ptr<ECS::Entity>(new ECS::Entity("blueprint"));

@@ -93,8 +93,8 @@ set (SRC_TEST_COMPONENT
     tests/component/test_Life.cpp
     tests/component/test_LifeSpan.cpp
     tests/component/test_Particules.cpp
-    # tests/component/test_Script.cpp
-    # tests/component/test_Spawner.cpp
+    tests/component/test_Script.cpp
+    tests/component/test_Spawner.cpp
     tests/component/test_Speed.cpp
     tests/component/test_Sprite.cpp
     tests/component/test_Text.cpp

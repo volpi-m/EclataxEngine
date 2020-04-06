@@ -28,10 +28,11 @@ namespace ECS {
             Script() : updateScript(nullptr) {}
 
             /// \brief constructor
-            Script(void (*newScript)(std::shared_ptr<Entity> &entity)) : updateScript(newScript) {}
+            Script(void (*newScript)(const std::shared_ptr<Entity> &entity)) : updateScript(newScript) {}
+            // Script(void (*newScript)(std::shared_ptr<Entity> &&entity)) : updateScript(newScript) {}
 
             /*! pointer to function attribute */
-            void (*updateScript)(std::shared_ptr<Entity> &entity);
+            void (*updateScript)(const std::shared_ptr<Entity> &entity);
         };
     }
 }

@@ -186,12 +186,12 @@ TEST(EntityFactoryTests, createEntityWithBlanc)
     ASSERT_EQ(cpy->hasComponent(ECS::Component::Flags::transform), true);
 }
 
-void dummyScript(std::shared_ptr<ECS::Entity> &entity)
+void dummyScript(const std::shared_ptr<ECS::Entity> &entity)
 {
     entity->setVisible(false);
 }
 
-std::shared_ptr<ECS::Entity> dummySpawner(std::shared_ptr<ECS::Entity> &entity)
+std::shared_ptr<ECS::Entity> dummySpawner(const std::shared_ptr<ECS::Entity> &entity)
 {
     (void)entity;
 
