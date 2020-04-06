@@ -101,6 +101,7 @@ set (SRC_TEST_COMPONENT
 )
 
 set (SRC_TEST_SYSTEM
+    tests/systems/test_Animation.cpp
     tests/systems/test_Collision.cpp
     tests/systems/test_HealthManipulator.cpp
     tests/systems/test_IA.cpp
