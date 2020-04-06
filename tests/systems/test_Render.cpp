@@ -32,7 +32,7 @@ TEST(RenderSystemTests, update)
 TEST(RenderSystemTests, getTexture)
 {
     Module::EntityComponentSystem ECS;
-    Game::Rect rect(0, 0, 32, 32);
+    ECL::Rect rect(0, 0, 32, 32);
     std::shared_ptr<ECS::IComponent> componentDefault(new ECS::Component::Sprite);
     std::shared_ptr<ECS::IComponent> component(new ECS::Component::Sprite("New texture!", rect));
     ECS::System::RenderSystem system;
@@ -57,7 +57,7 @@ TEST(RenderSystemTests, getTexture)
 TEST(RenderSystemTests, setTexture)
 {
     Module::EntityComponentSystem ECS;
-    Game::Rect rect(0, 0, 32, 32);
+    ECL::Rect rect(0, 0, 32, 32);
     std::shared_ptr<ECS::IComponent> component(new ECS::Component::Sprite("New texture!", rect));
     ECS::System::RenderSystem system;
 
@@ -77,7 +77,7 @@ TEST(RenderSystemTests, setTexture)
 
 TEST(RenderSystemTests, setLoaded)
 {
-    Game::Rect rect(0, 0, 32, 32);
+    ECL::Rect rect(0, 0, 32, 32);
     Module::EntityComponentSystem ECS;
     std::shared_ptr<ECS::IComponent> component(new ECS::Component::Sprite("New texture!", rect));
     ECS::System::RenderSystem system;

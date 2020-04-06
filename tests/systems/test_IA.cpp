@@ -6,12 +6,12 @@
 #include "IASystem.hpp"
 #include <gtest/gtest.h>
 
-void tagFunction(std::shared_ptr<ECS::Entity> &entity)
+void tagFunction(const std::shared_ptr<ECS::Entity> &entity)
 {
     entity->setTag("New Tag!");
 }
 
-void newFunction(std::shared_ptr<ECS::Entity> &entity)
+void newFunction(const std::shared_ptr<ECS::Entity> &entity)
 {
     std::cout << "the entitie's tag is " + entity->tag() << std::endl;
 }

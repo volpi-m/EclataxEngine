@@ -37,11 +37,11 @@ namespace ECS {
                 /// \param entity : entities that needs to be updated
                 /// \param func : new script (function pointer)
                 /// \brief adds a new script to the entity component
-                void setScript(std::shared_ptr<Entity> &entity, void (*func)(const std::shared_ptr<ECS::Entity> &entity));
+                void setScript(const std::shared_ptr<Entity> &entity, void (*func)(const std::shared_ptr<ECS::Entity> &entity));
  
                 /// \param entity : entities that needs to be updated
                 /// \brief deletes the script of an entity
-                void deleteScript(std::shared_ptr<Entity> &entity);
+                void deleteScript(const std::shared_ptr<Entity> &entity);
         };
     }
 }

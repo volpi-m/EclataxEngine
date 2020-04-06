@@ -10,7 +10,7 @@
 void ECS::System::RenderSystem::update([[maybe_unused]]std::unordered_map<unsigned long long, std::shared_ptr<Entity>> &entities)
 { }
 
-std::string ECS::System::RenderSystem::texture(std::shared_ptr<ECS::Entity> &entity) const
+std::string ECS::System::RenderSystem::texture(const std::shared_ptr<ECS::Entity> &entity) const
 {
     // Casting the correct component
     auto component = static_cast<ECS::Component::Sprite *>(entity->component(Component::Flags::sprite).get());
@@ -19,7 +19,7 @@ std::string ECS::System::RenderSystem::texture(std::shared_ptr<ECS::Entity> &ent
     return component->texture;
 }
 
-void ECS::System::RenderSystem::setTexture(std::shared_ptr<ECS::Entity> &entity, const std::string &texture)
+void ECS::System::RenderSystem::setTexture(const std::shared_ptr<ECS::Entity> &entity, const std::string &texture)
 {
     // Casting the correct component
     auto component = static_cast<ECS::Component::Sprite *>(entity->component(Component::Flags::sprite).get());
@@ -31,7 +31,7 @@ void ECS::System::RenderSystem::setTexture(std::shared_ptr<ECS::Entity> &entity,
     entity->update(true);
 }
 
-void ECS::System::RenderSystem::setLoaded(std::shared_ptr<ECS::Entity> &entity)
+void ECS::System::RenderSystem::setLoaded(const std::shared_ptr<ECS::Entity> &entity)
 {
     // Casting the correct component
     auto component = static_cast<ECS::Component::Sprite *>(entity->component(Component::Flags::sprite).get());
