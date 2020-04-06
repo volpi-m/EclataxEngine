@@ -37,29 +37,29 @@ namespace ECS {
 
                 /// \param entity : the target entity
                 /// \brief substract life of an entity
-                void subHealth(std::shared_ptr<Entity> &entity, int health);
+                void subHealth(const std::shared_ptr<Entity> &entity, int health);
 
                 /// \param entity : the target entity
                 /// \brief add life to an entity
-                void addHealth(std::shared_ptr<Entity> &entity, int health);
+                void addHealth(const std::shared_ptr<Entity> &entity, int health);
 
                 /// \param entity : the target entity
                 /// \brief set life of an entity
-                void setHealth(std::shared_ptr<Entity> &entity, int health);
+                void setHealth(const std::shared_ptr<Entity> &entity, int health);
 
                 /// \param entity : the target entity
                 /// \brief set life limit of an entity
-                void setHealthLimit(std::shared_ptr<Entity> &entity, int health);
+                void setHealthLimit(const std::shared_ptr<Entity> &entity, int health);
 
                 /// \return the health of the current entity
                 /// \param entity : the target entity
                 /// \brief get the healh of the tageted entity
-                int health(std::shared_ptr<Entity> &entity) const;
+                int health(const std::shared_ptr<Entity> &entity) const;
 
                 /// \return the health limit of the current entity
                 /// \param entity : the target entity
                 /// \brief get the healh limit of the tageted entity
-                int healthLimit(std::shared_ptr<Entity> &entity) const;
+                int healthLimit(const std::shared_ptr<Entity> &entity) const;
         };
     }
 }

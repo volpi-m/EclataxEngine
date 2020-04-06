@@ -19,7 +19,7 @@ void ECS::System::HealthManipulator::update(std::unordered_map<unsigned long lon
         }
 }
 
-void ECS::System::HealthManipulator::subHealth(std::shared_ptr<Entity> &entity, int health)
+void ECS::System::HealthManipulator::subHealth(const std::shared_ptr<Entity> &entity, int health)
 {
     // Casting the correct component
     auto component = static_cast<ECS::Component::Health *>(entity->component(Component::Flags::health).get());
@@ -31,7 +31,7 @@ void ECS::System::HealthManipulator::subHealth(std::shared_ptr<Entity> &entity, 
     entity->update(true);
 }
 
-void ECS::System::HealthManipulator::addHealth(std::shared_ptr<Entity> &entity, int health)
+void ECS::System::HealthManipulator::addHealth(const std::shared_ptr<Entity> &entity, int health)
 {
     // Casting the correct component
     auto component = static_cast<ECS::Component::Health *>(entity->component(Component::Flags::health).get());
@@ -43,7 +43,7 @@ void ECS::System::HealthManipulator::addHealth(std::shared_ptr<Entity> &entity, 
     entity->update(true);
 }
 
-void ECS::System::HealthManipulator::setHealth(std::shared_ptr<Entity> &entity, int health)
+void ECS::System::HealthManipulator::setHealth(const std::shared_ptr<Entity> &entity, int health)
 {
     // Casting the correct component
     auto component = static_cast<ECS::Component::Health *>(entity->component(Component::Flags::health).get());
@@ -55,7 +55,7 @@ void ECS::System::HealthManipulator::setHealth(std::shared_ptr<Entity> &entity, 
     entity->update(true);
 }
 
-void ECS::System::HealthManipulator::setHealthLimit(std::shared_ptr<Entity> &entity, int health)
+void ECS::System::HealthManipulator::setHealthLimit(const std::shared_ptr<Entity> &entity, int health)
 {
     // Casting the correct component
     auto component = static_cast<ECS::Component::Health *>(entity->component(Component::Flags::health).get());
@@ -68,7 +68,7 @@ void ECS::System::HealthManipulator::setHealthLimit(std::shared_ptr<Entity> &ent
     entity->update(true);
 }
 
-int ECS::System::HealthManipulator::health(std::shared_ptr<Entity> &entity) const
+int ECS::System::HealthManipulator::health(const std::shared_ptr<Entity> &entity) const
 {
     // Casting the correct component
     auto component = static_cast<ECS::Component::Health *>(entity->component(Component::Flags::health).get());
@@ -76,7 +76,7 @@ int ECS::System::HealthManipulator::health(std::shared_ptr<Entity> &entity) cons
     return component->health;
 }
 
-int ECS::System::HealthManipulator::healthLimit(std::shared_ptr<Entity> &entity) const
+int ECS::System::HealthManipulator::healthLimit(const std::shared_ptr<Entity> &entity) const
 {
     // Casting the correct component
     auto component = static_cast<ECS::Component::Health *>(entity->component(Component::Flags::health).get());

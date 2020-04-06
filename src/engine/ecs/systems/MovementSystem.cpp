@@ -23,7 +23,7 @@ std::tuple<float, float, float> ECS::System::MovementSystem::transform(const std
     return std::make_tuple(component->x, component->y, component->z);
 }
 
-void ECS::System::MovementSystem::setTransform(std::shared_ptr<Entity> &entity, float x, float y, float z)
+void ECS::System::MovementSystem::setTransform(const std::shared_ptr<Entity> &entity, float x, float y, float z)
 {
     // Casting it to the correct component
     auto component = static_cast<ECS::Component::Transform *>(entity->component(Component::Flags::transform).get());
@@ -37,7 +37,7 @@ void ECS::System::MovementSystem::setTransform(std::shared_ptr<Entity> &entity, 
     entity->update(true);
 }
 
-void ECS::System::MovementSystem::move(std::shared_ptr<Entity> &entity, float x, float y, float z)
+void ECS::System::MovementSystem::move(const std::shared_ptr<Entity> &entity, float x, float y, float z)
 {
     // Casting it to the correct component
     auto component = static_cast<ECS::Component::Transform *>(entity->component(Component::Flags::transform).get());

@@ -45,14 +45,14 @@ namespace ECS {
                 /// \param y : y coordinates
                 /// \param z : z coordinates
                 /// \brief update the entity by providing new coordinates
-                void setTransform(std::shared_ptr<Entity> &entity, float x, float y, float z);
+                void setTransform(const std::shared_ptr<Entity> &entity, float x, float y, float z);
 
                 /// \param entity : entity that we want to move
                 /// \param x : x coordinates
                 /// \param y : y coordinates
                 /// \param z : z coordinates
                 /// \brief move an entity
-                void move(std::shared_ptr<Entity> &entity, float x, float y, float z);
+                void move(const std::shared_ptr<Entity> &entity, float x, float y, float z);
 
                 /// \param entity : entity that we want the speed from
                 /// \brief get the speed of a entity

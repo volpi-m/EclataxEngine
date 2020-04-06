@@ -12,7 +12,7 @@ void ECS::System::CollisionSystem::update(std::unordered_map<unsigned long long,
     (void)entities;
 }
 
-bool ECS::System::CollisionSystem::onCollide2D(std::shared_ptr<Entity> &first, std::shared_ptr<Entity> &second)
+bool ECS::System::CollisionSystem::onCollide2D(const std::shared_ptr<Entity> &first, const std::shared_ptr<Entity> &second)
 {
     // Getting both transforms of entities
     auto transformFirst = static_cast<ECS::Component::Transform *>(first->component(Component::Flags::transform).get());
@@ -31,7 +31,7 @@ bool ECS::System::CollisionSystem::onCollide2D(std::shared_ptr<Entity> &first, s
     return false;
 }
 
-void ECS::System::CollisionSystem::onCollideDamage2D(std::shared_ptr<Entity> &first, std::shared_ptr<Entity> &second)
+void ECS::System::CollisionSystem::onCollideDamage2D(const std::shared_ptr<Entity> &first, const std::shared_ptr<Entity> &second)
 {
     // Checking all components
     if (!first->hasComponent(ECS::Component::Flags::transform) || !first->hasComponent(ECS::Component::Flags::collisionBox2D) ||

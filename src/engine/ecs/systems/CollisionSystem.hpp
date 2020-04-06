@@ -40,12 +40,12 @@ namespace ECS {
                 /// \param first : an entity
                 /// \param second : another entity
                 /// \brief checks if both entities have collided
-                bool onCollide2D(std::shared_ptr<Entity> &first, std::shared_ptr<Entity> &second);
+                bool onCollide2D(const std::shared_ptr<Entity> &first, const std::shared_ptr<Entity> &second);
 
                 /// \param first : an entity
                 /// \param second : another entity
                 /// \brief checks if both entities have collided and deal damage to one another
-                void onCollideDamage2D(std::shared_ptr<Entity> &first, std::shared_ptr<Entity> &second);
+                void onCollideDamage2D(const std::shared_ptr<Entity> &first, const std::shared_ptr<Entity> &second);
         };
     }
 }
