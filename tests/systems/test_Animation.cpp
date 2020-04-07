@@ -16,7 +16,7 @@ TEST(AnimationComponentsTest, updateMethod)
     std::shared_ptr<ECS::IComponent>component = std::make_shared<ECS::Component::Animation2D>(std::chrono::milliseconds(1), rect, 30, 10);
     std::shared_ptr<ECS::ISystem>animatonSystem = std::make_shared<ECS::System::AnimationSystem>();
     auto entity = ECS.createEntity(std::string("Animated entitie"));
-    ECS.addSystem(ECS::Component::Flags::animation2D, animatonSystem);
+    ECS.addSystem(ECS::System::Flags::Animation, animatonSystem);
     ECS.addComponentToEntity(entity, ECS::Component::Flags::animation2D, component);
 
     auto animationComponent = static_cast<ECS::Component::Animation2D *>
