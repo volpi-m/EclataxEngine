@@ -31,7 +31,7 @@ namespace ECS {
 
             /// \brief constructor
             /// \param _acceleration : acceleration value
-            Acceleration(std::size_t _acceleration) : acceleration(_acceleration) {}
+            Acceleration(float _acceleration) : acceleration(_acceleration) {}
 
             /*! acceleration attribute */
             float acceleration;
