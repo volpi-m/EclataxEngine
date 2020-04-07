@@ -9,7 +9,7 @@
 #include "AnimationSystem.hpp"
 #include "AudioComponent.hpp"
 
-TEST(AnimationComponentsTest, updateMethod)
+TEST(AnimationSystemTest, updateMethod)
 {
     Module::EntityComponentSystem ECS;
     ECL::Rect rect(0, 0, 10, 10);
