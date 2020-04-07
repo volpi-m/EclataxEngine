@@ -26,7 +26,7 @@ namespace ECS {
         /// \struct Animation2D
         /// \brief Animation structure, create the Animation component
         struct Animation2D : public IComponent {
-            
+
             /// \brief constructor
             Animation2D() : lastAnimationTime(std::chrono::high_resolution_clock::now()), animationTime(1000), rect(ECL::Rect()), maximumLeft(0), offset(0) {}
 

@@ -21,6 +21,7 @@ set(CMAKE_CXX_FLAGS "-W -Wall -fprofile-arcs -ftest-coverage")
 set(ENGINE_SRC
     ${CMAKE_CURRENT_SOURCE_DIR}/src/engine/GameEngine.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/engine/LibraryLoader.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/engine/Color.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/engine/ecs/ECS.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/engine/scenesManagement/sceneMachine/SceneStateMachine.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/engine/scenesManagement/scenes/AScene.cpp
@@ -36,7 +37,10 @@ set(ENGINE_SRC
     ${CMAKE_CURRENT_SOURCE_DIR}/src/engine/ecs/systems/CollisionSystem.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/engine/ecs/systems/HealthManipulatorSystem.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/engine/ecs/systems/TextSystem.cpp
-)
+
+
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/engine/graphicalAPI/SFML/ECLSFML.cpp # A retirer
+    )
 
 ## Utils source
 set(UTILS_SRC
@@ -59,6 +63,8 @@ set(SRC
 include_directories(
     src/engine/scenesManagement/sceneMachine
     src/engine/scenesManagement/scenes
+    src/engine/graphicalAPI/SFML # A retirer
+    src/engine/graphicalAPI
     src/engine/ecs/components
     src/engine/ecs/entities
     src/engine/ecs/systems
@@ -138,14 +144,17 @@ add_executable(unit_tests
 
 ## Linking libraries
 target_link_libraries(EclataxEngine-test PUBLIC
+    CONAN_PKG::sfml
     ${CMAKE_DL_LIBS}
 )
 
 target_link_libraries(ecl PUBLIC
+    CONAN_PKG::sfml
     ${CMAKE_DL_LIBS}
 )
 
 target_link_libraries(unit_tests PUBLIC
+    CONAN_PKG::sfml
     CONAN_PKG::gtest
     ${CMAKE_THREAD_LIBS_INIT}
     ${CMAKE_DL_LIBS}

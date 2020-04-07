@@ -10,6 +10,8 @@
 /// \brief Header file for the GameEngine class
 
 #include "SceneStateMachine.hpp"
+#include "IGraphicalAPI.hpp"
+#include "ECLSFML.hpp"
 #include "LibraryLoader.hpp"
 #include "ECS.hpp"
 
@@ -49,6 +51,10 @@ namespace Game
         /// \brief get the SceneStateMachine instance
         /// \return a shared poiner of the SceneStateMachine module
         std::shared_ptr<Module::SceneStateMachine> &SceneStateMachine();
+
+        /// \brief get the SceneStateMachine instance
+        /// \return a shared poiner of the SceneStateMachine module
+        std::shared_ptr<Module::IGraphicalAPI> &GraphicalAPI();
     private:
         void init();
 
@@ -58,6 +64,8 @@ namespace Game
         std::shared_ptr<Module::LibraryLoader> _libraryLoader;
         /*! SceneStateMachine instance */
         std::shared_ptr<Module::SceneStateMachine> _sceneStateMachine;
+        /*! GraphicalAPI instance */
+        std::shared_ptr<Module::IGraphicalAPI> _graphicalAPI;
         /*! iniialisation value */
         bool _initialised;
     };

@@ -14,6 +14,7 @@
 Game::GameEngine::GameEngine()
     : _ecs               { new Module::EntityComponentSystem   }
     , _libraryLoader     { new Module::LibraryLoader           }
+    , _graphicalAPI      { new ECL::ECLSFML                    }
     , _initialised       { true                                }
 {
     _sceneStateMachine = std::make_shared<Module::SceneStateMachine>(_ecs);
@@ -36,8 +37,12 @@ std::shared_ptr<Module::LibraryLoader> &Game::GameEngine::LibraryLoader()
     return _libraryLoader;
 };
 
-
 std::shared_ptr<Module::SceneStateMachine> &Game::GameEngine::SceneStateMachine()
 {
     return _sceneStateMachine;
+};
+
+std::shared_ptr<Module::IGraphicalAPI> &Game::GameEngine::GraphicalAPI()
+{
+    return _graphicalAPI;
 };
