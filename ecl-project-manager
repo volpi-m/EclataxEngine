@@ -331,8 +331,6 @@ class Shell:
         print(style.BLUE("Available commands:"))
         last_command = self.__commands.values()
         for (command, (fun, description)) in zip(self.__commands, self.__commands.values()):
-            if last_command != fun:
-                print("")
             print(style.MAGENTA(command), end="")
             print((padding - len(command)) * " ", end="")
             if last_command != fun:
